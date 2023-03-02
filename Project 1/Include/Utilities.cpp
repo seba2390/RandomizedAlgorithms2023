@@ -48,3 +48,10 @@ array_type generate_keys(const unsigned int& n)
     return keys;
 }
 
+void save(std::string filename, std::vector<output_data_type> data)
+{
+    std::ofstream output_stream(filename, std::ofstream::app); // Appending to end of file
+    for(auto data_point : data) output_stream << data_point << "    ";
+    output_stream << std::endl;
+    output_stream.close();
+}

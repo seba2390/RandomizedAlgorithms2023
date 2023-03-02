@@ -36,6 +36,8 @@ int main()
     if(my_hash_table.has(some_key)) std::cout << "Hash table holds: " << some_key;
     else std::cout << "Hash table does not hold: " << some_key;
 
+    // Testing writing to hard drive
+    save("test.txt", {0.1, 2.0});
 
 
 

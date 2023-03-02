@@ -9,6 +9,8 @@
 #include <climits>
 #include <list>
 #include <vector>
+#include <string>
+#include <fstream>
 #include <random>
 
 #define KEY_BIT_SIZE 32
@@ -24,6 +26,8 @@ using array_type = std::vector<key_type>;
  * */
 using linked_list_type = std::list<key_type>;
 
+using output_data_type = double_t;
+
 key_type get_random_uint32(const key_type& seed);
 
 key_type get_random_odd_uint32(const key_type& seed);
@@ -31,5 +35,7 @@ key_type get_random_odd_uint32(const key_type& seed);
 key_type hash(key_type key, key_type n);
 
 array_type generate_keys(const unsigned int& n);
+
+void save(std::string filename, std::vector<output_data_type> data);
 
 #endif //PROJECT_1_UTILITIES_HPP
