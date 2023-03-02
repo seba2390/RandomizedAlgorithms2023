@@ -14,6 +14,7 @@
 #include <random>
 #include <chrono>
 #include <filesystem>
+#include <set>
 
 #define KEY_BIT_SIZE 32
 
