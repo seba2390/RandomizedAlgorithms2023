@@ -48,7 +48,7 @@ public:
     bool has(const key_type& key)
     {
         /*
-         * Check whether the provided keys is stored in the hash table.
+         * Checks whether the provided key is stored in the hash table.
          */
         key_type index = hash(key, this->m);
 
