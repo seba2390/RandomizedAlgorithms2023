@@ -39,8 +39,8 @@ array_type generate_ordered_keys(const unsigned int& n);
 
 array_type generate_random_keys(const unsigned int& n, const unsigned int& seed);
 
-void append_to_file(std::string filename, std::vector<output_data_type> data);
+void append_to_file(std::string filename, std::string path, std::vector<output_data_type> data);
 
-void remove_file(std::string filename);
+void remove_file(std::string filename, std::string path);
 
 #endif //PROJECT_1_UTILITIES_HPP

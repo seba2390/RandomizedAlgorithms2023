@@ -55,25 +55,24 @@ array_type generate_random_keys(const unsigned int& n, const unsigned int& seed)
     return keys;
 }
 
-void append_to_file(std::string filename, std::vector<output_data_type> data)
+void append_to_file(std::string filename, std::string path, std::vector<output_data_type> data)
 {
-    std::string data_folder_path = "../../Data/";
-    std::ofstream output_stream(data_folder_path+filename, std::ofstream::app); // Appending to end of file
+    std::ofstream output_stream(path+"/"+filename, std::ofstream::app); // Appending to end of file
     for(auto data_point : data) output_stream << data_point << "    ";
     output_stream << std::endl;
     output_stream.close();
 }
 
-void remove_file(std::string filename)
+void remove_file(std::string filename,  std::string path)
 {
     std::filesystem::path folder_path = "../../Data";
-    if(std::filesystem::exists(folder_path / (std::filesystem::path)filename))
+    if(std::filesystem::exists(path / (std::filesystem::path)filename))
     {
         // Remove the file
-        if (std::filesystem::remove(folder_path / filename)) {
-            std::cout << "\nThe file " << folder_path / filename << " was successfully deleted." << std::endl;
+        if (std::filesystem::remove((std::filesystem::path)path / filename)) {
+            std::cout << "\nPre-existing file " << (std::filesystem::path)path / filename << " was successfully deleted." << std::endl;
         } else {
-            std::cerr << "Error deleting file: " << folder_path / filename << std::endl;
+            std::cerr << "Error deleting file: " << (std::filesystem::path)path / filename << std::endl;
         }
     }
 }

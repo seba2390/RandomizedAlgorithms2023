@@ -13,18 +13,19 @@ int main()
 {
     using hash_table = HashingWithChaining<key_type, array_type , linked_list_type>;
 
-    for(unsigned int seed = 0; seed < 10; seed++)
+    unsigned int nr_seeds = 100;
+    std::string folder_path = "../../Data/HashingWithChaining";
+    for(unsigned int seed = 0; seed < nr_seeds; seed++)
     {
+        std::cout << "Iteration nr.: " << seed << std::endl;
         // Timing insertion for various n
         std::string filename = "HWC_insertion_timing_"+std::to_string(seed)+".txt";
-        remove_file(filename); // Removing possibly already existing file with name 'filename' from drive.
+        remove_file(filename,folder_path); // Removing possibly already existing file with name 'filename' from drive.
         const unsigned int iterations = 19;
         for(key_type w = 5; w <= (key_type)(5+iterations); w++)
         {
             // Defining number of keys as power of 2 to enable use of Multiply-Shift hash function
             key_type n = std::pow(2,w);
-
-            std::cout << "w:" << w << " | n: " << n << std::endl;
 
             // Generating hash_table and keys
             hash_table my_hash_table = hash_table(n, seed);
@@ -38,12 +39,9 @@ int main()
 
             // Getting size of the longest linked list in hash table
             unsigned int max_size = my_hash_table.max_bucket_size();
-            std::cout << "max size: " << max_size << std::endl;
 
             // Saving time and sizes
-            append_to_file(filename, {(output_data_type)n, duration, (output_data_type)max_size});
-
-            std::cout << "------------------- \n";
+            append_to_file(filename, folder_path, {(output_data_type)n, duration, (output_data_type)max_size});
         }
 
         // Generating random keys for testing query complexity
