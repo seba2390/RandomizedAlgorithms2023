@@ -18,10 +18,11 @@ int main()
     for(unsigned int seed = 0; seed < nr_seeds; seed++)
     {
         std::cout << "Iteration nr.: " << seed << std::endl;
-        // Timing insertion for various n
+
+        // Timing insertion and query for various n
         std::string filename = "HWC_insertion_timing_"+std::to_string(seed)+".txt";
         remove_file(filename,folder_path); // Removing possibly already existing file with name 'filename' from drive.
-        const unsigned int iterations = 19;
+        const unsigned int iterations = 10;
         for(key_type w = 5; w <= (key_type)(5+iterations); w++)
         {
             // Defining number of keys as power of 2 to enable use of Multiply-Shift hash function
@@ -35,16 +36,26 @@ int main()
             auto start = std::chrono::high_resolution_clock::now();
             my_hash_table.insert_keys(my_keys);
             auto stop = std::chrono::high_resolution_clock::now();
-            output_data_type duration = duration_cast<std::chrono::nanoseconds>(stop - start).count();
+            output_data_type insertion_duration = duration_cast<std::chrono::nanoseconds>(stop - start).count();
 
             // Getting size of the longest linked list in hash table
             unsigned int max_size = my_hash_table.max_bucket_size();
 
+            // Testing query complexity
+            array_type random_keys = generate_random_keys(n,seed);
+            start = std::chrono::high_resolution_clock::now();
+            for(key_type key: random_keys) bool _ = my_hash_table.holds(key);
+            stop = std::chrono::high_resolution_clock::now();
+            output_data_type query_duration = duration_cast<std::chrono::nanoseconds>(stop - start).count();
+
             // Saving time and sizes
-            append_to_file(filename, folder_path, {(output_data_type)n, duration, (output_data_type)max_size});
+            append_to_file(filename, folder_path, {(output_data_type)n,
+                                                              insertion_duration,
+                                                              (output_data_type)max_size,
+                                                              query_duration});
         }
 
-        // Generating random keys for testing query complexity
+
 
     }
 
