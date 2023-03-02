@@ -48,7 +48,3 @@ array_type generate_keys(const unsigned int& n)
     return keys;
 }
 
-void save_data(const unsigned int& n, )
-{
-
-}
