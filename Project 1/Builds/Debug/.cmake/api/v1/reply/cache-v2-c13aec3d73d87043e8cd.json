@@ -979,7 +979,7 @@
 				}
 			],
 			"type" : "BOOL",
-			"value" : "ON"
+			"value" : "FALSE"
 		},
 		{
 			"name" : "Project_1_BINARY_DIR",

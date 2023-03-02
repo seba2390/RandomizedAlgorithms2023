@@ -12,6 +12,8 @@
 #include <string>
 #include <fstream>
 #include <random>
+#include <chrono>
+#include <filesystem>
 
 #define KEY_BIT_SIZE 32
 #define SEED 12
@@ -32,10 +34,12 @@ key_type get_random_uint32(const key_type& seed);
 
 key_type get_random_odd_uint32(const key_type& seed);
 
-key_type hash(key_type key, key_type n);
+key_type hash(key_type key, key_type n, key_type a, key_type l);
 
 array_type generate_keys(const unsigned int& n);
 
-void save(std::string filename, std::vector<output_data_type> data);
+void append_to_file(std::string filename, std::vector<output_data_type> data);
+
+void remove_file(std::string filename);
 
 #endif //PROJECT_1_UTILITIES_HPP

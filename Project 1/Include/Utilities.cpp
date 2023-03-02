@@ -26,7 +26,7 @@ key_type get_random_odd_uint32(const key_type& seed)
     return a;
 }
 
-key_type hash(key_type key, key_type n)
+key_type hash(key_type key, key_type n, key_type a, key_type l)
 {
     /*
      * Multiply-shift hashing function. Only maps to a power of two: [2^w] -> [2^l]. As such, choose
@@ -34,8 +34,6 @@ key_type hash(key_type key, key_type n)
      *
      * N.B. This hash function is 2-approx. universal.
      * */
-    key_type a = get_random_odd_uint32(SEED);
-    key_type l = log2(n);  // if m = 2^l then l = log2(m)
     return (a * key) >> (KEY_BIT_SIZE - l);
 }
 
@@ -48,10 +46,25 @@ array_type generate_keys(const unsigned int& n)
     return keys;
 }
 
-void save(std::string filename, std::vector<output_data_type> data)
+void append_to_file(std::string filename, std::vector<output_data_type> data)
 {
-    std::ofstream output_stream(filename, std::ofstream::app); // Appending to end of file
+    std::string data_folder_path = "../../Data/";
+    std::ofstream output_stream(data_folder_path+filename, std::ofstream::app); // Appending to end of file
     for(auto data_point : data) output_stream << data_point << "    ";
     output_stream << std::endl;
     output_stream.close();
+}
+
+void remove_file(std::string filename)
+{
+    std::filesystem::path folder_path = "../../Data";
+    if(std::filesystem::exists(folder_path / (std::filesystem::path)filename))
+    {
+        // Remove the file
+        if (std::filesystem::remove(folder_path / filename)) {
+            std::cout << "\nThe file " << folder_path / filename << " was successfully deleted." << std::endl;
+        } else {
+            std::cerr << "Error deleting file: " << folder_path / filename << std::endl;
+        }
+    }
 }
