@@ -37,12 +37,21 @@ key_type hash(key_type key, key_type n, key_type a, key_type l)
     return (a * key) >> (KEY_BIT_SIZE - l);
 }
 
-array_type generate_keys(const unsigned int& n)
+array_type generate_ordered_keys(const unsigned int& n)
 {
     std::vector<key_type> keys;
     keys.reserve(n);    // allocate memory for the array/vector
     keys.resize(n); // initialize the array/vector with the given size
     for(key_type i = 0; i < n; i++) keys[i] = 100 * i; // Setting keys in array/vector.
+    return keys;
+}
+
+array_type generate_random_keys(const unsigned int& n, const unsigned int& seed)
+{
+    std::vector<key_type> keys;
+    keys.reserve(n);    // allocate memory for the array/vector
+    keys.resize(n); // initialize the array/vector with the given size
+    for(key_type i = 0; i < n; i++) keys[i] = get_random_uint32(seed); // Setting keys in array/vector.
     return keys;
 }
 

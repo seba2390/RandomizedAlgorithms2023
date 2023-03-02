@@ -16,7 +16,6 @@
 #include <filesystem>
 
 #define KEY_BIT_SIZE 32
-#define SEED 12
 
 // Defining types.
 using key_type = uint32_t;
@@ -36,7 +35,9 @@ key_type get_random_odd_uint32(const key_type& seed);
 
 key_type hash(key_type key, key_type n, key_type a, key_type l);
 
-array_type generate_keys(const unsigned int& n);
+array_type generate_ordered_keys(const unsigned int& n);
+
+array_type generate_random_keys(const unsigned int& n, const unsigned int& seed);
 
 void append_to_file(std::string filename, std::vector<output_data_type> data);
 

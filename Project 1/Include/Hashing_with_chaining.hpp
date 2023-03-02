@@ -25,7 +25,7 @@ private:
         for(key_type i = 0; i < this->m; i++) hash_table[i] = std::list<key_type>{}; // Setting lists in array/vector.
     }
 
-    void initialize_consts()
+    void initialize_consts(const unsigned int& seed)
     {
         /*
          * Initializing constants for hash function here
@@ -33,7 +33,7 @@ private:
          * calling hash function.
          * */
 
-        this->a = get_random_odd_uint32(SEED);
+        this->a = get_random_odd_uint32(seed);
         this->l = std::log2(this->m); // if m = 2^l then l = log2(m)
     }
 
@@ -43,17 +43,17 @@ public:
     hash_table_type hash_table;
 
     // Parameterized C-tor
-    [[maybe_unused]] explicit HashingWithChaining(const unsigned int& n)
+    [[maybe_unused]] explicit HashingWithChaining(const unsigned int& n, const unsigned int& seed)
     {
      this->m = n;
      initialize_hash_table();
-     initialize_consts();
+     initialize_consts(seed);
     }
 
     // Methods
     void insert(const key_type& key)
     {
-        this->hash_table[hash(key, this->m, this->a, this->l)].push_back(key);
+        this->hash_table[hash(key, this->m, this->a, this->l)].push_back(std::move(key));
     }
 
     void insert_keys(const array_type& keys)
