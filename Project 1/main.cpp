@@ -1,8 +1,8 @@
 //
 // Created by Sebastian Yde Madsen on 01/03/2023.
 //
-#include "Hashing_with_chaining.hpp"
-#include "RedBlack_tree.hpp"
+#include "HashingWithChaining.hpp"
+#include "RedBlackTree.hpp"
 #include "Utilities.hpp"
 
 
@@ -62,5 +62,8 @@ int main()
     // Testing std::set AKA Red-Black Tree
     using red_black_tree = RedBlackTree<key_type, array_type>;
     red_black_tree my_red_black_tree = red_black_tree();
+    array_type RedBlackKeys = generate_ordered_keys(10);
+    my_red_black_tree.insert_keys(RedBlackKeys);
+
 
 }

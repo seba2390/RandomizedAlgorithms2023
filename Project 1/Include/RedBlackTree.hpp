@@ -15,12 +15,12 @@ public:
     // Standard un-parametrized C-tor.
     RedBlackTree() {};
 
-    void insert(key_type &key) {
-        this->tree.insert(std::move(key));
+    void insert(key_type& key) {
+        this->tree.insert(key);
     }
 
     void insert_keys(array_type& keys){
-        for(key_type key: keys) insert(std::move(key));
+        for(auto key: keys) insert(key);
     }
 
     bool holds(const key_type& key){
