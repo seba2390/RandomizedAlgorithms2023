@@ -15,12 +15,15 @@
 #include <chrono>
 #include <filesystem>
 #include <set>
+#include <algorithm>    // std::random_shuffle
+#include <Eigen/Dense>
 
 #define KEY_BIT_SIZE 32
 
 // Defining types.
 using key_type = uint32_t;
 using array_type = std::vector<key_type>;
+using column_vector = Eigen::Matrix<key_type,Eigen::Dynamic, 1>;
 
 /* N.B. the std::list in c++ is a doubly linked list,
  * i.e. nodes of (pointer to prev, pointer to next, data)
