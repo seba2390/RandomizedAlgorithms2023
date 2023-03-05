@@ -76,3 +76,8 @@ void remove_file(std::string filename,  std::string path)
         }
     }
 }
+
+void print_flag()
+{
+    std::cout << "PRINTING HERE!!!" << std::endl;
+}

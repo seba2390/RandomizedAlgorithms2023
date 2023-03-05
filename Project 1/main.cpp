@@ -16,6 +16,7 @@ int main()
 {
     //// ----------------- Testing Hashing With Chaining implementation ----------------- ////
 
+    /*
     using hash_table = HashingWithChaining<key_type, array_type , linked_list_type>;
 
     unsigned int nr_seeds = 10;
@@ -105,5 +106,13 @@ int main()
         }
 
     }
+    */
 
+    using PerfectHashing = PerfectHashing<key_type, array_type, linked_list_type>;
+
+    key_type n = std::pow(2,10);
+    key_type seed = 123;
+    PerfectHashing my_perfect_hash_table = PerfectHashing(n,seed);
+    array_type my_keys = generate_ordered_keys(n);
+    my_perfect_hash_table.insert_keys(my_keys,seed);
 }

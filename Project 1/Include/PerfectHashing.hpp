@@ -62,17 +62,16 @@ private:
         for(list_type linked_list: inner_table)
         {
             linked_list.clear();
+            linked_list.resize(0);
         }
     }
 
 
     bool has_collisions(const inner_hash_table_type& inner_table)
     {
-        unsigned int list_length;
         for(list_type linked_list: inner_table)
         {
-            list_length = std::distance(linked_list.begin(), linked_list.end());
-            if (list_length>1)
+            if (linked_list.size()>1)
             {
                 return true;
             }
@@ -82,15 +81,33 @@ private:
 
     unsigned int sum_of_squares(const inner_hash_table_type& collision_lists)
     {
+        /*
+         * Calculates sum of squared size of each bucket in outer table, where each squared
+         * size is rounded to the nearest power of 2 (due to using multiply-shift hash function).
+         * */
         unsigned int sum_of_squares = 0;
         for(list_type list: collision_lists)
         {
             if(!list.empty())
             {
-                sum_of_squares +=  (unsigned int)std::pow(list.size(),2);
+                sum_of_squares +=  std::pow(nearest_power_of_2((key_type)std::pow(list.size(),2)),2);
             }
         }
         return sum_of_squares;
+    }
+
+    unsigned int nearest_power_of_2(const key_type& m)
+    {
+        /*
+         * Given a number 'm', calculates the number 'l', l >= 1,  such
+         * that the expression |(2^l)-m| is minimized.
+         * */
+
+        if(m == 1) return 1; // rounds up to 2^1.
+        else
+        {
+            return (unsigned int)round((double)std::log2(m));
+        }
     }
 public:
 
@@ -100,6 +117,7 @@ public:
     // Parameterized C-tor
     [[maybe_unused]] explicit PerfectHashing(const unsigned int& n, const unsigned int& seed)
     {
+        // TODO: should one still use m=n for Perfect hashing ?
         this->m = n;
         initialize_outer_table();
         initialize_consts(seed);
@@ -108,7 +126,7 @@ public:
     // Methods
     void insert_keys(const array_type& keys, const unsigned int& seed)
     {
-
+        print_flag();
         // Sum of squares should be O(n) (prob 1/2 to be less than 4*c*n).
         unsigned int seed_shift = 0;
         do{
@@ -118,21 +136,23 @@ public:
                 this->outer_collisions[hash(keys[j], this->m, this->a, this->l)].push_back(keys[j]);
             }
             seed_shift++;
+            seed_shift *= 3; // Multiply seed by odd int to avoid getting same a_j even though different seed.
         }
         // TODO: Maybe refine this conditions (do we know 'c' for given hash function) ?
         while(sum_of_squares(this->outer_collisions) >= std::pow(this->m,2));
+        print_flag();
 
         // Setting sizes of inner tables and fills them w. empty lists
         unsigned int m_j;
         for(int j = 0; j < this->m; j++)
         {
             if(!this->outer_collisions[j].empty()){
-                // TODO: How do I make sure this is a power of 2 (for use of multiply-shift hashing)?
-                m_j = std::pow(this->outer_collisions[j].size(),2);
+                // TODO: How do I make sure this is a power of 2 (for use of multiply-shift hashing)? - currently rounding to nearest power of 2 above 1.
+                m_j = std::pow(nearest_power_of_2(std::pow(this->outer_collisions[j].size(),2)),2);
                 initialize_inner_table(m_j, this->outer_table[j]);
             }
         }
-
+        print_flag();
         // Initial deposit of keys in inner tables
         unsigned int outer_index, inner_index, l_j, a_j;
         for(int j = 0; j < this->m; j++)
@@ -140,8 +160,8 @@ public:
             if(!this->outer_collisions[j].empty())
             {
                 outer_index = j;
-                m_j = std::pow(this->outer_collisions[j].size(),2);
-                l_j = std::log2(m_j); // TODO: If m_j is not power of 2 (for use of multiply-shift hashing) - what should l_j be?
+                l_j = nearest_power_of_2(std::pow(this->outer_collisions[j].size(),2)); // TODO: If m_j is not power of 2 (for use of multiply-shift hashing) - what should l_j be? - currently rounding to nearest power of 2 above 1
+                m_j = std::pow(l_j,2);
                 a_j = this->A[outer_index];
                 for(key_type key: this->outer_collisions[j])
                 {
@@ -150,6 +170,7 @@ public:
                 }
             }
         }
+        print_flag();
 
         // Making sure that there are no collisions in inner tables
         generate_hash_consts(seed);
@@ -163,6 +184,8 @@ public:
                 m_j = std::pow(this->outer_collisions[j].size(),2);
                 l_j = std::log2(m_j); // TODO: If m_j is not power of 2 (for use of multiply-shift hashing) - what should l_j be?
                 a_j = this->A[outer_index];
+
+                int counter = 0;
                 while (has_collisions(this->outer_table[outer_index]))
                 {
                     // Remove keys from lists in inner hash table.
@@ -171,6 +194,8 @@ public:
                     // Re-calculate hash function const 'a' for given inner hash table.
                     this->A[outer_index] = get_random_odd_uint32(seed + seed_shift);
                     a_j = this->A[outer_index];
+                    std::cout << "counter: " << counter << ", a_j:" << a_j << std::endl;
+
 
                     // Re-fill keys in given inner hash table.
                     for(key_type key : this->outer_collisions[outer_index])
@@ -180,7 +205,9 @@ public:
                     }
 
                     // Increment seed shift for new hash func seed.
-                    seed_shift++;
+                    seed_shift += 1;
+                    seed_shift *= 3; // Multiply seed by odd int to avoid getting same a_j even though different seed.
+                    counter++;
                 }
             }
         }
@@ -192,28 +219,23 @@ public:
         /*
          * Checks whether the provided key is stored in the hash table.
          */
-        key_type index = hash(key, this->m, this->a, this->l);
+        key_type outer_index = hash(key, this->m, this->a, this->l);
+
+        key_type m_j, l_j, a_j;
+        m_j = (this->outer_table[outer_index]).size();
+        l_j = std::log2(m_j);
+        a_j = (this->A)[outer_index];
+        key_type inner_index = hash(key,m_j,a_j,l_j);
 
         // Only start iterating through linked list if bucket is not empty
-        if(!this->hash_table[index].empty())
+        if(!(this->outer_table[outer_index])[inner_index].empty())
         {
-            auto iterator = std::find(this->hash_table[index].begin(), this->hash_table[index].end(), key);
-            if(iterator != this->hash_table[index].end())
+            if((this->outer_table[outer_index])[inner_index] == key)
             {
                 return true;
             }
         }
         return false;
     }
-    unsigned int max_bucket_size()
-    {
-        unsigned int max_size = 0;
-        for(int m_i = 0; m_i < this->m; m_i++)
-        {
-            if(this->hash_table[m_i].size() > max_size) max_size = this->hash_table[m_i].size();
-        }
-        return max_size;
-    }
-
 
 };

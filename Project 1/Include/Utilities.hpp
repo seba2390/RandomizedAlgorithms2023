@@ -46,4 +46,6 @@ void append_to_file(std::string filename, std::string path, std::vector<output_d
 
 void remove_file(std::string filename, std::string path);
 
+void print_flag();
+
 #endif //PROJECT_1_UTILITIES_HPP
