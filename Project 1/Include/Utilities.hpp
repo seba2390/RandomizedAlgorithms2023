@@ -30,7 +30,6 @@ using column_vector = Eigen::Matrix<key_type,Eigen::Dynamic, 1>;
  * It has search O(n), and delete/insert O(1).
  * */
 using linked_list_type = std::list<key_type>;
-
 using output_data_type = double_t;
 
 key_type get_random_uint32(const key_type& seed);

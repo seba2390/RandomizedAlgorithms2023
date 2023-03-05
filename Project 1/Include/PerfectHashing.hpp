@@ -5,10 +5,11 @@
 #include "Utilities.hpp"
 
 
-template <typename key_type, typename array_type>
+template <typename key_type, typename array_type, typename list_type>
 class PerfectHashing
 {
 private:
+    using inner_hash_table_type = std::vector<list_type>;
 
     // Attributes
     unsigned int m;
@@ -24,13 +25,15 @@ private:
     void initialize_outer_table()
     {
         outer_table.reserve(this->m);       // allocate memory for the array/vector
-        outer_table.resize(this->m);        // initialize the array/vector with the given size
+        outer_table.resize(this->m);           // initialize the array/vector with the given size
+        for(key_type i = 0; i < this->m; i++) this->outer_table[i] = inner_hash_table_type{};
     }
 
-    void initialize_inner_tables()
+    void initialize_inner_table(const unsigned int& m, inner_hash_table_type& inner_table)
     {
-        array_type inner_table;
-        std::fill(this->outer_table.begin(), this->outer_table.end(), array_type{});
+        inner_table.reserve(m);    // allocate memory for the array/vector
+        inner_table.resize(m);        // initialize the array/vector with the given size
+        for(key_type i = 0; i < this->m; i++) inner_table[i] = std::list<key_type>{}; // Setting lists in array/vector.
     }
 
     void generate_hash_consts(const unsigned int& seed)
@@ -51,32 +54,43 @@ private:
         this->a = get_random_odd_uint32(seed);
     }
 
-    unsigned int sum_of_squares()
+    void clear_lists(const inner_hash_table_type& inner_table)
     {
-        unsigned int tot_size = 0;
-        for(array_type inner_table : outer_table) tot_size += (unsigned int)std::pow(inner_table.size(),2);
-        return tot_size;
+        for(list_type linked_list: inner_table)
+        {
+            linked_list.clear();
+        }
+    }
+
+
+    bool has_collisions(const inner_hash_table_type& inner_table)
+    {
+        unsigned int list_length;
+        for(list_type linked_list: inner_table)
+        {
+            list_length = std::distance(linked_list.begin(), linked_list.end());
+            if (list_length>1)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
 public:
 
     // Attributes
-    std::vector<array_type> outer_table;
+    std::vector<inner_hash_table_type> outer_table;
 
     // Parameterized C-tor
-    [[maybe_unused]] explicit PerfectHashing(const unsigned int& n)
+    [[maybe_unused]] explicit PerfectHashing(const unsigned int& n, const unsigned int& seed)
     {
         this->m = n;
         initialize_outer_table();
-        initialize_inner_tables();
+        initialize_consts(seed);
     }
 
     // Methods
-    void insert(const key_type& key, const key_type& a, array_type& inner_table)
-    {
-        inner_table[hash(key, this->m, a, this->l)].push_back(std::move(key));
-    }
-
     void insert_keys(const array_type& keys, const unsigned int& seed)
     {
 
@@ -97,14 +111,64 @@ public:
         {
             if(this->outer_collisions[j] > 0){
                 // TODO: How do I make sure this is a power of 2 (for use of multiply-shift hashing)?
-                this->outer_table[j].reserve(std::pow(this->outer_collisions[j],2));
-                this->outer_table[j].resize(std::pow(this->outer_collisions[j],2));
+                initialize_inner_table(std::pow(this->outer_collisions[j],2), this->outer_table[j]);
             }
         }
 
+        // Initial deposit of keys in inner tables
+        unsigned int outer_index, inner_index, m_j, l_j, a_j;
+        for(int j = 0; j < this->m; j++)
+        {
+            outer_index = hash(keys[j], this->m, this->a, this->l);
+
+            m_j = this->outer_table[outer_index].size();
+            // TODO: If m_j is not power of 2 (for use of multiply-shift hashing) - what should l_j be?
+            l_j = std::log2(m_j);
+            a_j = A[outer_index];
+
+            inner_index = hash(keys[j], m_j, a_j, l_j);
+            (this->outer_table[outer_index])[inner_index].push_back(keys[j]);
+        }
+
         // Making sure that there are no collisions in inner tables
+        unsigned int array_size;
+        generate_hash_consts(seed);
+        for(int j = 0; j < this->m; j++)
+        {
+            seed_shift = 0;
+            do{
+                outer_index = hash(keys[j], this->m, this->a, this->l);
 
+                m_j = this->outer_table[outer_index].size();
+                // TODO: If m_j is not power of 2 (for use of multiply-shift hashing) - what should l_j be?
+                l_j = std::log2(m_j);
+                a_j = A[outer_index];
 
+                inner_index = hash(keys[j], m_j, a_j, l_j);
+                this->A[outer_index] = get_random_odd_uint32(seed + seed_shift);
+
+                if(has_collisions(this->outer_table[outer_index]))
+                {
+                    clear_lists(this->outer_table[outer_index]);
+                    seed_shift++;
+                }
+
+            } while (has_collisions(this->outer_table[outer_index]));
+        }
+
+        // Final deposit of keys in inner tables
+        for(int j = 0; j < this->m; j++)
+        {
+            outer_index = hash(keys[j], this->m, this->a, this->l);
+
+            m_j = this->outer_table[outer_index].size();
+            // TODO: If m_j is not power of 2 (for use of multiply-shift hashing) - what should l_j be?
+            l_j = std::log2(m_j);
+            a_j = A[outer_index];
+
+            inner_index = hash(keys[j], m_j, a_j, l_j);
+            (this->outer_table[outer_index])[inner_index].push_back(keys[j]);
+        }
     }
 
     bool holds(const key_type& key)
