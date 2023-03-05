@@ -17,7 +17,7 @@ private:
     key_type l;
     key_type a;   // Rng. const for functions hashing to entries in outer table.
     array_type A; // Rng. consts for the m hash functions hashing from outer table -> inner tables.
-    column_vector outer_collisions; // j'th entry = nr. keys hashed to j'th entry in outer table.
+    inner_hash_table_type outer_collisions; // j'th entry = linked list of keys hashed to j'th entry in outer table.
 
 
 
@@ -31,9 +31,12 @@ private:
 
     void initialize_inner_table(const unsigned int& m, inner_hash_table_type& inner_table)
     {
+        /*
+         * Initializes inner_table array to size 'm' and fills with empty lists.
+         * */
         inner_table.reserve(m);    // allocate memory for the array/vector
         inner_table.resize(m);        // initialize the array/vector with the given size
-        for(key_type i = 0; i < this->m; i++) inner_table[i] = std::list<key_type>{}; // Setting lists in array/vector.
+        for(key_type i = 0; i < m; i++) inner_table[i] = std::list<key_type>{}; // Setting lists in array/vector.
     }
 
     void generate_hash_consts(const unsigned int& seed)
@@ -77,6 +80,18 @@ private:
         return false;
     }
 
+    unsigned int sum_of_squares(const inner_hash_table_type& collision_lists)
+    {
+        unsigned int sum_of_squares = 0;
+        for(list_type list: collision_lists)
+        {
+            if(!list.empty())
+            {
+                sum_of_squares +=  (unsigned int)std::pow(list.size(),2);
+            }
+        }
+        return sum_of_squares;
+    }
 public:
 
     // Attributes
@@ -97,37 +112,43 @@ public:
         // Sum of squares should be O(n) (prob 1/2 to be less than 4*c*n).
         unsigned int seed_shift = 0;
         do{
-            outer_collisions.setZero();
+            clear_lists(this->outer_collisions);
             this->a = get_random_odd_uint32(seed + seed_shift);
             for(int j = 0; j < this->m; j++){
-                this->outer_collisions[hash(keys[j], this->m, this->a, this->l)] += 1;
+                this->outer_collisions[hash(keys[j], this->m, this->a, this->l)].push_back(keys[j]);
             }
             seed_shift++;
         }
-        while(this->outer_collisions.squaredNorm() >= std::pow(this->m,2));
+        // TODO: Maybe refine this conditions (do we know 'c' for given hash function) ?
+        while(sum_of_squares(this->outer_collisions) >= std::pow(this->m,2));
 
-        // Setting sizes of inner tables
+        // Setting sizes of inner tables and fills them w. empty lists
+        unsigned int m_j;
         for(int j = 0; j < this->m; j++)
         {
-            if(this->outer_collisions[j] > 0){
+            if(!this->outer_collisions[j].empty()){
                 // TODO: How do I make sure this is a power of 2 (for use of multiply-shift hashing)?
-                initialize_inner_table(std::pow(this->outer_collisions[j],2), this->outer_table[j]);
+                m_j = std::pow(this->outer_collisions[j].size(),2);
+                initialize_inner_table(m_j, this->outer_table[j]);
             }
         }
 
         // Initial deposit of keys in inner tables
-        unsigned int outer_index, inner_index, m_j, l_j, a_j;
+        unsigned int outer_index, inner_index, l_j, a_j;
         for(int j = 0; j < this->m; j++)
         {
-            outer_index = hash(keys[j], this->m, this->a, this->l);
-
-            m_j = this->outer_table[outer_index].size();
-            // TODO: If m_j is not power of 2 (for use of multiply-shift hashing) - what should l_j be?
-            l_j = std::log2(m_j);
-            a_j = A[outer_index];
-
-            inner_index = hash(keys[j], m_j, a_j, l_j);
-            (this->outer_table[outer_index])[inner_index].push_back(keys[j]);
+            if(!this->outer_collisions[j].empty())
+            {
+                outer_index = j;
+                m_j = std::pow(this->outer_collisions[j].size(),2);
+                l_j = std::log2(m_j); // TODO: If m_j is not power of 2 (for use of multiply-shift hashing) - what should l_j be?
+                a_j = this->A[outer_index];
+                for(key_type key: this->outer_collisions[j])
+                {
+                    inner_index = hash(key, m_j, a_j, l_j);
+                    (this->outer_table[outer_index])[inner_index].push_back(key);
+                }
+            }
         }
 
         // Making sure that there are no collisions in inner tables
@@ -135,40 +156,36 @@ public:
         generate_hash_consts(seed);
         for(int j = 0; j < this->m; j++)
         {
-            seed_shift = 0;
-            do{
-                outer_index = hash(keys[j], this->m, this->a, this->l);
-
-                m_j = this->outer_table[outer_index].size();
-                // TODO: If m_j is not power of 2 (for use of multiply-shift hashing) - what should l_j be?
-                l_j = std::log2(m_j);
-                a_j = A[outer_index];
-
-                inner_index = hash(keys[j], m_j, a_j, l_j);
-                this->A[outer_index] = get_random_odd_uint32(seed + seed_shift);
-
-                if(has_collisions(this->outer_table[outer_index]))
+            // Only check inner hash tables that holds any keys
+            if(!this->outer_collisions[j].empty())
+            {
+                seed_shift = 1;
+                outer_index = j;
+                m_j = std::pow(this->outer_collisions[j].size(),2);
+                l_j = std::log2(m_j); // TODO: If m_j is not power of 2 (for use of multiply-shift hashing) - what should l_j be?
+                a_j = this->A[outer_index];
+                while (has_collisions(this->outer_table[outer_index]))
                 {
+                    // Remove keys from lists in inner hash table.
                     clear_lists(this->outer_table[outer_index]);
+
+                    // Re-calculate hash function const 'a' for given inner hash table.
+                    this->A[outer_index] = get_random_odd_uint32(seed + seed_shift);
+                    a_j = this->A[outer_index];
+
+                    // Re-fill keys in given inner hash table.
+                    for(key_type key : this->outer_collisions[outer_index])
+                    {
+                        inner_index = hash(key,m_j,a_j,l_j);
+                        (this->outer_table[outer_index])[inner_index].push_back(key);
+                    }
+
+                    // Increment seed shift for new hash func seed.
                     seed_shift++;
                 }
-
-            } while (has_collisions(this->outer_table[outer_index]));
+            }
         }
 
-        // Final deposit of keys in inner tables
-        for(int j = 0; j < this->m; j++)
-        {
-            outer_index = hash(keys[j], this->m, this->a, this->l);
-
-            m_j = this->outer_table[outer_index].size();
-            // TODO: If m_j is not power of 2 (for use of multiply-shift hashing) - what should l_j be?
-            l_j = std::log2(m_j);
-            a_j = A[outer_index];
-
-            inner_index = hash(keys[j], m_j, a_j, l_j);
-            (this->outer_table[outer_index])[inner_index].push_back(keys[j]);
-        }
     }
 
     bool holds(const key_type& key)
