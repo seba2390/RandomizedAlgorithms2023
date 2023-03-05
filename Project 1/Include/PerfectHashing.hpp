@@ -152,7 +152,6 @@ public:
         }
 
         // Making sure that there are no collisions in inner tables
-        unsigned int array_size;
         generate_hash_consts(seed);
         for(int j = 0; j < this->m; j++)
         {
