@@ -57,12 +57,14 @@ private:
         this->a = get_random_odd_uint32(seed);
     }
 
-    void clear_lists(const inner_hash_table_type& inner_table)
+    void clear_lists(inner_hash_table_type& inner_table)
     {
-        for(list_type linked_list: inner_table)
+        for(int i = 0; i < inner_table.size(); i++)
         {
-            linked_list.clear();
-            linked_list.resize(0);
+            if(!inner_table[i].empty())
+            {
+                inner_table[i].clear();
+            }
         }
     }
 
@@ -126,7 +128,6 @@ public:
     // Methods
     void insert_keys(const array_type& keys, const unsigned int& seed)
     {
-        print_flag();
         // Sum of squares should be O(n) (prob 1/2 to be less than 4*c*n).
         unsigned int seed_shift = 0;
         do{
@@ -140,7 +141,6 @@ public:
         }
         // TODO: Maybe refine this conditions (do we know 'c' for given hash function) ?
         while(sum_of_squares(this->outer_collisions) >= std::pow(this->m,2));
-        print_flag();
 
         // Setting sizes of inner tables and fills them w. empty lists
         unsigned int m_j;
@@ -148,11 +148,10 @@ public:
         {
             if(!this->outer_collisions[j].empty()){
                 // TODO: How do I make sure this is a power of 2 (for use of multiply-shift hashing)? - currently rounding to nearest power of 2 above 1.
-                m_j = std::pow(nearest_power_of_2(std::pow(this->outer_collisions[j].size(),2)),2);
+                m_j = std::pow(2, nearest_power_of_2(std::pow(this->outer_collisions[j].size(),2)));
                 initialize_inner_table(m_j, this->outer_table[j]);
             }
         }
-        print_flag();
         // Initial deposit of keys in inner tables
         unsigned int outer_index, inner_index, l_j, a_j;
         for(int j = 0; j < this->m; j++)
@@ -161,7 +160,7 @@ public:
             {
                 outer_index = j;
                 l_j = nearest_power_of_2(std::pow(this->outer_collisions[j].size(),2)); // TODO: If m_j is not power of 2 (for use of multiply-shift hashing) - what should l_j be? - currently rounding to nearest power of 2 above 1
-                m_j = std::pow(l_j,2);
+                m_j = std::pow(2, l_j);
                 a_j = this->A[outer_index];
                 for(key_type key: this->outer_collisions[j])
                 {
@@ -170,7 +169,6 @@ public:
                 }
             }
         }
-        print_flag();
 
         // Making sure that there are no collisions in inner tables
         generate_hash_consts(seed);
@@ -194,7 +192,6 @@ public:
                     // Re-calculate hash function const 'a' for given inner hash table.
                     this->A[outer_index] = get_random_odd_uint32(seed + seed_shift);
                     a_j = this->A[outer_index];
-                    std::cout << "counter: " << counter << ", a_j:" << a_j << std::endl;
 
 
                     // Re-fill keys in given inner hash table.
@@ -226,11 +223,11 @@ public:
         l_j = std::log2(m_j);
         a_j = (this->A)[outer_index];
         key_type inner_index = hash(key,m_j,a_j,l_j);
-
         // Only start iterating through linked list if bucket is not empty
         if(!(this->outer_table[outer_index])[inner_index].empty())
         {
-            if((this->outer_table[outer_index])[inner_index] == key)
+            auto iterator = std::find((this->outer_table[outer_index])[inner_index].begin(), (this->outer_table[outer_index])[inner_index].end(), key);
+            if(iterator != (this->outer_table[outer_index])[inner_index].end())
             {
                 return true;
             }

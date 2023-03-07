@@ -16,7 +16,7 @@ int main()
 {
     //// ----------------- Testing Hashing With Chaining implementation ----------------- ////
 
-    /*
+
     using hash_table = HashingWithChaining<key_type, array_type , linked_list_type>;
 
     unsigned int nr_seeds = 10;
@@ -26,7 +26,7 @@ int main()
         std::cout << "Iteration nr.: " << seed << std::endl;
 
         // Timing insertion and query for various n
-        std::string filename = "HWC_insertion_timing_"+std::to_string(seed)+".txt";
+        std::string filename = "HWC_insertion_timing_"+std::to_string(3*seed)+".txt";
         remove_file(filename,folder_path); // Removing possibly already existing file with name 'filename' from drive.
         const unsigned int iterations = 19;
         for(key_type w = 5; w <= (key_type)(5+iterations); w++)
@@ -48,7 +48,7 @@ int main()
             unsigned int max_size = my_hash_table.max_bucket_size();
 
             // Testing query complexity
-            array_type random_keys = generate_random_keys(n,seed);
+            array_type random_keys = generate_random_keys(n,3*seed);
             start = std::chrono::high_resolution_clock::now();
             for(key_type key: random_keys) bool _ = my_hash_table.holds(key);
             stop = std::chrono::high_resolution_clock::now();
@@ -74,7 +74,7 @@ int main()
         std::cout << "Iteration nr.: " << seed << std::endl;
 
         // Timing insertion and query for various n
-        std::string filename = "RBT_insertion_timing_"+std::to_string(seed)+".txt";
+        std::string filename = "RBT_insertion_timing_"+std::to_string(3*seed)+".txt";
         remove_file(filename,folder_path); // Removing possibly already existing file with name 'filename' from drive.
         const unsigned int iterations = 19;
         for(key_type w = 5; w <= (key_type)(5+iterations); w++)
@@ -93,7 +93,7 @@ int main()
             output_data_type insertion_duration = duration_cast<std::chrono::nanoseconds>(stop - start).count();
 
             // Testing query complexity
-            array_type random_keys = generate_random_keys(n,seed);
+            array_type random_keys = generate_random_keys(n,3*seed);
             start = std::chrono::high_resolution_clock::now();
             for(key_type key: random_keys) bool _ = my_red_black_tree.holds(key);
             stop = std::chrono::high_resolution_clock::now();
@@ -106,13 +106,48 @@ int main()
         }
 
     }
-    */
+
+    //// ----------------- Testing Perfect Hashing implementation ----------------- ////
 
     using PerfectHashing = PerfectHashing<key_type, array_type, linked_list_type>;
+    nr_seeds = 10;
+    folder_path = "../../Data/PerfectHashing";
+    for(unsigned int seed = 0; seed < nr_seeds; seed++)
+    {
+        std::cout << "Iteration nr.: " << seed << std::endl;
 
-    key_type n = std::pow(2,10);
-    key_type seed = 123;
-    PerfectHashing my_perfect_hash_table = PerfectHashing(n,seed);
-    array_type my_keys = generate_ordered_keys(n);
-    my_perfect_hash_table.insert_keys(my_keys,seed);
+        // Timing insertion and query for various n
+        std::string filename = "PH_insertion_timing_"+std::to_string(3*seed)+".txt";
+        remove_file(filename,folder_path); // Removing possibly already existing file with name 'filename' from drive.
+        const unsigned int iterations = 19;
+        for(key_type w = 5; w <= (key_type)(5+iterations); w++)
+        {
+            // Defining number of keys as power of 2 to enable use of Multiply-Shift hash function
+            key_type n = std::pow(2,w);
+
+            // Generating Red Black tree and keys
+            PerfectHashing my_perfect_hash_table = PerfectHashing (n, 3*seed);
+            array_type my_keys = generate_ordered_keys(n);
+
+            // Inserting keys and timing the execution
+            auto start = std::chrono::high_resolution_clock::now();
+            my_perfect_hash_table.insert_keys(my_keys,3*seed);
+            auto stop = std::chrono::high_resolution_clock::now();
+            output_data_type insertion_duration = duration_cast<std::chrono::nanoseconds>(stop - start).count();
+
+            // Testing query complexity
+            array_type random_keys = generate_random_keys(n,3*seed);
+            start = std::chrono::high_resolution_clock::now();
+            for(key_type key: random_keys) bool _ = my_perfect_hash_table.holds(key);
+            stop = std::chrono::high_resolution_clock::now();
+            output_data_type query_duration = duration_cast<std::chrono::nanoseconds>(stop - start).count();
+
+            // Saving time and sizes
+            append_to_file(filename, folder_path, {(output_data_type)n,
+                                                               insertion_duration,
+                                                               query_duration});
+        }
+
+    }
+
 }
