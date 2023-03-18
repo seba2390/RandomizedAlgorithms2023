@@ -18,6 +18,7 @@ private:
     key_type a;   // Rng. const for functions hashing to entries in outer table.
     array_type A; // Rng. consts for the m hash functions hashing from outer table -> inner tables.
     inner_hash_table_type outer_collisions; // j'th entry = linked list of keys hashed to j'th entry in outer table.
+    column_vector outer_collisions_vector;
 
 
 
@@ -43,7 +44,7 @@ private:
     {
         for(int table_entry = 0; table_entry < this->m; table_entry++)
         {
-            this->A[table_entry] = get_random_odd_uint32(seed);
+            if(this->outer_collisions_vector[table_entry] != 0) this->A[table_entry] = get_random_odd_uint32(seed);
         }
     }
 
@@ -55,6 +56,8 @@ private:
 
         this->l = std::log2(this->m); // if m = 2^l then l = log2(m)
         this->a = get_random_odd_uint32(seed);
+
+        this->outer_collisions_vector.setZero(this->m);
     }
 
     void clear_lists(inner_hash_table_type& inner_table)
@@ -123,7 +126,7 @@ private:
         if(m == 1) return 1; // rounds up to 2^1.
         else
         {
-            return (unsigned int)std::ceil((double)std::log2(m));
+            return (unsigned int)std::ceil(std::log2(m));
         }
     }
 
@@ -147,118 +150,130 @@ public:
     void insert_keys(const array_type& keys, const unsigned int& seed)
     {
 
-        auto start_1= std::chrono::high_resolution_clock::now();
-        // Sum of squares should be O(n) (prob 1/2 to be less than 4*c*n).
-        unsigned int seed_shift = 0;
-        do{
-            clear_lists(this->outer_collisions);
-            this->a = get_random_odd_uint32(seed + seed_shift * 11);
-            for(int j = 0; j < this->n; j++){
-                this->outer_collisions[hash(keys[j], this->a, this->l)].push_back(keys[j]);
-            }
-            seed_shift++;
+        //auto start_1= std::chrono::high_resolution_clock::now();
+
+        /////// ----- Sum of squares should be O(n) (prob 1/2 to be less than 4*c*n). ----- ///////
+        // Counting collisions
+        for(int j = 0; j < this->n; j++){
+            this->outer_collisions_vector[hash(keys[j], this->a, this->l)] += 1;
+        }
+        // Rounding up to the square of each entry to the nearest power of two to enable use of multiply-shift hashing.
+        this->outer_collisions_vector.array().square().matrix();
+        this->outer_collisions_vector = this->outer_collisions_vector.unaryExpr([](key_type x) {
+            if (x == 0) return (key_type)x;
+            else return (key_type)std::pow(2, std::ceil(std::log2(x)));
+        });
+        // Grouping keys.
+        for(key_type key : keys)
+        {
+            this->outer_collisions[hash(key, this->a, this->l)].push_back(key);
         }
         // TODO: Maybe smarter to check that there are no more than n/2 collisions?
-        while(sum_of_squares(this->outer_collisions) > 4 * this->n);
-        auto stop_1= std::chrono::high_resolution_clock::now();
-        std::cout << "Process 1: " << duration_cast<std::chrono::nanoseconds>(stop_1 - start_1).count() << std::endl << std::endl;
+        unsigned int seed_shift = 1;
+        while(this->outer_collisions_vector.sum() > 4 * this->n){
+            // Clearing current values
+            this->outer_collisions_vector.setZero();
+            clear_lists(this->outer_collisions);
 
-        auto start_2= std::chrono::high_resolution_clock::now();
+            // Re-setting rng. const for hash func.
+            this->a = get_random_odd_uint32(seed + seed_shift * 11);
+
+            // Counting collisions
+            for(int j = 0; j < this->n; j++){
+                this->outer_collisions_vector[hash(keys[j], this->a, this->l)] += 1;
+            }
+
+            // Rounding up to the square of each entry to the nearest power of two to enable use of multiply-shift hashing.
+            this->outer_collisions_vector.array().square().matrix();
+            this->outer_collisions_vector = this->outer_collisions_vector.unaryExpr([](key_type x) {
+                if (x == 0) return (key_type)x;
+                else return (key_type)std::pow(2, std::ceil(std::log2(x)));
+            });
+
+            // Grouping keys.
+            for(key_type key : keys)
+            {
+                this->outer_collisions[hash(key, this->a, this->l)].push_back(key);
+            }
+
+            seed_shift++;
+        }
+
+        //auto stop_1= std::chrono::high_resolution_clock::now();
+        //std::cout << "Process 1: " << duration_cast<std::chrono::nanoseconds>(stop_1 - start_1).count() << std::endl << std::endl;
+
+        //auto start_2= std::chrono::high_resolution_clock::now();
         // Setting sizes of inner tables and fills them w. empty lists
         unsigned int m_j;
         for(int j = 0; j < this->m; j++)
         {
             if(!this->outer_collisions[j].empty()){
-                // TODO: How do I make sure this is a power of 2 (for use of multiply-shift hashing)? - currently rounding to nearest power of 2 above 1.
-                //m_j = std::pow(2, nearest_power_of_2(std::pow(this->outer_collisions[j].size(),2)));
-                m_j = std::pow(2, nearest_upper_power_of_2(std::pow(this->outer_collisions[j].size(),2)));
+                // Each inner table is initialized to the square of the number of collisions (rounded up to the nearest power of 2)
+                m_j = this->outer_collisions_vector[j];
                 initialize_inner_table(m_j, this->outer_table[j]);
             }
         }
-        auto stop_2= std::chrono::high_resolution_clock::now();
-        std::cout << "Process 2: " << duration_cast<std::chrono::nanoseconds>(stop_2 - start_2).count() << std::endl << std::endl;
+        //auto stop_2= std::chrono::high_resolution_clock::now();
+        //std::cout << "Process 2: " << duration_cast<std::chrono::nanoseconds>(stop_2 - start_2).count() << std::endl << std::endl;
 
 
-        auto start_3 = std::chrono::high_resolution_clock::now();
+        //auto start_3 = std::chrono::high_resolution_clock::now();
         // Initial deposit of keys in inner tables
-        unsigned int outer_index, inner_index, l_j, a_j;
+        unsigned int  l_j, a_j;
         for(int j = 0; j < this->m; j++)
         {
-            if(!this->outer_collisions[j].empty())
+            if(this->outer_collisions_vector[j] != 0)
             {
-                outer_index = j;
-                //l_j = nearest_power_of_2(std::pow(this->outer_collisions[j].size(),2)); // TODO: If m_j is not power of 2 (for use of multiply-shift hashing) - what should l_j be? - currently rounding to nearest power of 2 above 1
-                l_j = nearest_upper_power_of_2(std::pow(this->outer_collisions[j].size(),2)); //
-                a_j = this->A[outer_index];
+                l_j = std::log2(this->outer_collisions_vector[j]);
+                a_j = this->A[j];
                 for(key_type key: this->outer_collisions[j])
                 {
-                    inner_index = hash(key, a_j, l_j);
-                    (this->outer_table[outer_index])[inner_index].push_back(key);
+                    (this->outer_table[j])[hash(key, a_j, l_j)].push_back(key);
                 }
             }
         }
-        auto stop_3= std::chrono::high_resolution_clock::now();
-        std::cout << "Process 3: " << duration_cast<std::chrono::nanoseconds>(stop_3 - start_3).count() << std::endl << std::endl;
+        //auto stop_3= std::chrono::high_resolution_clock::now();
+        //std::cout << "Process 3: " << duration_cast<std::chrono::nanoseconds>(stop_3 - start_3).count() << std::endl << std::endl;
 
-        auto start_4 = std::chrono::high_resolution_clock::now();
-        // Making sure that there are no collisions in inner tables
+        //auto start_4 = std::chrono::high_resolution_clock::now();
+        /////// ----- Making sure that there are no collisions in inner tables. ----- ///////
         double avg_counter = 0;
         double counter = 0;
-
-        //start = std::chrono::high_resolution_clock::now();
         generate_hash_consts(seed);
-        //stop = std::chrono::high_resolution_clock::now();
-        //insertion_duration = duration_cast<std::chrono::nanoseconds>(stop - start).count();
-        //std::cout << "generator: " << insertion_duration << std::endl;
-
         for(int j = 0; j < this->m; j++)
         {
             // Only check inner hash tables that holds any keys
-
             if(!this->outer_collisions[j].empty())
             {
                 seed_shift = 1;
-                outer_index = j;
-                m_j = std::pow(this->outer_collisions[j].size(),2);
-                l_j = std::log2(m_j); // TODO: If m_j is not power of 2 (for use of multiply-shift hashing) - what should l_j be?
-                a_j = this->A[outer_index];
 
-                bool with_collisions = false;
+
                 //start = std::chrono::high_resolution_clock::now();
-                while (has_collisions(this->outer_table[outer_index]))
+                while (has_collisions(this->outer_table[j]))
                 {
-                    with_collisions = true;
                     // Remove keys from lists in inner hash table.
-                    clear_lists(this->outer_table[outer_index]);
+                    clear_lists(this->outer_table[j]);
 
                     // Re-calculate hash function const 'a' for given inner hash table.
-                    this->A[outer_index] = get_random_odd_uint32(seed + seed_shift);
-                    a_j = this->A[outer_index];
-
+                    this->A[j] = get_random_odd_uint32(seed + seed_shift * 11);
+                    m_j = this->outer_collisions_vector[j];
+                    l_j = std::log2(m_j);
+                    a_j = this->A[j];
 
                     // Re-fill keys in given inner hash table.
-                    for(key_type key : this->outer_collisions[outer_index])
+                    for(key_type key : this->outer_collisions[j])
                     {
-                        inner_index = hash(key,a_j,l_j);
-                        (this->outer_table[outer_index])[inner_index].push_back(key);
+                        (this->outer_table[j])[hash(key,a_j,l_j)].push_back(key);
                     }
 
                     // Increment seed shift for new hash func seed.
                     seed_shift += 1;
                     seed_shift *= 3; // Multiply seed by odd int to avoid getting same a_j even though different seed.
-                    //avg_counter++;
                 }
-                //stop = std::chrono::high_resolution_clock::now();
-                //insertion_duration = duration_cast<std::chrono::nanoseconds>(stop - start).count();
-                //if(with_collisions)
-                //{
-                //    counter++;
-                    //std::cout << "While loop time pr. iteration: " << insertion_duration << " ns" << std::endl;
-                //}
             }
         }
-        auto stop_4 = std::chrono::high_resolution_clock::now();
-        std::cout << "Process 4: " << duration_cast<std::chrono::nanoseconds>(stop_4 - start_4).count() << std::endl << std::endl;
+        //auto stop_4 = std::chrono::high_resolution_clock::now();
+        //std::cout << "Process 4: " << duration_cast<std::chrono::nanoseconds>(stop_4 - start_4).count() << std::endl << std::endl;
 
     }
 
@@ -271,7 +286,7 @@ public:
         key_type m_j, l_j, a_j;
         m_j = (this->outer_table[outer_index]).size();
         // Only start iterating through linked list if bucket is not empty
-        if (m_j > 0) // If table is length zero hashfunction will not make sense and faulty index will occur in
+        if (m_j > 1) // If table is length zero hashfunction will not make sense and faulty index will occur in
         {
             l_j = std::log2(m_j);
             a_j = (this->A)[outer_index];
@@ -283,6 +298,7 @@ public:
             }
 
         }
+        if(m_j == 1) return true;
         return false;
     }
 
