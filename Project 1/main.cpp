@@ -14,23 +14,25 @@ static_assert((CHAR_BIT * sizeof(key_type) == KEY_BIT_SIZE), "Adjust key_type to
 
 int main()
 {
-    //// ----------------- Testing Hashing With Chaining implementation ----------------- ////
+    const unsigned int iterations = 1;
 
+    //// ----------------- Testing Hashing With Chaining implementation ----------------- ////
+    std::cout << " \n-------- Hashing with Chaining --------\n " << std::endl;
 
     using hash_table = HashingWithChaining<key_type, array_type , linked_list_type>;
 
-    unsigned int nr_seeds = 10;
+    unsigned int nr_seeds = 0;
     std::string folder_path = "../../Data/HashingWithChaining";
     for(unsigned int seed = 0; seed < nr_seeds; seed++)
     {
-        std::cout << "Iteration nr.: " << seed << std::endl;
+        std::cout << "Seed iteration nr.: " << seed << std::endl;
 
         // Timing insertion and query for various n
         std::string filename = "HWC_insertion_timing_"+std::to_string(3*seed)+".txt";
         remove_file(filename,folder_path); // Removing possibly already existing file with name 'filename' from drive.
-        const unsigned int iterations = 19;
         for(key_type w = 5; w <= (key_type)(5+iterations); w++)
         {
+            //std::cout << "n=2^" << w << std::endl;
             // Defining number of keys as power of 2 to enable use of Multiply-Shift hash function
             key_type n = std::pow(2,w);
 
@@ -65,20 +67,21 @@ int main()
 
 
     //// ----------------- Testing std::set AKA Red-Black Tree ----------------- ////
+    std::cout << " \n-------- Red-Black Tree --------\n " << std::endl;
     using red_black_tree = RedBlackTree<key_type, array_type>;
 
-    nr_seeds = 10;
+    nr_seeds = 0;
     folder_path = "../../Data/RedBlackTree";
     for(unsigned int seed = 0; seed < nr_seeds; seed++)
     {
-        std::cout << "Iteration nr.: " << seed << std::endl;
+        std::cout << "Seed iteration nr.: " << seed << std::endl;
 
         // Timing insertion and query for various n
         std::string filename = "RBT_insertion_timing_"+std::to_string(3*seed)+".txt";
         remove_file(filename,folder_path); // Removing possibly already existing file with name 'filename' from drive.
-        const unsigned int iterations = 19;
         for(key_type w = 5; w <= (key_type)(5+iterations); w++)
         {
+            //std::cout << "n=2^" << w << std::endl;
             // Defining number of keys as power of 2 to enable use of Multiply-Shift hash function
             key_type n = std::pow(2,w);
 
@@ -108,24 +111,25 @@ int main()
     }
 
     //// ----------------- Testing Perfect Hashing implementation ----------------- ////
+    std::cout << " \n-------- Perfect Hashing --------\n " << std::endl;
 
     using PerfectHashing = PerfectHashing<key_type, array_type, linked_list_type>;
-    nr_seeds = 10;
+    nr_seeds = 1;
     folder_path = "../../Data/PerfectHashing";
     for(unsigned int seed = 0; seed < nr_seeds; seed++)
     {
-        std::cout << "Iteration nr.: " << seed << std::endl;
+        std::cout << "Seed iteration nr.: " << seed << std::endl;
 
         // Timing insertion and query for various n
         std::string filename = "PH_insertion_timing_"+std::to_string(3*seed)+".txt";
         remove_file(filename,folder_path); // Removing possibly already existing file with name 'filename' from drive.
-        const unsigned int iterations = 19;
         for(key_type w = 5; w <= (key_type)(5+iterations); w++)
         {
+            std::cout << "n=2^" << w << std::endl;
             // Defining number of keys as power of 2 to enable use of Multiply-Shift hash function
             key_type n = std::pow(2,w);
 
-            // Generating Red Black tree and keys
+            // Generating perfect hashing structure and keys
             PerfectHashing my_perfect_hash_table = PerfectHashing (n, 3*seed);
             array_type my_keys = generate_ordered_keys(n);
 
@@ -134,6 +138,8 @@ int main()
             my_perfect_hash_table.insert_keys(my_keys,3*seed);
             auto stop = std::chrono::high_resolution_clock::now();
             output_data_type insertion_duration = duration_cast<std::chrono::nanoseconds>(stop - start).count();
+            std::cout << "Total time: " << insertion_duration << " ns " << std::endl;
+            std::cout << "Total time pr. key: " << insertion_duration / n << std::endl << std::endl;
 
             // Testing query complexity
             array_type random_keys = generate_random_keys(n,3*seed);

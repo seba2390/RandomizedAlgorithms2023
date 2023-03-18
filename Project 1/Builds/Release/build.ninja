@@ -51,14 +51,14 @@ build cmake_object_order_depends_target_main: phony || CMakeFiles/main.dir
 
 build CMakeFiles/main.dir/main.cpp.o: CXX_COMPILER__main_Release /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div.$ Github$ projekter/RandomizedAlgorithms2023/Project$ 1/main.cpp || cmake_object_order_depends_target_main
   DEP_FILE = CMakeFiles/main.dir/main.cpp.o.d
-  FLAGS = -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -std=gnu++17
+  FLAGS = -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -std=gnu++2a
   INCLUDES = -I"/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 1/Include" -isystem /opt/homebrew/include/eigen3
   OBJECT_DIR = CMakeFiles/main.dir
   OBJECT_FILE_DIR = CMakeFiles/main.dir
 
 build CMakeFiles/main.dir/Include/Utilities.cpp.o: CXX_COMPILER__main_Release /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div.$ Github$ projekter/RandomizedAlgorithms2023/Project$ 1/Include/Utilities.cpp || cmake_object_order_depends_target_main
   DEP_FILE = CMakeFiles/main.dir/Include/Utilities.cpp.o.d
-  FLAGS = -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -std=gnu++17
+  FLAGS = -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -std=gnu++2a
   INCLUDES = -I"/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 1/Include" -isystem /opt/homebrew/include/eigen3
   OBJECT_DIR = CMakeFiles/main.dir
   OBJECT_FILE_DIR = CMakeFiles/main.dir/Include

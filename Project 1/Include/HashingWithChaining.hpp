@@ -53,7 +53,7 @@ public:
     // Methods
     void insert(const key_type& key)
     {
-        this->hash_table[hash(key, this->m, this->a, this->l)].push_back(std::move(key));
+        this->hash_table[hash(key, this->a, this->l)].push_back(std::move(key));
     }
 
     void insert_keys(const array_type& keys)
@@ -66,7 +66,7 @@ public:
         /*
          * Checks whether the provided key is stored in the hash table.
          */
-        key_type index = hash(key, this->m, this->a, this->l);
+        key_type index = hash(key, this->a, this->l);
 
         // Only start iterating through linked list if bucket is not empty
         if(!this->hash_table[index].empty())

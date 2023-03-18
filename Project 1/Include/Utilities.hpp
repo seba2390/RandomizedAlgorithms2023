@@ -36,7 +36,7 @@ key_type get_random_uint32(const key_type& seed);
 
 key_type get_random_odd_uint32(const key_type& seed);
 
-key_type hash(key_type key, key_type n, key_type a, key_type l);
+key_type hash(key_type key, key_type a, key_type l);
 
 array_type generate_ordered_keys(const unsigned int& n);
 
