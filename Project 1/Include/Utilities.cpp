@@ -6,11 +6,9 @@
 
 key_type get_random_uint32(const key_type& seed) {
     // create a random number generator and seed it.
-    //std::mt19937 generator(seed);
     XoshiroCpp::Xoshiro128PlusPlus generator(seed);
 
     // create a uniform distribution that generates values in the range [0, 2^bit-size(keytype) - 1]
-    //std::uniform_int_distribution<key_type> distribution(0, std::pow(2,KEY_BIT_SIZE) - 1);
     std::uniform_int_distribution<key_type> distribution(0, std::pow(2,KEY_BIT_SIZE) - 1);
 
     // generate and return a random bit-size(keytype)-bit integer
