@@ -16,7 +16,10 @@
 #include <filesystem>
 #include <set>
 #include <algorithm>    // std::random_shuffle
+
 #include <Eigen/Dense>
+
+#include <Xoshiro.hpp>
 
 #define KEY_BIT_SIZE 32
 

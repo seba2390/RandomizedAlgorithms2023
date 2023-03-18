@@ -84,51 +84,8 @@ private:
         return false;
     }
 
-    unsigned int sum_of_squares(const inner_hash_table_type& collision_lists)
-    {
-        /*
-         * Calculates sum of squared size of each bucket in outer table, where each squared
-         * size is rounded to the nearest power of 2 (due to using multiply-shift hash function).
-         * */
-        unsigned int sum_of_squares = 0;
-        for(list_type list: collision_lists)
-        {
-            if(!list.empty())
-            {
-                //sum_of_squares +=  std::pow(nearest_power_of_2((key_type)std::pow(list.size(),2)),2);
-                sum_of_squares +=  std::pow(nearest_upper_power_of_2((key_type)std::pow(list.size(),2)),2);
-            }
-        }
-        return sum_of_squares;
-    }
 
-    unsigned int nearest_power_of_2(const key_type& m)
-    {
-        /*
-         * Given a number 'm', calculates the number 'l', l >= 1,  such
-         * that the expression |(2^l)-m| is minimized.
-         * */
 
-        if(m == 1) return 1; // rounds up to 2^1.
-        else
-        {
-            return (unsigned int)round((double)std::log2(m));
-        }
-    }
-
-    unsigned int nearest_upper_power_of_2(const key_type& m)
-    {
-        /*
-         * Given a number 'm', calculates the number 'l', l >= 1,  such
-         * that the expression |(2^l)-m| is minimized.
-         * */
-
-        if(m == 1) return 1; // rounds up to 2^1.
-        else
-        {
-            return (unsigned int)std::ceil(std::log2(m));
-        }
-    }
 
 public:
 
@@ -237,8 +194,6 @@ public:
 
         //auto start_4 = std::chrono::high_resolution_clock::now();
         /////// ----- Making sure that there are no collisions in inner tables. ----- ///////
-        double avg_counter = 0;
-        double counter = 0;
         generate_hash_consts(seed);
         for(int j = 0; j < this->m; j++)
         {
@@ -246,7 +201,6 @@ public:
             if(!this->outer_collisions[j].empty())
             {
                 seed_shift = 1;
-
 
                 //start = std::chrono::high_resolution_clock::now();
                 while (has_collisions(this->outer_table[j]))
