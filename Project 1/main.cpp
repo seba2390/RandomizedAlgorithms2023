@@ -14,7 +14,7 @@ static_assert((CHAR_BIT * sizeof(key_type) == KEY_BIT_SIZE), "Adjust key_type to
 
 int main()
 {
-    const unsigned int iterations = 10;
+    const unsigned int iterations = 18;
     const unsigned int seed_multiplier = 11;
 
     //// ----------------- Testing Hashing With Chaining implementation ----------------- ////
@@ -22,7 +22,7 @@ int main()
 
     using hash_table = HashingWithChaining<key_type, array_type , linked_list_type>;
 
-    unsigned int nr_seeds = 100;
+    unsigned int nr_seeds = 50;
     std::string folder_path = "../../Data/HashingWithChaining";
     for(unsigned int seed = 0; seed < nr_seeds; seed++)
     {
@@ -71,7 +71,7 @@ int main()
     std::cout << " \n-------- Red-Black Tree --------\n " << std::endl;
     using red_black_tree = RedBlackTree<key_type, array_type>;
 
-    nr_seeds = 100;
+    nr_seeds = 50;
     folder_path = "../../Data/RedBlackTree";
     for(unsigned int seed = 0; seed < nr_seeds; seed++)
     {
@@ -115,7 +115,7 @@ int main()
     std::cout << " \n-------- Perfect Hashing --------\n " << std::endl;
 
     using PerfectHashing = PerfectHashing<key_type, array_type, linked_list_type>;
-    nr_seeds = 100;
+    nr_seeds = 50;
     folder_path = "../../Data/PerfectHashing";
     for(unsigned int seed = 0; seed < nr_seeds; seed++)
     {
