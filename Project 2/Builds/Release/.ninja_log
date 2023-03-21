@@ -1,0 +1,4 @@
+# ninja log v5
+972	1005	1679260794470873786	main	8049c32a9592d15b
+3	972	1679260794434357465	CMakeFiles/main.dir/main.cpp.o	2da5ecd0f18c84fe
+3	790	1679260753881207852	CMakeFiles/main.dir/Include/Utilities.cpp.o	84b60e8e7176d94a
