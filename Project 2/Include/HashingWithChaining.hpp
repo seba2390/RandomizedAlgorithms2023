@@ -9,14 +9,13 @@ template <typename key_type, typename pair_type, typename array_type, typename l
 class HashingWithChaining
 {
 private:
+    // Typedefs
     using hash_table_type = std::vector<list_type>;
     using sum_type = int64_t;
 
     // Attributes
     unsigned int m;
-
     key_type a, l;
-
     bool empty;
 
 
