@@ -4,24 +4,24 @@
 
 #include "Utilities.hpp"
 
-key_type get_random_uint32(const key_type& seed) {
+key_type get_random_uint32(const key_type& seed, const key_type& upper_bound) {
     // create a random number generator and seed it.
     XoshiroCpp::Xoshiro128PlusPlus generator(seed);
 
     // create a uniform distribution that generates values in the range [0, 2^bit-size(keytype) - 1]
-    std::uniform_int_distribution<key_type> distribution(0, std::pow(2,KEY_BIT_SIZE) - 1);
+    std::uniform_int_distribution<key_type> distribution(0, upper_bound); // upper bound = std::pow(2,KEY_BIT_SIZE) - 1 for multiply shift
 
     // generate and return a random bit-size(keytype)-bit integer
     return (key_type)distribution(generator);
 }
 
-key_type get_random_odd_uint32(const key_type& seed)
+key_type get_random_odd_uint32(const key_type& seed, const key_type& upper_bound)
 {
     unsigned int counter = 1;
-    key_type a =  get_random_uint32(seed);
+    key_type a =  get_random_uint32(seed, upper_bound);
 
     while ( a % 2 == 0) {
-        a = get_random_uint32(seed + counter);
+        a = get_random_uint32(seed + counter, upper_bound);
         counter++;
     }
 

@@ -23,6 +23,7 @@
 
 #define KEY_BIT_SIZE 32
 #define NAN_TOKEN 0
+#define MERSENNE_PRIME 2147483648 - 1 // 2^31 - 1
 
 // Defining types.
 using key_type = int32_t;
@@ -39,9 +40,9 @@ using column_vector = Eigen::Matrix<key_type,Eigen::Dynamic, 1>;
 using linked_list_type = std::list<pair_type>;
 using output_data_type = double_t;
 
-key_type get_random_uint32(const key_type& seed);
+key_type get_random_uint32(const key_type& seed, const key_type& upper_bound);
 
-key_type get_random_odd_uint32(const key_type& seed);
+key_type get_random_odd_uint32(const key_type& seed, const key_type& upper_bound);
 
 key_type multiply_shift_hash(key_type key, key_type a, key_type l);
 
