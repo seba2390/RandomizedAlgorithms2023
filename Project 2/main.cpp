@@ -19,7 +19,7 @@ int main()
     for(key_type i = 0; i < 10; i++)
     {
         // Constant for other 4-wise independent hash function  (remember to use different seeds).
-        mersenne_hashing_constants.a = get_random_uint32(seed+i, mersenne_upper_bound);
+        mersenne_hashing_constants.a = get_random_uint32(seed+1*i, mersenne_upper_bound);
         mersenne_hashing_constants.b = get_random_uint32(seed+7*i, mersenne_upper_bound);
         mersenne_hashing_constants.c = get_random_uint32(seed+3*i, mersenne_upper_bound);
         mersenne_hashing_constants.d = get_random_uint32(seed+5*i, mersenne_upper_bound);
