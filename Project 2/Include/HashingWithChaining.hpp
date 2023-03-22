@@ -17,6 +17,8 @@ private:
 
     key_type a, l;
 
+    bool empty;
+
 
     // Methods
     void initialize_hash_table()
@@ -36,6 +38,7 @@ private:
 
         this->a = get_random_odd_uint32(seed);
         this->l = std::log2(this->m); // if m = 2^l then l = log2(m)
+        this->empty = true;
     }
 
 public:
@@ -99,22 +102,45 @@ public:
     void add(key_type key, int32_t delta)
     {
 
-        // Checking if key is already in table
-        std::tuple<key_type,key_type,bool> result = holds(key);
-        if(std::get<2>(result))
-        {
-            // Then just add delta to value in pair
-            key_type array_index = std::get<0>(result);
-            key_type list_index = std::get<1>(result);
-            (this->hash_table[array_index])[list_index].second += delta;
+        // Only performing checks if table holds any pairs
+        if(!this->empty){
+            // Checking if key is already in table
+            std::tuple<key_type,key_type,bool> result = holds(key);
+            if(std::get<2>(result))
+            {
+                // Then just add delta to value in pair
+                key_type array_index = std::get<0>(result);
+                key_type list_index = std::get<1>(result);
+                (this->hash_table[array_index])[list_index].second += delta;
+            } else
+            {
+                // Then just append pair to end of list
+                key_type array_index = hash(key, this->a, this->l);
+                (this->hash_table[array_index]).push_back(std::make_pair(key, 0+delta));
+            }
         } else
         {
             // Then just append pair to end of list
             key_type array_index = hash(key, this->a, this->l);
             (this->hash_table[array_index]).push_back(std::make_pair(key, 0+delta));
+            // Set table not empty
+            this->empty = false;
         }
 
     }
 
-
+    sum_type sum_of_squares()
+    {
+        sum_type result = 0;
+        for(const list_type& list: this->hash_table)
+            if(!list.empty())
+            {
+                for(const pair_type& pair: list)
+                {
+                    sum_type v = static_cast<sum_type>(pair.second);
+                    result += v*v;
+                }
+            }
+        return result;
+    }
 };
