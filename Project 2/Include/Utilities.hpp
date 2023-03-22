@@ -32,10 +32,10 @@ using pair_type = std::pair<key_type,value_type>;
 
 struct hashing_constants {
     // Storing as 64-bit because exercise 4 requires it to evaluate 'mod' operation efficiently.
-    key_type a;
-    key_type b;
-    key_type c;
-    key_type d;
+    uint64_t a;
+    uint64_t b;
+    uint64_t c;
+    uint64_t d;
 };
 
 /* N.B. the std::list in c++ is a doubly linked list,
@@ -54,8 +54,6 @@ key_type get_random_odd_uint32(const key_type& seed, const key_type& upper_bound
 key_type multiply_shift_hash(key_type key, key_type a, key_type l);
 
 uint64_t mersenne_4_independent_hash(key_type key,  hashing_constants constants);
-
-key_type slow_mersenne_4_independent_hash(key_type key,  hashing_constants constants);
 
 void append_to_file(std::string filename, std::string path, std::vector<output_data_type> data);
 

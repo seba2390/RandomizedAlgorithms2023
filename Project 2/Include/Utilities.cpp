@@ -52,27 +52,25 @@ key_type multiply_shift_hash(key_type key, key_type a, key_type l)
     return (a * key) >> (KEY_BIT_SIZE - l);
 }
 
-key_type slow_mersenne_4_independent_hash(key_type key,  hashing_constants constants)
-{
-    key_type p = std::pow(2,MERSENNE_PRIME_EXPONENT) - 1;
-    return (constants.a*(key_type)std::pow(key,3)+constants.b*(key_type)std::pow(constants.b,2)+constants.c*key+constants.d)%p;
-}
-
 uint64_t mersenne_4_independent_hash(key_type key,  hashing_constants constants)
 {
-    key_type q = MERSENNE_PRIME_EXPONENT;
-    key_type p = std::pow(2,q) - 1;
-    uint64_t k;
 
-    k = ((constants.a*key+constants.b)&p) + ((constants.a*key+constants.b)>>q);
-    if(k>=p) k-=p;
+    uint64_t x = key;
+    uint64_t q = MERSENNE_PRIME_EXPONENT;
+    uint64_t p = std::pow(2,q) - 1;
 
-    k = ((k*key+constants.c)&p) + ((constants.a*key+constants.b)>>q);
-    if(k>=p) k-=p;
+    //TODO: Find out why three different k's are needed for correct result
+    uint64_t k, k1, k2;
 
-    k = ((k*key+constants.d)&p) + ((constants.a*key+constants.b)>>q);
-    if(k>=p) k-=p;
-    return k;
+    k = ((constants.a*x+constants.b)&p) + ((constants.a*x+constants.b)>>q);
+    if (k >= p) k-=p;
+
+    k1 = ((k*x+constants.c)&p) + ((k*x+constants.c)>>q);
+    if (k1 >= p) k1-=p;
+
+    k2 = ((k1*x+constants.d)&p) + ((k1*x+constants.d)>>q);
+    if (k2 >= p) k2-=p;
+    return k2;
 }
 void append_to_file(std::string filename, std::string path, std::vector<output_data_type> data)
 {
