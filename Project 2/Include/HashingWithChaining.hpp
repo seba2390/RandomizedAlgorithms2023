@@ -136,7 +136,7 @@ public:
             {
                 for(const pair_type& pair: list)
                 {
-                    sum_type v = static_cast<sum_type>(pair.second);
+                    sum_type v = static_cast<sum_type>(pair.second); // TODO: Only necessary if key_type is 32-bit.
                     result += v*v;
                 }
             }
