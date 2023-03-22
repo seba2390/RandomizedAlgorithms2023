@@ -30,7 +30,7 @@ key_type get_random_odd_uint32(const key_type& seed)
 }
 
 
-key_type hash(key_type key, key_type a, key_type l)
+key_type multiply_shift_hash(key_type key, key_type a, key_type l)
 {
     /*
      * Multiply-shift hashing function. Only maps to a power of two: [2^w] -> [2^l]. As such, choose

@@ -70,7 +70,7 @@ public:
         /*
          * Checks whether the provided key is stored in the hash table.
          */
-        key_type array_index = hash(key, this->a, this->l);
+        key_type array_index = multiply_shift_hash(key, this->a, this->l);
 
         // Only start iterating through linked list if bucket is not empty
         if(!this->hash_table[array_index].empty())
@@ -114,13 +114,13 @@ public:
             } else
             {
                 // Then just append pair to end of list
-                key_type array_index = hash(key, this->a, this->l);
+                key_type array_index = multiply_shift_hash(key, this->a, this->l);
                 (this->hash_table[array_index]).push_back(std::make_pair(key, 0+delta));
             }
         } else
         {
             // Then just append pair to end of list
-            key_type array_index = hash(key, this->a, this->l);
+            key_type array_index = multiply_shift_hash(key, this->a, this->l);
             (this->hash_table[array_index]).push_back(std::make_pair(key, 0+delta));
             // Set table not empty
             this->empty = false;

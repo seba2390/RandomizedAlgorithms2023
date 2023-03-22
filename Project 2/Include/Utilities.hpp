@@ -25,7 +25,7 @@
 #define NAN_TOKEN 0
 
 // Defining types.
-using key_type = uint32_t;
+using key_type = int32_t;
 using value_type = int32_t;
 using pair_type = std::pair<key_type,value_type>;
 
@@ -43,7 +43,7 @@ key_type get_random_uint32(const key_type& seed);
 
 key_type get_random_odd_uint32(const key_type& seed);
 
-key_type hash(key_type key, key_type a, key_type l);
+key_type multiply_shift_hash(key_type key, key_type a, key_type l);
 
 void append_to_file(std::string filename, std::string path, std::vector<output_data_type> data);
 
