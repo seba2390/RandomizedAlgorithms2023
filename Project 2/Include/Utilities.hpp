@@ -2,8 +2,8 @@
 // Created by Sebastian Yde Madsen on 02/03/2023.
 //
 
-#ifndef PROJECT_1_UTILITIES_HPP
-#define PROJECT_1_UTILITIES_HPP
+#ifndef PROJECT_2_UTILITIES_HPP
+#define PROJECT_2_UTILITIES_HPP
 
 #include <iostream>
 #include <climits>
@@ -16,6 +16,8 @@
 #include <filesystem>
 #include <set>
 #include <algorithm>    // std::random_shuffle
+#include <array>
+#include <type_traits>
 
 #include <Eigen/Dense>
 
@@ -63,6 +65,7 @@ void append_to_file(std::string filename, std::string path, std::vector<output_d
 
 void remove_file(std::string filename, std::string path);
 
-void print_flag();
+template <typename T>
+void print(const T &value);
 
-#endif //PROJECT_1_UTILITIES_HPP
+#endif //PROJECT_2_UTILITIES_HPP

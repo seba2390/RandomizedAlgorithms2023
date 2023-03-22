@@ -18,8 +18,10 @@ private:
     key_type a, l;
     bool empty;
 
-    key_type multiply_shift_upper_bound = std::pow(2,KEY_BIT_SIZE) - 1;
-    key_type mersenne_upper_bound = std::pow(2,MERSENNE_PRIME_EXPONENT) - 1;
+    // Equivalent to 2^KEY_BIT_SIZE - 1
+    key_type multiply_shift_upper_bound = fast_uint32_pow_2(KEY_BIT_SIZE) - 1;
+    // Equivalent to 2^MERSENNE_PRIME_EXPONENT - 1
+    key_type mersenne_upper_bound = fast_uint32_pow_2(MERSENNE_PRIME_EXPONENT) - 1;
 
     hashing_constants mersenne_hashing_constants;
 

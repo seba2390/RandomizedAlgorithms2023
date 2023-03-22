@@ -135,7 +135,66 @@ void remove_file(std::string filename,  std::string path)
     }
 }
 
-void print_flag()
-{
-    std::cout << "PRINTING HERE!!!" << std::endl;
+template <typename T>
+void print(const T &value) {
+    // First checking for normal printable single-item types
+    if constexpr (std::is_arithmetic_v<T> || std::is_same_v<T, std::string> || std::is_same_v<T, const char*>)
+    {
+        std::cout << value << std::endl;
+    }
+    else if constexpr (std::is_array_v<T> && std::is_same_v<std::remove_extent_t<T>, char>)
+    {
+        std::cout << value << std::endl;
+    }
+    else
+    {
+        // Checking if T is array type
+        if constexpr (std::is_array_v<T>) {
+            std::cout << '[';
+            for (const auto& element : value) {
+                std::cout << element << ", ";
+            }
+            std::cout << "\b\b]" << std::endl;
+        }
+
+        // Checking if T is vector type
+        else if constexpr (std::is_same_v<T, std::vector<typename T::value_type, typename T::allocator_type>>) {
+            std::cout << '[';
+            for (const auto& element : value) {
+                std::cout << element << ", ";
+            }
+            std::cout << "\b\b]" << std::endl;
+        }
+
+        // Checking if T is list type
+        else if constexpr (std::is_same_v<T, std::list<typename T::value_type, typename T::allocator_type>>) {
+            std::cout << '[';
+            for (const auto &element: value) {
+                std::cout << element << ", ";
+            }
+            std::cout << "\b\b]" << std::endl;
+        }
+            // Checking if T can be converted to std::string
+        else if constexpr (std::is_convertible_v<T, std::string>) {
+            std::cout << value << std::endl;
+        }
+    }
 }
+
+template void print<int>(const int&);
+template void print<double>(const double&);
+template void print<std::string>(const std::string&);
+template void print<const char*>(const char* const&);
+template void print<bool>(const bool&);
+
+template void print<std::vector<int>>(const std::vector<int>&);
+template void print<std::vector<double>>(const std::vector<double>&);
+template void print<std::vector<std::string>>(const std::vector<std::string>&);
+template void print<std::vector<const char*>>(const std::vector<const char*>&);
+template void print<std::vector<bool>>(const std::vector<bool>&);
+
+template void print<std::list<int>>(const std::list<int>&);
+template void print<std::list<double>>(const std::list<double>&);
+template void print<std::list<std::string>>(const std::list<std::string>&);
+template void print<std::list<const char*>>(const std::list<const char*>&);
+template void print<std::list<bool>>(const std::list<bool>&);
