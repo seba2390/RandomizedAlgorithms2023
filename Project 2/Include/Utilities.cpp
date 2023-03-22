@@ -40,6 +40,21 @@ key_type get_random_odd_uint32(const key_type& seed, const key_type& upper_bound
     return a;
 }
 
+uint32_t fast_uint32_pow_2(const uint32_t& power)
+{
+    /*
+     * Calculates 2^q for some positive 32-bit integer in a fast manner.
+     * */
+    return UINT32_C(1) << power;
+}
+
+uint64_t fast_uint64_pow_2(const uint64_t& power)
+{
+    /*
+     * Calculates 2^q for some positive 64-bit integer in a fast manner.
+     * */
+    return 1ULL << power;
+}
 
 key_type multiply_shift_hash(key_type key, key_type a, key_type l)
 {
@@ -57,9 +72,8 @@ std::pair<int64_t,int64_t> mersenne_4_independent_hash(key_type key, key_type ar
     int64_t r = array_size;
     uint64_t x = key;
     uint64_t q = MERSENNE_PRIME_EXPONENT;
-    uint64_t p = std::pow(2,q) - 1;
+    uint64_t p = (1ULL << q) - 1;  //std::pow(2,q) - 1;
 
-    //TODO: Find out why three different k's are needed for correct result
     int64_t k, k1, k2;
 
     k = ((constants.a*x+constants.b)&p) + ((constants.a*x+constants.b)>>q);
@@ -71,6 +85,8 @@ std::pair<int64_t,int64_t> mersenne_4_independent_hash(key_type key, key_type ar
     k2 = ((k1*x+constants.d)&p) + ((k1*x+constants.d)>>q);
     if (k2 >= p) k2-=p;
 
+    std::cout << "k2: " << k2 << std::endl;
+    //TODO: Find out why three different k's are needed for correct result
     /*
      * (k2 & 1): returns the Least Significant Bit (LSB) of k2.
      * LSB is the rightmost bit of the bitstring - this is always {0,1}.

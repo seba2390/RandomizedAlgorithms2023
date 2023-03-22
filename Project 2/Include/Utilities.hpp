@@ -55,6 +55,10 @@ key_type multiply_shift_hash(key_type key, key_type a, key_type l);
 
 std::pair<int64_t,int64_t> mersenne_4_independent_hash(key_type key, key_type array_size,  hashing_constants constants);
 
+uint32_t fast_uint32_pow_2(const uint32_t& power);
+
+uint64_t fast_uint64_pow_2(const uint64_t& power);
+
 void append_to_file(std::string filename, std::string path, std::vector<output_data_type> data);
 
 void remove_file(std::string filename, std::string path);
