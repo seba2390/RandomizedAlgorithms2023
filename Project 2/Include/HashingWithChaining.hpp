@@ -63,24 +63,28 @@ public:
         for(pair_type pair : key_value_pairs) insert(pair);
     }
 
-    bool holds(const pair_type& pair)
+    std::tuple<key_type, key_type, bool> holds(const key_type& key)
     {
         /*
          * Checks whether the provided key is stored in the hash table.
          */
-        key_type key = pair.first;
-        key_type index = hash(key, this->a, this->l);
+        key_type array_index = hash(key, this->a, this->l);
 
         // Only start iterating through linked list if bucket is not empty
-        if(!this->hash_table[index].empty())
+        if(!this->hash_table[array_index].empty())
         {
-            auto iterator = std::find(this->hash_table[index].begin(), this->hash_table[index].end(), pair);
-            if(iterator != this->hash_table[index].end())
+            // Using lambda function in iterator to check if the first value in the pair (the key value) equals given key.
+            auto iterator = std::find_if(this->hash_table[array_index].begin(),
+                                         this->hash_table[array_index].end(),
+                                         [=](const pair_type& p){return p.first == key;}
+                                         );
+            if(iterator != this->hash_table[array_index].end())
             {
-                return true;
+                key_type list_index = std::distance(this->hash_table[array_index].begin(), iterator);
+                return std::make_tuple(array_index, list_index, true);
             }
         }
-        return false;
+        return std::make_tuple(NAN_TOKEN, NAN_TOKEN, true);
     }
     unsigned int max_bucket_size()
     {
@@ -90,6 +94,26 @@ public:
             if(this->hash_table[m_i].size() > max_size) max_size = this->hash_table[m_i].size();
         }
         return max_size;
+    }
+
+    void add(key_type key, int32_t delta)
+    {
+
+        // Checking if key is already in table
+        std::tuple<key_type,key_type,bool> result = holds(key);
+        if(std::get<2>(result))
+        {
+            // Then just add delta to value in pair
+            key_type array_index = std::get<0>(result);
+            key_type list_index = std::get<1>(result);
+            (this->hash_table[array_index])[list_index].second += delta;
+        } else
+        {
+            // Then just append pair to end of list
+            key_type array_index = hash(key, this->a, this->l);
+            (this->hash_table[array_index]).push_back(std::make_pair(key, 0+delta));
+        }
+
     }
 
 

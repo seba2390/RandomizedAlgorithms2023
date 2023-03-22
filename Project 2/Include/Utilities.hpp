@@ -22,10 +22,11 @@
 #include <Xoshiro.hpp>
 
 #define KEY_BIT_SIZE 32
+#define NAN_TOKEN 0
 
 // Defining types.
 using key_type = uint32_t;
-using value_type = uint32_t;
+using value_type = int32_t;
 using pair_type = std::pair<key_type,value_type>;
 
 using array_type = std::vector<key_type>;
