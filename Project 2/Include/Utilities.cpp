@@ -142,10 +142,6 @@ void print(const T &value) {
     {
         std::cout << value << std::endl;
     }
-    else if constexpr (std::is_array_v<T> && std::is_same_v<std::remove_extent_t<T>, char>)
-    {
-        std::cout << value << std::endl;
-    }
     else
     {
         // Checking if T is array type
