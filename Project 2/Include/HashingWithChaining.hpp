@@ -19,14 +19,9 @@ private:
     bool empty;
 
     key_type multiply_shift_upper_bound = std::pow(2,KEY_BIT_SIZE) - 1;
-    key_type mersenne_upper_bound = MERSENNE_PRIME - 1;
+    key_type mersenne_upper_bound = std::pow(2,MERSENNE_PRIME_EXPONENT) - 1;
 
-    struct hashing_constants {
-        key_type a;
-        key_type b;
-        key_type c;
-        key_type d;
-    };
+    hashing_constants mersenne_hashing_constants;
 
 
 
@@ -50,10 +45,10 @@ private:
         this->a = get_random_odd_uint32(seed, this->multiply_shift_upper_bound);
 
         // Constant for other 4-wise independent hash function  (remember to use different seeds).
-        this->hashing_constants.a = get_random_odd_uint32(seed+0, this->mersenne_upper_bound);
-        this->hashing_constants.b = get_random_odd_uint32(seed+1, this->mersenne_upper_bound);
-        this->hashing_constants.c = get_random_odd_uint32(seed+2, this->mersenne_upper_bound);
-        this->hashing_constants.d = get_random_odd_uint32(seed+3, this->mersenne_upper_bound);
+        this->mersenne_hashing_constants.a = (int64_t)get_random_uint32(seed+0, this->mersenne_upper_bound);
+        this->mersenne_hashing_constants.b = (int64_t)get_random_uint32(seed+1, this->mersenne_upper_bound);
+        this->mersenne_hashing_constants.c = (int64_t)get_random_uint32(seed+2, this->mersenne_upper_bound);
+        this->mersenne_hashing_constants.d = (int64_t)get_random_uint32(seed+3, this->mersenne_upper_bound);
 
 
         this->l = std::log2(this->m); // if m = 2^l then l = log2(m)
