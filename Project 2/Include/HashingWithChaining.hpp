@@ -33,6 +33,15 @@ private:
         for(key_type i = 0; i < this->m; i++) hash_table[i] = std::list<key_type>{}; // Setting lists in array/vector.
     }
 
+    void set_mersenne_hash_constants(const unsigned int& seed)
+    {
+        // Constant for other 4-wise independent hash function  (remember to use different seeds).
+        this->mersenne_hashing_constants.a = get_random_uint64(seed+0, this->mersenne_upper_bound);
+        this->mersenne_hashing_constants.b = get_random_uint64(seed+11, this->mersenne_upper_bound);
+        this->mersenne_hashing_constants.c = get_random_uint64(seed+431, this->mersenne_upper_bound);
+        this->mersenne_hashing_constants.d = get_random_uint64(seed+78, this->mersenne_upper_bound);
+    }
+
     void initialize_consts(const unsigned int& seed)
     {
         /*
@@ -41,17 +50,13 @@ private:
          * calling hash function.
          * */
 
-        // Constant for multiply-shift
+        // Constant for multiply-shift hash function.
         this->a = get_random_odd_uint32(seed, this->multiply_shift_upper_bound);
 
         // Constant for other 4-wise independent hash function  (remember to use different seeds).
-        this->mersenne_hashing_constants.a = (int64_t)get_random_uint32(seed+0, this->mersenne_upper_bound);
-        this->mersenne_hashing_constants.b = (int64_t)get_random_uint32(seed+1, this->mersenne_upper_bound);
-        this->mersenne_hashing_constants.c = (int64_t)get_random_uint32(seed+2, this->mersenne_upper_bound);
-        this->mersenne_hashing_constants.d = (int64_t)get_random_uint32(seed+3, this->mersenne_upper_bound);
+        set_mersenne_hash_constants(seed);
 
-
-        this->l = std::log2(this->m); // if m = 2^l then l = log2(m)
+        this->l = std::log2(this->m); // if m = 2^l then l = log2(m).
         this->empty = true;
     }
 
