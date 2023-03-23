@@ -25,26 +25,19 @@ private:
 
 
     // Methods
+    /**
+     * Initializes the hash table by allocating memory for the array/vector, setting its size, and
+     * setting empty lists in each array/vector element.
+     *
+     * @param none
+     *
+     * @return none
+     */
     void initialize_hash_table()
     {
         hash_table.reserve(this->array_size);    // allocate memory for the array/vector
         hash_table.resize(this->array_size);        // initialize the array/vector with the given size
         for(key_type i = 0; i < this->array_size; i++) hash_table[i] = list_type{}; // Setting lists in array/vector.
-    }
-
-
-    void initialize_consts(const unsigned int& seed)
-    {
-        /*
-         * Initializing constants for hash function here
-         * to avoid continuous recalculation when
-         * calling hash function.
-         * */
-
-        // Constant for multiply-shift hash function.
-        this->a = get_random_odd_uint32(seed, this->multiply_shift_upper_bound);
-        this->l = fast_uint64_log_2(this->array_size); // if m = 2^l then l = log2(m).
-        this->empty = true;
     }
 
 public:
@@ -53,16 +46,28 @@ public:
     hash_table_type hash_table;
 
     // Parameterized C-tor
+    /**
+     * Constructs a HashingWithChaining object with the specified parameters.
+     *
+     * @param array_size An unsigned integer representing the size of the hash table array. Must be a power of 2.
+     * @param seed An unsigned integer used as the seed for the multiply-shift hash function.
+     *
+     * @throws std::runtime_error if the value_type used in the Sketch template is not 64-bit.
+     * @throws std::runtime_error if the array_size parameter is not a power of 2.
+     */
     [[maybe_unused]] explicit HashingWithChaining(const unsigned int& array_size, const unsigned int& seed)
     {
      // Checking that 64-bit numbers are used c.f. exercise 6.
      if(!sizeof(value_type) * BITS_PR_BYTE == 64) throw std::runtime_error("'value_type' used in Sketch template should be 64-bit.");
      // For this purpose we assume 'array_size' to be r=2^R (i.e. power of 2).
      if((array_size & (array_size - 1)) != 0) throw std::runtime_error("Array size given to Sketch C-tor should be power of 2.");
-
      this->array_size = array_size;
+
+     // Constant for multiply-shift hash function.
+     this->a = get_random_odd_uint32(seed, this->multiply_shift_upper_bound);
+     this->l = fast_uint64_log_2(this->array_size); // if m = 2^l then l = log2(m).
+     this->empty = true;
      initialize_hash_table();
-     initialize_consts(seed);
     }
 
     // Methods

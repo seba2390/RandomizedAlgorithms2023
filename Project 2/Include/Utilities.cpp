@@ -97,6 +97,13 @@ key_type multiply_shift_hash(key_type key, key_type a, uint32_t l)
     return (a * key) >> (KEY_BIT_SIZE - l);
 }
 
+/**
+ * Computes the Mersenne 4-Independent Hash function on the given key, array size and hashing constants.
+ * @param key the key to be hashed, a 64-bit signed integer
+ * @param array_size the size of the hash table array, a 64-bit unsigned integer
+ * @param constants a struct containing the four hashing constants a, b, c, and d, used for the hash function
+ * @return a pair of two 64-bit signed integers, representing the resulting hash values g and h, respectively
+ * */
 std::pair<int64_t,int64_t> mersenne_4_independent_hash(int64_t key, uint64_t array_size, hashing_constants constants)
 {
     int64_t r = array_size;
@@ -136,7 +143,7 @@ std::pair<int64_t,int64_t> mersenne_4_independent_hash(int64_t key, uint64_t arr
      * up to the bit that corresponds to the highest power of 2 less than or equal to r.
      * Any higher-order bits of (k2 >> 1) that are above the bit corresponding to r are unaffected by the mask.
      *
-     * Effectively (k2 >> 1) & (r-1) corresponds to k2 mod r, when r = 2^R (r is a power of 2).
+     * Effectively (k2 >> 1) & (r-1) corresponds to first bit shifting k2 by 1, and then performing mod r, when r = 2^R (r is a power of 2).
      */
     int64_t h = (k2 >> 1) & (r-1);
 
