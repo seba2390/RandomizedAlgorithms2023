@@ -131,6 +131,37 @@ int main()
     }
 
 
+    /// ----------- EXERCISE 8 ----------- ///
+    using sketch_type = Sketch<value_type, pair_type, array_type>;
+    using hashing_with_chaining_type = HashingWithChaining<value_type, pair_type, linked_list_type>;
+
+    const uint32_t N_MAX = 28;
+    const uint32_t N_MIN = 6;
+    const auto N_UPDATES = static_cast<int64_t>(std::pow(10,5)); // TODO: Should be 10^9
+    const array_type array_sizes = {(value_type)fast_uint64_pow_2(7),
+                                    (value_type)fast_uint64_pow_2(10),
+                                    (value_type)fast_uint64_pow_2(20)};
+
+    for(const value_type& r : array_sizes)
+    {
+
+        sketch_type my_sketch = sketch_type(r, seed);
+        hashing_with_chaining_type my_hashing_with_chaining(r, seed);
+        std::cout << "r: " << r << std::endl;
+        for(uint32_t N = N_MIN; N <= N_MAX; N++)
+        {
+            uint32_t n = fast_uint32_pow_2(N);
+            for(int64_t i = 1; i < N_UPDATES; i++)
+            {
+                value_type delta = 1;
+                auto key = static_cast<key_type>(i & (n-1)); // Fast i mod n, when n=2^N.
+                my_sketch.update(std::make_pair(key,delta));
+                my_hashing_with_chaining.update(std::make_pair(key,delta));
+            }
+        }
+    }
+
+
 
 
 
