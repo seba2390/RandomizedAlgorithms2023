@@ -54,14 +54,14 @@ int main()
         keys.push_back(i);
     }
 
-    auto mersenne_upper_bound = static_cast<uint64_t>(std::pow(2,31) - 1);
+    uint64_t mersenne_upper_bound = fast_uint64_pow_2(31) - 1;
     hashing_constants constants = {get_random_uint64(seed, mersenne_upper_bound),
                                    get_random_uint64(seed, mersenne_upper_bound),
                                    get_random_uint64(seed, mersenne_upper_bound),
                                    get_random_uint64(seed, mersenne_upper_bound)};
 
 
-    uint32_t multiply_shift_upper_bound = static_cast<uint32_t>(std::pow(2,32)) - 1;
+    uint32_t multiply_shift_upper_bound = static_cast<uint32_t>(std::pow(2,KEY_BIT_SIZE)) - 1;
     const auto a = static_cast<int32_t>(get_random_odd_uint32(seed,multiply_shift_upper_bound));
     const auto l = static_cast<uint32_t>(std::log2(array_size));
 
@@ -106,26 +106,24 @@ int main()
 
     const uint32_t N_MAX = 28;
     const uint32_t N_MIN = 6;
-    const auto N_UPDATES = static_cast<int64_t>(std::pow(10,9));
+    const auto N_UPDATES = static_cast<int64_t>(std::pow(10,5)); // TODO: Should be 10^9
     const array_type array_sizes = {(value_type)fast_uint64_pow_2(7),
                                     (value_type)fast_uint64_pow_2(10),
                                     (value_type)fast_uint64_pow_2(20)};
 
-    print(std::string("hehe"));
     for(const value_type& r : array_sizes)
     {
+
         sketch_type my_sketch = sketch_type(r, seed);
         hashing_with_chaining_type my_hashing_with_chaining(r, seed);
-
+        std::cout << "r: " << r << std::endl;
         for(uint32_t N = N_MIN; N <= N_MAX; N++)
         {
-            std::cout << "N: " << N << std::endl;
             uint32_t n = fast_uint32_pow_2(N);
             for(int64_t i = 1; i < N_UPDATES; i++)
             {
                 value_type delta = 1;
                 auto key = static_cast<key_type>(i & (n-1)); // Fast i mod n, when n=2^N.
-
                 my_sketch.update(std::make_pair(key,delta));
                 my_hashing_with_chaining.update(std::make_pair(key,delta));
             }

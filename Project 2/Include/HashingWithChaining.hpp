@@ -15,12 +15,12 @@ private:
     using sum_type = int64_t;
 
     // Attributes
-    key_type array_size;
-    key_type a, l;
+    uint32_t array_size;
+    uint32_t a, l;
     bool empty;
 
     // Equivalent to 2^KEY_BIT_SIZE - 1
-    uint32_t multiply_shift_upper_bound = fast_uint32_pow_2(KEY_BIT_SIZE) - 1;
+    uint32_t multiply_shift_upper_bound = static_cast<uint32_t>(std::pow(2,KEY_BIT_SIZE)) - 1;
 
 
 
@@ -118,7 +118,6 @@ public:
     {
         key_type key = pair.first;
         value_type delta = pair.second;
-
         // Only performing checks if table holds any pairs
         if(!this->empty){
             // Checking if key is already in table
@@ -145,6 +144,7 @@ public:
             // Then just append pair to end of list
             key_type array_index = multiply_shift_hash(key, this->a, this->l);
             (this->hash_table[array_index]).push_back(std::make_pair(key, 0+delta));
+
             // Set table not empty
             this->empty = false;
         }

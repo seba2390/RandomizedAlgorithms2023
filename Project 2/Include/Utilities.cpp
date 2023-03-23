@@ -12,7 +12,7 @@ uint32_t get_random_uint32(const uint32_t& seed, const uint32_t& upper_bound) {
     std::uniform_int_distribution<uint32_t> distribution(0, upper_bound); // upper bound = std::pow(2,KEY_BIT_SIZE) - 1 for multiply shift
 
     // generate and return a random bit-size(keytype)-bit integer
-    return distribution(generator);
+    return static_cast<uint32_t>(distribution(generator));
 }
 
 uint64_t get_random_uint64(const uint64_t& seed, const uint64_t& upper_bound) {
@@ -52,6 +52,7 @@ uint64_t fast_uint64_pow_2(const uint64_t& power)
 {
     /*
      * Calculates 2^q for some positive 64-bit integer in a fast manner.
+     * N.B. only works for power < 64.
      * */
     return 1ULL << power;
 }
@@ -86,7 +87,7 @@ int64_t fast_uint64_log_2(uint64_t x)
     return sizeof(uint64_t) * BITS_PR_BYTE - __builtin_clzll(x) - 1;
 }
 
-key_type multiply_shift_hash(key_type key, key_type a, uint32_t l)
+uint32_t multiply_shift_hash(uint32_t key, uint32_t a, uint32_t l)
 {
     /*
      * Multiply-shift hashing function. Only maps to a power of two: [2^w] -> [2^l]. As such, choose
