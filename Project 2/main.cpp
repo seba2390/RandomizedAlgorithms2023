@@ -27,7 +27,7 @@ int main()
         if(std_impl!=fast_impl) throw std::runtime_error("fast_uint64_pow_2 doesn't give same output as std::pow.");
     }
 
-    /// ----------- TESTING SLOW & FAST 4-INDEPENDENT HASH FUNCTIONS ----------- ///
+    /// ----------- TESTING SLOW vs. FAST 4-INDEPENDENT HASH FUNCTIONS ----------- ///
     uint64_t n_keys = std::pow(10,6) - 1;
     std::vector<int64_t> keys{};
     for(int64_t i = 0; i < n_keys; i++)
