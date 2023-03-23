@@ -43,7 +43,6 @@ int main()
         if(std_impl!=fast_impl) throw std::runtime_error("fast_uint64_log_2 doesn't give same output as std::log2.");
     }
 
-
     /// ----------- EXERCISE 5 ----------- ///
     const uint32_t seed = 4331;
     const value_type power = 24;
@@ -61,7 +60,8 @@ int main()
                                    get_random_uint64(seed, mersenne_upper_bound),
                                    get_random_uint64(seed, mersenne_upper_bound)};
 
-    uint32_t multiply_shift_upper_bound = fast_uint32_pow_2(32) - 1;
+
+    uint32_t multiply_shift_upper_bound = static_cast<uint32_t>(std::pow(2,32)) - 1;
     const auto a = static_cast<int32_t>(get_random_odd_uint32(seed,multiply_shift_upper_bound));
     const auto l = static_cast<uint32_t>(std::log2(array_size));
 

@@ -4,7 +4,7 @@
 
 #include "Utilities.hpp"
 
-uint32_t get_random_uint32(const uint32_t& seed, const key_type& upper_bound) {
+uint32_t get_random_uint32(const uint32_t& seed, const uint32_t& upper_bound) {
     // create a random number generator and seed it.
     XoshiroCpp::Xoshiro128PlusPlus generator(seed);
 
@@ -26,17 +26,16 @@ uint64_t get_random_uint64(const uint64_t& seed, const uint64_t& upper_bound) {
     return distribution(generator);
 }
 
-key_type get_random_odd_uint32(const uint32_t& seed, const key_type& upper_bound)
+uint32_t get_random_odd_uint32(const uint32_t& seed, const uint32_t& upper_bound)
 {
     unsigned int counter = 1;
-    key_type a =  get_random_uint32(seed, upper_bound);
+    uint32_t a =  get_random_uint32(seed, upper_bound);
 
     while ( a % 2 == 0) {
+
         a = get_random_uint32(seed + counter, upper_bound);
         counter++;
     }
-
-    //if(a % 2 == 0) return a+1;
     return a;
 }
 
@@ -44,6 +43,7 @@ uint32_t fast_uint32_pow_2(const uint32_t& power)
 {
     /*
      * Calculates 2^q for some positive 32-bit integer in a fast manner.
+     * N.B. only works for power < 32.
      * */
     return UINT32_C(1) << power;
 }
@@ -260,6 +260,7 @@ void print(const T &value) {
         }
     }
 }
+
 
 template void print<int>(const int&);
 template void print<double>(const double&);
