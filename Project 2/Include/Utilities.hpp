@@ -51,17 +51,17 @@ struct hashing_constants {
 using linked_list_type = std::list<pair_type>;
 using output_data_type = double_t;
 
-key_type get_random_uint32(const key_type& seed, const key_type& upper_bound);
+uint32_t get_random_uint32(const uint32_t& seed, const uint32_t& upper_bound);
 
-uint64_t get_random_uint64(const key_type& seed, const key_type& upper_bound);
+uint64_t get_random_uint64(const uint64_t& seed, const uint64_t& upper_bound);
 
-key_type get_random_odd_uint32(const key_type& seed, const key_type& upper_bound);
+uint32_t get_random_odd_uint32(const uint32_t& seed, const uint32_t& upper_bound);
 
-key_type multiply_shift_hash(key_type key, key_type a, key_type l);
+key_type multiply_shift_hash(key_type key, key_type a, uint32_t l);
 
-std::pair<int64_t,int64_t> mersenne_4_independent_hash(key_type key, key_type array_size,  hashing_constants constants);
+std::pair<int64_t,int64_t> mersenne_4_independent_hash(int64_t key, uint64_t array_size,  hashing_constants constants);
 
-std::pair<int64_t,int64_t> slow_mersenne_4_independent_hash(key_type key, key_type array_size, hashing_constants constants);
+std::pair<int64_t,int64_t> slow_mersenne_4_independent_hash(int64_t key, uint64_t array_size, hashing_constants constants);
 
 uint32_t fast_uint32_pow_2(const uint32_t& power);
 

@@ -20,7 +20,7 @@ private:
     bool empty;
 
     // Equivalent to 2^KEY_BIT_SIZE - 1
-    key_type multiply_shift_upper_bound = fast_uint32_pow_2(KEY_BIT_SIZE) - 1;
+    uint32_t multiply_shift_upper_bound = fast_uint32_pow_2(KEY_BIT_SIZE) - 1;
 
 
 
@@ -66,6 +66,16 @@ public:
 
     // Methods
 
+    /**
+     * Checks whether the provided key is stored in the hash table.
+     *
+     * @param key The key to search for in the hash table.
+     *
+     * @return A std::tuple containing three values:
+     *         1. The index of the bucket in the hash table where the key is found (or NAN_TOKEN if not found)
+     *         2. The index of the key-value pair in the linked list within the bucket where the key is found (or NAN_TOKEN if not found)
+     *         3. A boolean value indicating whether the key is found in the hash table or not.
+     */
     std::tuple<key_type, key_type , bool> holds(const key_type& key)
     {
         /*
@@ -90,6 +100,14 @@ public:
         return std::make_tuple(NAN_TOKEN, NAN_TOKEN, true);
     }
 
+    /**
+     * Updates the hash table with a given key-value pair. If the key already exists in the hash table,
+     * the value is incremented by the given delta. Otherwise, a new key-value pair is added to the hash table.
+     *
+     * @param pair A key-value pair to update the hash table with.
+     *
+     * @returns void
+     */
     void update(const pair_type& pair)
     {
         key_type key = pair.first;
@@ -104,9 +122,12 @@ public:
                 // Then just add delta to value in pair
                 key_type array_index = std::get<0>(result);
                 key_type list_index = std::get<1>(result);
-                auto a = this->hash_table[array_index];
-                auto b = a[list_index];
-                (this->hash_table[array_index])[list_index].second += delta;
+
+                // iterate to the 'list_index' element using a list iterator.
+                auto it = std::next((this->hash_table[array_index]).begin(), list_index);
+
+                // change the .second value of the pair at the 'list_index' position.
+                it->second += delta;
             } else
             {
                 // Then just append pair to end of list
@@ -124,18 +145,23 @@ public:
 
     }
 
-    sum_type query()
-    {
-        // Using std method for norm square if array_type is std::vector
-        if constexpr (std::is_same_v<array_type, std::vector<typename array_type::value_type, typename array_type::allocator_type>>)
-        {
-            return std::inner_product(this->hash_table.begin(),this->hash_table.end(), this->hash_table, 0);
-        }
-            // If array_type is not std::vector but some other iterable type container.
-        else
-        {
-            sum_type result = 0;
-            for(const value_type& value: this->hash_table) result += value*value;
+    /**
+     * Compute the norm square of the hash table.
+     * If array_type is std::vector, use std::inner_product to compute the sum of squares.
+     * If array_type is not std::vector, use std::accumulate to compute the sum of squares.
+     *
+     * @return The norm square of the hash table.
+     */
+    sum_type query() {
+        // Check if array_type is std::vector
+        if constexpr (std::is_same_v<array_type, std::vector<typename array_type::value_type, typename array_type::allocator_type>>) {
+            // If array_type is std::vector, use std::inner_product to compute the sum of squares
+            return std::inner_product(this->hash_table.begin(), this->hash_table.end(), this->hash_table.begin(), 0);
+        } else {
+            // If array_type is not std::vector, use std::accumulate and lambda function to compute the sum of squares
+            auto result = std::accumulate(this->hash_table.begin(), this->hash_table.end(), static_cast<sum_type>(0), [](const auto& acc, const auto& val) {
+                return acc + val * val;
+            });
             return result;
         }
     }

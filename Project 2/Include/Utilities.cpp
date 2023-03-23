@@ -4,29 +4,29 @@
 
 #include "Utilities.hpp"
 
-key_type get_random_uint32(const key_type& seed, const key_type& upper_bound) {
+uint32_t get_random_uint32(const uint32_t& seed, const key_type& upper_bound) {
     // create a random number generator and seed it.
     XoshiroCpp::Xoshiro128PlusPlus generator(seed);
 
     // create a uniform distribution that generates values in the range [0, 2^bit-size(keytype) - 1]
-    std::uniform_int_distribution<key_type> distribution(0, upper_bound); // upper bound = std::pow(2,KEY_BIT_SIZE) - 1 for multiply shift
+    std::uniform_int_distribution<uint32_t> distribution(0, upper_bound); // upper bound = std::pow(2,KEY_BIT_SIZE) - 1 for multiply shift
 
     // generate and return a random bit-size(keytype)-bit integer
-    return (key_type)distribution(generator);
+    return distribution(generator);
 }
 
-uint64_t get_random_uint64(const key_type& seed, const key_type& upper_bound) {
+uint64_t get_random_uint64(const uint64_t& seed, const uint64_t& upper_bound) {
     // create a random number generator and seed it.
-    XoshiroCpp::Xoshiro256PlusPlus generator((uint64_t)seed);
+    XoshiroCpp::Xoshiro256PlusPlus generator(seed);
 
     // create a uniform distribution that generates values in the range [0, 2^bit-size(keytype) - 1]
-    std::uniform_int_distribution<uint64_t> distribution(0, (uint64_t)upper_bound); // upper bound = std::pow(2,KEY_BIT_SIZE) - 1 for multiply shift
+    std::uniform_int_distribution<uint64_t> distribution(0, upper_bound); // upper bound = std::pow(2,KEY_BIT_SIZE) - 1 for multiply shift
 
     // generate and return a random bit-size(keytype)-bit integer
-    return (uint64_t)distribution(generator);
+    return distribution(generator);
 }
 
-key_type get_random_odd_uint32(const key_type& seed, const key_type& upper_bound)
+key_type get_random_odd_uint32(const uint32_t& seed, const key_type& upper_bound)
 {
     unsigned int counter = 1;
     key_type a =  get_random_uint32(seed, upper_bound);
@@ -86,7 +86,7 @@ int64_t fast_uint64_log_2(uint64_t x)
     return sizeof(uint64_t) * BITS_PR_BYTE - __builtin_clzll(x) - 1;
 }
 
-key_type multiply_shift_hash(key_type key, key_type a, key_type l)
+key_type multiply_shift_hash(key_type key, key_type a, uint32_t l)
 {
     /*
      * Multiply-shift hashing function. Only maps to a power of two: [2^w] -> [2^l]. As such, choose
@@ -97,7 +97,7 @@ key_type multiply_shift_hash(key_type key, key_type a, key_type l)
     return (a * key) >> (KEY_BIT_SIZE - l);
 }
 
-std::pair<int64_t,int64_t> mersenne_4_independent_hash(key_type key, key_type array_size, hashing_constants constants)
+std::pair<int64_t,int64_t> mersenne_4_independent_hash(int64_t key, uint64_t array_size, hashing_constants constants)
 {
     int64_t r = array_size;
     uint64_t x = key;
@@ -144,7 +144,7 @@ std::pair<int64_t,int64_t> mersenne_4_independent_hash(key_type key, key_type ar
 
 }
 
-std::pair<int64_t,int64_t> slow_mersenne_4_independent_hash(key_type key, key_type array_size, hashing_constants constants)
+std::pair<int64_t,int64_t> slow_mersenne_4_independent_hash(int64_t key, uint64_t array_size, hashing_constants constants)
 {
     int64_t r = array_size;
     uint64_t x = key;
