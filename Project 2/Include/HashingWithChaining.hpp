@@ -57,7 +57,8 @@ public:
     {
      // Checking that 64-bit numbers are used c.f. exercise 6.
      if(!sizeof(value_type) * BITS_PR_BYTE == 64) throw std::runtime_error("'value_type' used in Sketch template should be 64-bit.");
-
+     // For this purpose we assume 'array_size' to be r=2^R (i.e. power of 2).
+     if((array_size & (array_size - 1)) != 0) throw std::runtime_error("Array size given to Sketch C-tor should be power of 2.");
 
      this->array_size = array_size;
      initialize_hash_table();

@@ -63,6 +63,8 @@ public:
     {
         // For this purpose we assume 'array_size' to be r=2^R (i.e. power of 2).
         if((array_size & (array_size - 1)) != 0) throw std::runtime_error("Array size given to Sketch C-tor should be power of 2.");
+        // Checking that 64-bit numbers are used c.f. exercise 6.
+        if(!sizeof(value_type) * BITS_PR_BYTE == 64) throw std::runtime_error("'value_type' used in Sketch template should be 64-bit.");
         this->array_size = array_size;
         initialize_hash_table();
         initialize_consts(seed);
@@ -79,23 +81,24 @@ public:
 
     }
 
-    sum_type query()
-    {
-        // Checking that 64-bit numbers are used c.f. exercise 6.
-        if(!sizeof(value_type) * BITS_PR_BYTE == 64) throw std::runtime_error("'value_type' used in Sketch template should be 64-bit.");
-
-        // Using std method for norm square if array_type is std::vector
-        if constexpr (std::is_same_v<array_type, std::vector<typename array_type::value_type, typename array_type::allocator_type>>)
-        {
-            return std::inner_product(this->hash_table.begin(),this->hash_table.end(), this->hash_table, 0);
-        }
-        // If array_type is not std::vector but some other iterable type container.
-        else
-        {
-            sum_type result = 0;
-            for(const value_type& value: this->hash_table) result += value*value;
+    /**
+     * Compute the norm square of the hash table.
+     * If array_type is std::vector, use std::inner_product to compute the sum of squares.
+     * If array_type is not std::vector, use std::accumulate to compute the sum of squares.
+     *
+     * @return The norm square of the hash table.
+     */
+    sum_type query() {
+        // Check if array_type is std::vector
+        if constexpr (std::is_same_v<array_type, std::vector<typename array_type::value_type, typename array_type::allocator_type>>) {
+            // If array_type is std::vector, use std::inner_product to compute the sum of squares
+            return std::inner_product(this->hash_table.begin(), this->hash_table.end(), this->hash_table.begin(), 0);
+        } else {
+            // If array_type is not std::vector, use std::accumulate and lambda function to compute the sum of squares
+            auto result = std::accumulate(this->hash_table.begin(), this->hash_table.end(), static_cast<sum_type>(0), [](const auto& acc, const auto& val) {
+                return acc + val * val;
+            });
             return result;
         }
-
     }
 };
