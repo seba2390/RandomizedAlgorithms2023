@@ -3,7 +3,7 @@
 //
 #include "HashingWithChaining.hpp"
 #include "Utilities.hpp"
-
+#include "Sketch.hpp"
 
 
 // Checking that local environment 'key_type' type bit-size is as expected.
@@ -27,6 +27,15 @@ int main()
         if(std_impl!=fast_impl) throw std::runtime_error("fast_uint64_pow_2 doesn't give same output as std::pow.");
     }
 
+    /// ----------- TESTING SKETCH ----------- ///
+    using sketch_type = Sketch<value_type,pair_type,array_type>;
+    const unsigned int seed = 4331;
+    value_type power = 24;
+    const unsigned int array_size =  fast_uint32_pow_2(power);
+    Sketch<value_type,pair_type,array_type> my_sketch = Sketch<value_type,pair_type,array_type>(array_size, seed);
+
+
+
     /// ----------- TESTING SLOW vs. FAST 4-INDEPENDENT HASH FUNCTIONS ----------- ///
     uint64_t n_keys = std::pow(10,6) - 1;
     std::vector<int64_t> keys{};
@@ -35,8 +44,6 @@ int main()
         keys.push_back(i);
     }
 
-    int64_t array_size =  std::pow(2,24);
-    uint64_t seed = 4331;
     uint64_t mersenne_upper_bound = std::pow(2,31) - 1;
     hashing_constants constants = {get_random_uint64(seed, mersenne_upper_bound),
                                    get_random_uint64(seed, mersenne_upper_bound),

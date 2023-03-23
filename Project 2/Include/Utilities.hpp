@@ -18,6 +18,7 @@
 #include <algorithm>    // std::random_shuffle
 #include <array>
 #include <type_traits>
+#include <numeric> // std::inner_product for std::vector
 
 #include <Eigen/Dense>
 
@@ -26,12 +27,14 @@
 #define KEY_BIT_SIZE 32
 #define NAN_TOKEN 0
 #define MERSENNE_PRIME_EXPONENT 31
+#define MERSENNE_PRIME (1ULL << MERSENNE_PRIME_EXPONENT) - 1
 #define BITS_PR_BYTE CHAR_BIT
 
 // Defining types.
 using key_type = int32_t;
-using value_type = int32_t;
-using pair_type = std::pair<key_type,value_type>;
+using value_type = int64_t;
+using pair_type = std::pair<value_type,value_type>;
+using array_type = std::vector<value_type>;
 
 struct hashing_constants {
     // Storing as 64-bit because exercise 4 requires it to evaluate 'mod' operation efficiently.
@@ -63,6 +66,10 @@ std::pair<int64_t,int64_t> slow_mersenne_4_independent_hash(key_type key, key_ty
 uint32_t fast_uint32_pow_2(const uint32_t& power);
 
 uint64_t fast_uint64_pow_2(const uint64_t& power);
+
+int32_t fast_uint32_log_2(uint32_t x);
+
+int64_t fast_uint64_log_2(uint64_t x);
 
 void append_to_file(std::string filename, std::string path, std::vector<output_data_type> data);
 

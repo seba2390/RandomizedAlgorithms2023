@@ -32,7 +32,7 @@ private:
     {
         hash_table.reserve(this->m);    // allocate memory for the array/vector
         hash_table.resize(this->m);        // initialize the array/vector with the given size
-        for(key_type i = 0; i < this->m; i++) hash_table[i] = std::list<key_type>{}; // Setting lists in array/vector.
+        for(key_type i = 0; i < this->m; i++) hash_table[i] = list_type{}; // Setting lists in array/vector.
     }
 
     void set_mersenne_hash_constants(const unsigned int& seed)

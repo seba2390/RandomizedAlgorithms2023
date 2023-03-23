@@ -4,7 +4,7 @@
 
 #include "Utilities.hpp"
 
-template <typename key_type, typename pair_type, typename array_type>
+template <typename value_type, typename pair_type, typename array_type>
 class Sketch
 {
 private:
@@ -13,15 +13,10 @@ private:
     using sum_type = int64_t;
 
     // Attributes
-    unsigned int m;
-    key_type a, l;
-    bool empty;
+    unsigned int array_size;
 
-    // Equivalent to 2^KEY_BIT_SIZE - 1
-    key_type multiply_shift_upper_bound = fast_uint32_pow_2(KEY_BIT_SIZE) - 1;
     // Equivalent to 2^MERSENNE_PRIME_EXPONENT - 1
-    key_type mersenne_upper_bound = fast_uint32_pow_2(MERSENNE_PRIME_EXPONENT) - 1;
-
+    value_type mersenne_upper_bound = fast_uint32_pow_2(MERSENNE_PRIME_EXPONENT) - 1;
     hashing_constants mersenne_hashing_constants;
 
 
@@ -29,9 +24,10 @@ private:
     // Methods
     void initialize_hash_table()
     {
-        hash_table.reserve(this->m);    // allocate memory for the array/vector
-        hash_table.resize(this->m);        // initialize the array/vector with the given size
-        for(key_type i = 0; i < this->m; i++) hash_table[i] = std::list<key_type>{}; // Setting lists in array/vector.
+        this->hash_table.reserve(this->array_size);        // allocate memory for the array/vector
+        this->hash_table.resize(this->array_size);        // initialize the array/vector with the given size
+        // Filling with nullified pairs.
+        for(int entry = 0; entry < this->array_size; entry++) this->hash_table[entry] = (value_type)0;
     }
 
     void set_mersenne_hash_constants(const unsigned int& seed)
@@ -43,6 +39,8 @@ private:
         this->mersenne_hashing_constants.d = get_random_uint64(seed+78, this->mersenne_upper_bound);
     }
 
+
+
     void initialize_consts(const unsigned int& seed)
     {
         /*
@@ -51,14 +49,8 @@ private:
          * calling hash function.
          * */
 
-        // Constant for multiply-shift hash function.
-        this->a = get_random_odd_uint32(seed, this->multiply_shift_upper_bound);
-
         // Constant for other 4-wise independent hash function  (remember to use different seeds).
         set_mersenne_hash_constants(seed);
-
-        this->l = std::log2(this->m); // if m = 2^l then l = log2(m).
-        this->empty = true;
     }
 
 public:
@@ -67,100 +59,43 @@ public:
     hash_table_type hash_table;
 
     // Parameterized C-tor
-    [[maybe_unused]] explicit HashingWithChaining(const unsigned int& n, const unsigned int& seed)
+    [[maybe_unused]] explicit Sketch(const unsigned int& array_size, const unsigned int& seed)
     {
-        this->m = n;
+        // For this purpose we assume 'array_size' to be r=2^R (i.e. power of 2).
+        if((array_size & (array_size - 1)) != 0) throw std::runtime_error("Array size given to Sketch C-tor should be power of 2.");
+        this->array_size = array_size;
         initialize_hash_table();
         initialize_consts(seed);
     }
 
     // Methods
-    void insert(const pair_type& pair)
+    void update(const pair_type& pair)
     {
-        key_type key = pair.first;
-        this->hash_table[hash(key, this->a, this->l)].push_back(std::move(pair));
-    }
-
-    void insert_key_value_pairs(const array_type& key_value_pairs)
-    {
-        for(pair_type pair : key_value_pairs) insert(pair);
-    }
-
-    std::tuple<key_type, key_type, bool> holds(const key_type& key)
-    {
-        /*
-         * Checks whether the provided key is stored in the hash table.
-         */
-        key_type array_index = multiply_shift_hash(key, this->a, this->l);
-
-        // Only start iterating through linked list if bucket is not empty
-        if(!this->hash_table[array_index].empty())
-        {
-            // Using lambda function in iterator to check if the first value in the pair (the key value) equals given key.
-            auto iterator = std::find_if(this->hash_table[array_index].begin(),
-                                         this->hash_table[array_index].end(),
-                                         [=](const pair_type& p){return p.first == key;}
-            );
-            if(iterator != this->hash_table[array_index].end())
-            {
-                key_type list_index = std::distance(this->hash_table[array_index].begin(), iterator);
-                return std::make_tuple(array_index, list_index, true);
-            }
-        }
-        return std::make_tuple(NAN_TOKEN, NAN_TOKEN, true);
-    }
-    unsigned int max_bucket_size()
-    {
-        unsigned int max_size = 0;
-        for(int m_i = 0; m_i < this->m; m_i++)
-        {
-            if(this->hash_table[m_i].size() > max_size) max_size = this->hash_table[m_i].size();
-        }
-        return max_size;
-    }
-
-    void add(key_type key, int32_t delta)
-    {
-
-        // Only performing checks if table holds any pairs
-        if(!this->empty){
-            // Checking if key is already in table
-            std::tuple<key_type,key_type,bool> result = holds(key);
-            if(std::get<2>(result))
-            {
-                // Then just add delta to value in pair
-                key_type array_index = std::get<0>(result);
-                key_type list_index = std::get<1>(result);
-                (this->hash_table[array_index])[list_index].second += delta;
-            } else
-            {
-                // Then just append pair to end of list
-                key_type array_index = multiply_shift_hash(key, this->a, this->l);
-                (this->hash_table[array_index]).push_back(std::make_pair(key, 0+delta));
-            }
-        } else
-        {
-            // Then just append pair to end of list
-            key_type array_index = multiply_shift_hash(key, this->a, this->l);
-            (this->hash_table[array_index]).push_back(std::make_pair(key, 0+delta));
-            // Set table not empty
-            this->empty = false;
-        }
+        // First value in pair is key 'i' and second is update-value 'delta'.
+        auto array_index = mersenne_4_independent_hash(pair.first,
+                                                       this->array_size,
+                                                       this->mersenne_hashing_constants);
+        this->hash_table[array_index] += pair.second;
 
     }
 
     sum_type sum_of_squares()
     {
-        sum_type result = 0;
-        for(const list_type& list: this->hash_table)
-            if(!list.empty())
-            {
-                for(const pair_type& pair: list)
-                {
-                    sum_type v = static_cast<sum_type>(pair.second); // TODO: Only necessary if key_type is 32-bit.
-                    result += v*v;
-                }
-            }
-        return result;
+        // Checking that 64-bit numbers are used c.f. exercise 6.
+        if(!sizeof(value_type) * BITS_PR_BYTE == 64) throw std::runtime_error("'value_type' used in Sketch template should be 64-bit.");
+
+        // Using std method for norm square if array_type is std::vector
+        if constexpr (std::is_same_v<array_type, std::vector<typename array_type::value_type, typename array_type::allocator_type>>)
+        {
+            return std::inner_product(this->hash_table.begin(),this->hash_table.end(), this->hash_table, 0);
+        }
+        // If array_type is not std::vector but some other iterable type container.
+        else
+        {
+            sum_type result = 0;
+            for(const value_type& value: this->hash_table) result += value*value;
+            return result;
+        }
+
     }
 };
