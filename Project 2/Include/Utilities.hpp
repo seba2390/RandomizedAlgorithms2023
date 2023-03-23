@@ -33,7 +33,7 @@
 // Defining types.
 using key_type = int32_t;
 using value_type = int64_t;
-using pair_type = std::pair<value_type,value_type>;
+using pair_type = std::pair<key_type,value_type>;
 using array_type = std::vector<value_type>;
 
 struct hashing_constants {

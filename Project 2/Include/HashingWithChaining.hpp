@@ -5,44 +5,33 @@
 #include "Utilities.hpp"
 
 
-template <typename key_type, typename pair_type, typename array_type, typename list_type>
+template <typename value_type, typename pair_type, typename list_type>
 class HashingWithChaining
 {
 private:
     // Typedefs
-    using hash_table_type = std::vector<list_type>;
+    using array_type = std::vector<list_type>;
+    using hash_table_type = array_type;
     using sum_type = int64_t;
 
     // Attributes
-    unsigned int m;
+    key_type array_size;
     key_type a, l;
     bool empty;
 
     // Equivalent to 2^KEY_BIT_SIZE - 1
     key_type multiply_shift_upper_bound = fast_uint32_pow_2(KEY_BIT_SIZE) - 1;
-    // Equivalent to 2^MERSENNE_PRIME_EXPONENT - 1
-    key_type mersenne_upper_bound = fast_uint32_pow_2(MERSENNE_PRIME_EXPONENT) - 1;
-
-    hashing_constants mersenne_hashing_constants;
 
 
 
     // Methods
     void initialize_hash_table()
     {
-        hash_table.reserve(this->m);    // allocate memory for the array/vector
-        hash_table.resize(this->m);        // initialize the array/vector with the given size
-        for(key_type i = 0; i < this->m; i++) hash_table[i] = list_type{}; // Setting lists in array/vector.
+        hash_table.reserve(this->array_size);    // allocate memory for the array/vector
+        hash_table.resize(this->array_size);        // initialize the array/vector with the given size
+        for(key_type i = 0; i < this->array_size; i++) hash_table[i] = list_type{}; // Setting lists in array/vector.
     }
 
-    void set_mersenne_hash_constants(const unsigned int& seed)
-    {
-        // Constant for other 4-wise independent hash function  (remember to use different seeds).
-        this->mersenne_hashing_constants.a = get_random_uint64(seed+0, this->mersenne_upper_bound);
-        this->mersenne_hashing_constants.b = get_random_uint64(seed+11, this->mersenne_upper_bound);
-        this->mersenne_hashing_constants.c = get_random_uint64(seed+431, this->mersenne_upper_bound);
-        this->mersenne_hashing_constants.d = get_random_uint64(seed+78, this->mersenne_upper_bound);
-    }
 
     void initialize_consts(const unsigned int& seed)
     {
@@ -54,11 +43,7 @@ private:
 
         // Constant for multiply-shift hash function.
         this->a = get_random_odd_uint32(seed, this->multiply_shift_upper_bound);
-
-        // Constant for other 4-wise independent hash function  (remember to use different seeds).
-        set_mersenne_hash_constants(seed);
-
-        this->l = std::log2(this->m); // if m = 2^l then l = log2(m).
+        this->l = fast_uint64_log_2(this->array_size); // if m = 2^l then l = log2(m).
         this->empty = true;
     }
 
@@ -68,26 +53,20 @@ public:
     hash_table_type hash_table;
 
     // Parameterized C-tor
-    [[maybe_unused]] explicit HashingWithChaining(const unsigned int& n, const unsigned int& seed)
+    [[maybe_unused]] explicit HashingWithChaining(const unsigned int& array_size, const unsigned int& seed)
     {
-     this->m = n;
+     // Checking that 64-bit numbers are used c.f. exercise 6.
+     if(!sizeof(value_type) * BITS_PR_BYTE == 64) throw std::runtime_error("'value_type' used in Sketch template should be 64-bit.");
+
+
+     this->array_size = array_size;
      initialize_hash_table();
      initialize_consts(seed);
     }
 
     // Methods
-    void insert(const pair_type& pair)
-    {
-        key_type key = pair.first;
-        this->hash_table[hash(key, this->a, this->l)].push_back(std::move(pair));
-    }
 
-    void insert_key_value_pairs(const array_type& key_value_pairs)
-    {
-        for(pair_type pair : key_value_pairs) insert(pair);
-    }
-
-    std::tuple<key_type, key_type, bool> holds(const key_type& key)
+    std::tuple<key_type, key_type , bool> holds(const key_type& key)
     {
         /*
          * Checks whether the provided key is stored in the hash table.
@@ -110,28 +89,23 @@ public:
         }
         return std::make_tuple(NAN_TOKEN, NAN_TOKEN, true);
     }
-    unsigned int max_bucket_size()
-    {
-        unsigned int max_size = 0;
-        for(int m_i = 0; m_i < this->m; m_i++)
-        {
-            if(this->hash_table[m_i].size() > max_size) max_size = this->hash_table[m_i].size();
-        }
-        return max_size;
-    }
 
-    void add(key_type key, int32_t delta)
+    void update(const pair_type& pair)
     {
+        key_type key = pair.first;
+        value_type delta = pair.second;
 
         // Only performing checks if table holds any pairs
         if(!this->empty){
             // Checking if key is already in table
-            std::tuple<key_type,key_type,bool> result = holds(key);
+            std::tuple<key_type,value_type,bool> result = holds(key);
             if(std::get<2>(result))
             {
                 // Then just add delta to value in pair
                 key_type array_index = std::get<0>(result);
                 key_type list_index = std::get<1>(result);
+                auto a = this->hash_table[array_index];
+                auto b = a[list_index];
                 (this->hash_table[array_index])[list_index].second += delta;
             } else
             {
@@ -150,18 +124,19 @@ public:
 
     }
 
-    sum_type sum_of_squares()
+    sum_type query()
     {
-        sum_type result = 0;
-        for(const list_type& list: this->hash_table)
-            if(!list.empty())
-            {
-                for(const pair_type& pair: list)
-                {
-                    sum_type v = static_cast<sum_type>(pair.second); // TODO: Only necessary if key_type is 32-bit.
-                    result += v*v;
-                }
-            }
-        return result;
+        // Using std method for norm square if array_type is std::vector
+        if constexpr (std::is_same_v<array_type, std::vector<typename array_type::value_type, typename array_type::allocator_type>>)
+        {
+            return std::inner_product(this->hash_table.begin(),this->hash_table.end(), this->hash_table, 0);
+        }
+            // If array_type is not std::vector but some other iterable type container.
+        else
+        {
+            sum_type result = 0;
+            for(const value_type& value: this->hash_table) result += value*value;
+            return result;
+        }
     }
 };

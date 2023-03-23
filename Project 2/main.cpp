@@ -27,17 +27,28 @@ int main()
         if(std_impl!=fast_impl) throw std::runtime_error("fast_uint64_pow_2 doesn't give same output as std::pow.");
     }
 
-    /// ----------- TESTING SKETCH ----------- ///
-    using sketch_type = Sketch<value_type,pair_type,array_type>;
+    /// ----------- TESTING FAST LOG2 FUNCTIONS ----------- ///
+    for(uint32_t pow = 1; pow < sizeof(uint32_t) * BITS_PR_BYTE; pow++)
+    {
+        uint32_t x = fast_uint32_pow_2(pow);
+        int32_t std_impl = std::log2(x);
+        int32_t fast_impl = fast_uint32_log_2(x);
+        if(std_impl!=fast_impl) throw std::runtime_error("fast_uint32_log_2 doesn't give same output as std::log2.");
+    }
+    for(uint64_t pow = 1; pow < sizeof(uint64_t) * BITS_PR_BYTE; pow++)
+    {
+        uint64_t x = fast_uint64_pow_2(pow);
+        int64_t std_impl = std::log2(x);
+        int64_t fast_impl = fast_uint64_log_2(x);
+        if(std_impl!=fast_impl) throw std::runtime_error("fast_uint64_log_2 doesn't give same output as std::log2.");
+    }
+
+
+    /// ----------- EXERCISE 5 ----------- ///
     const unsigned int seed = 4331;
     value_type power = 24;
     const unsigned int array_size =  fast_uint32_pow_2(power);
-    Sketch<value_type,pair_type,array_type> my_sketch = Sketch<value_type,pair_type,array_type>(array_size, seed);
-
-
-
-    /// ----------- TESTING SLOW vs. FAST 4-INDEPENDENT HASH FUNCTIONS ----------- ///
-    uint64_t n_keys = std::pow(10,6) - 1;
+    uint64_t n_keys = std::pow(10,6);
     std::vector<int64_t> keys{};
     for(int64_t i = 0; i < n_keys; i++)
     {
@@ -89,6 +100,36 @@ int main()
     std::cout << "Multiply-shift: " << avg_time_3 << " [ns]" << std::endl;
 
 
+    /// ----------- EXERCISE 7 ----------- ///
+    using sketch_type = Sketch<value_type, pair_type, array_type>;
+    using hashing_with_chaining_type = HashingWithChaining<value_type, pair_type, linked_list_type>;
+
+    const uint32_t N_MAX = 28;
+    const uint32_t N_MIN = 6;
+    const int64_t N_UPDATES = std::pow(10,9);;
+    const array_type array_sizes = {(value_type)fast_uint64_pow_2(7),
+                                    (value_type)fast_uint64_pow_2(10),
+                                    (value_type)fast_uint64_pow_2(20)};
+
+
+    for(const value_type& array_size : array_sizes)
+    {
+        sketch_type my_sketch = sketch_type(array_size, seed);
+        hashing_with_chaining_type my_hashing_with_chaining(array_size, seed);
+
+        for(uint32_t N = N_MIN; N <= N_MAX; N++)
+        {
+            uint32_t n = fast_uint32_pow_2(N);
+            for(int64_t i = 1; i < N_UPDATES; i++)
+            {
+                value_type delta = 1;
+                key_type key = i & (n-1); // Fast i mod n, when n=2^N.
+
+                my_sketch.update(std::make_pair(key,delta));
+                my_hashing_with_chaining.update(std::make_pair(key,delta));
+            }
+        }
+    }
 
 
 

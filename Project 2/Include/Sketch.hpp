@@ -16,7 +16,7 @@ private:
     unsigned int array_size;
 
     // Equivalent to 2^MERSENNE_PRIME_EXPONENT - 1
-    value_type mersenne_upper_bound = fast_uint32_pow_2(MERSENNE_PRIME_EXPONENT) - 1;
+    value_type mersenne_upper_bound = MERSENNE_PRIME;
     hashing_constants mersenne_hashing_constants;
 
 
@@ -72,14 +72,14 @@ public:
     void update(const pair_type& pair)
     {
         // First value in pair is key 'i' and second is update-value 'delta'.
-        auto array_index = mersenne_4_independent_hash(pair.first,
+        pair_type result = mersenne_4_independent_hash(pair.first,
                                                        this->array_size,
                                                        this->mersenne_hashing_constants);
-        this->hash_table[array_index] += pair.second;
+        (this->hash_table)[result.first] += result.second * pair.second;  // A[h(i)] += g(i) * delta;
 
     }
 
-    sum_type sum_of_squares()
+    sum_type query()
     {
         // Checking that 64-bit numbers are used c.f. exercise 6.
         if(!sizeof(value_type) * BITS_PR_BYTE == 64) throw std::runtime_error("'value_type' used in Sketch template should be 64-bit.");

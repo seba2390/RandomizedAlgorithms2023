@@ -83,7 +83,7 @@ int64_t fast_uint64_log_2(uint64_t x)
      * the number of bits in x gives the position of the most significant bit, which is the base-2 logarithm of x.
      * */
 
-    return sizeof(uint64_t) * BITS_PR_BYTE - __builtin_clz(x) - 1;
+    return sizeof(uint64_t) * BITS_PR_BYTE - __builtin_clzll(x) - 1;
 }
 
 key_type multiply_shift_hash(key_type key, key_type a, key_type l)
