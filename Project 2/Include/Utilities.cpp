@@ -85,7 +85,6 @@ std::pair<int64_t,int64_t> mersenne_4_independent_hash(key_type key, key_type ar
     k2 = ((k1*x+constants.d)&p) + ((k1*x+constants.d)>>q);
     if (k2 >= p) k2-=p;
 
-    std::cout << "k2: " << k2 << std::endl;
     //TODO: Find out why three different k's are needed for correct result
     /*
      * (k2 & 1): returns the Least Significant Bit (LSB) of k2.
@@ -112,7 +111,55 @@ std::pair<int64_t,int64_t> mersenne_4_independent_hash(key_type key, key_type ar
     int64_t h = (k2 >> 1) & (r-1);
 
     return std::make_pair(g,h);
+
 }
+
+std::pair<int64_t,int64_t> slow_mersenne_4_independent_hash(key_type key, key_type array_size, hashing_constants constants)
+{
+    int64_t r = array_size;
+    uint64_t x = key;
+    uint64_t q = MERSENNE_PRIME_EXPONENT;
+    uint64_t p = (1ULL << q) - 1;  //std::pow(2,q) - 1;
+
+    int64_t k, k1, k2;
+
+    k = (constants.a*x+constants.b) % p;
+    if (k >= p) k-=p;
+
+    k1 = (k*x+constants.c) % p;
+    if (k1 >= p) k1-=p;
+
+    k2 = (k1*x+constants.d) % p;
+    if (k2 >= p) k2-=p;
+
+    /*
+     * (k2 & 1): returns the Least Significant Bit (LSB) of k2.
+     * LSB is the rightmost bit of the bitstring - this is always {0,1}.
+     * As such, 2 * (k2 & 1) - 1 always returns a number in {-1,+1}
+     */
+    int64_t g = 2*(k2 & 1)-1;
+
+
+    /*
+     * (k2 >> 1): will shift the bits of k2 one position to the right.
+     * This is equivalent to floor(k2 / 2). (dividing w. 2, discarding remainder and rounding down).
+     * Or equivalent to dropping the LSB.
+     *
+     * (r-1): This operation produces a mask of bits that has all the bits set to 1 from the LSB
+     * up to the bit that corresponds to the highest power of 2 less than or equal to r.
+     *
+     * (k2 >> 1) & (r-1): produces a new value that has all the bits of (k2 >> 1) set to 0 from the LSB
+     * up to the bit that corresponds to the highest power of 2 less than or equal to r.
+     * Any higher-order bits of (k2 >> 1) that are above the bit corresponding to r are unaffected by the mask.
+     *
+     * Effectively (k2 >> 1) & (r-1) corresponds to first bit shifting k2 by 1, and then performing mod r, when r = 2^R (r is a power of 2).
+     */
+    int64_t h = k2 >> 1;
+    int64_t h2 = h % r;
+    //int64_t h = (k2 >> 1) & (r-1);
+
+    return std::make_pair(g,h2);
+    }
 void append_to_file(std::string filename, std::string path, std::vector<output_data_type> data)
 {
     std::ofstream output_stream(path+"/"+filename, std::ofstream::app); // Appending to end of file

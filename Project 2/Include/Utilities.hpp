@@ -26,6 +26,7 @@
 #define KEY_BIT_SIZE 32
 #define NAN_TOKEN 0
 #define MERSENNE_PRIME_EXPONENT 31
+#define BITS_PR_BYTE CHAR_BIT
 
 // Defining types.
 using key_type = int32_t;
@@ -56,6 +57,8 @@ key_type get_random_odd_uint32(const key_type& seed, const key_type& upper_bound
 key_type multiply_shift_hash(key_type key, key_type a, key_type l);
 
 std::pair<int64_t,int64_t> mersenne_4_independent_hash(key_type key, key_type array_size,  hashing_constants constants);
+
+std::pair<int64_t,int64_t> slow_mersenne_4_independent_hash(key_type key, key_type array_size, hashing_constants constants);
 
 uint32_t fast_uint32_pow_2(const uint32_t& power);
 
