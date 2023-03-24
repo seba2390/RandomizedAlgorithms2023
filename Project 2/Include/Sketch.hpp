@@ -4,14 +4,14 @@
 
 #include "Utilities.hpp"
 
-template <typename value_type, typename pair_type, typename array_type, typename return_type, typename... Args>
+template <typename value_type, typename pair_type, typename array_type, typename hash_return_type, typename... hash_args>
 class Sketch
 {
 private:
     // Typedefs
     using hash_table_type = array_type;
     using sum_type = int64_t;
-    using hash_func_type = std::function<return_type(Args...)>;
+    using hash_func_type = std::function<hash_return_type(hash_args...)>;
 
     // Attributes
     unsigned int array_size;
@@ -70,7 +70,7 @@ private:
      * @param args The values to hash.
      * @return The hash value computed by the hash function.
      */
-    return_type hash(Args... args) {
+    hash_return_type hash(hash_args... args) {
         return this->hash_function(args...);
     }
 public:

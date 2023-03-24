@@ -5,7 +5,7 @@
 #include "Utilities.hpp"
 
 
-template <typename value_type, typename pair_type, typename list_type, typename return_type, typename... Args>
+template <typename value_type, typename pair_type, typename list_type, typename hash_return_type, typename... hash_args>
 class HashingWithChaining
 {
 private:
@@ -13,13 +13,13 @@ private:
     using array_type = std::vector<list_type>;
     using hash_table_type = array_type;
     using sum_type = int64_t;
-    using hash_func_type = std::function<return_type(Args...)>;
+    using hash_func_type = std::function<hash_return_type(hash_args...)>;
 
     // Attributes
     uint32_t array_size;
     uint32_t a, l;
+    hashing_constants my_hash_constants;
     bool empty;
-    hash_func_type hash_function;
 
     // Equivalent to 2^KEY_BIT_SIZE - 1
     uint32_t multiply_shift_upper_bound = static_cast<uint32_t>(std::pow(2,KEY_BIT_SIZE)) - 1;
@@ -42,24 +42,39 @@ private:
         for(key_type i = 0; i < this->array_size; i++) hash_table[i] = list_type{}; // Setting lists in array/vector.
     }
 
+    /**
+ * Sets the constants for the 4-wise independent hash function using the Mersenne Twister algorithm with the given seed.
+ *
+ * @param seed The seed used to generate the hash function constants.
+ */
+    void set_hash_constants(const unsigned int& seed)
+    {
+        // Constant for other 4-wise independent hash function  (remember to use different seeds).
+        this->mersenne_hashing_constants.a = get_random_uint64(seed+0, this->mersenne_upper_bound);
+        this->mersenne_hashing_constants.b = get_random_uint64(seed+11, this->mersenne_upper_bound);
+        this->mersenne_hashing_constants.c = get_random_uint64(seed+431, this->mersenne_upper_bound);
+        this->mersenne_hashing_constants.d = get_random_uint64(seed+78, this->mersenne_upper_bound);
+    }
+
 
 
     /**
-     * Computes a hash value using the provided arguments and the hash function
-     * specified in the constructor.
+     * Initializes the constants for the other 4-wise independent hash function with the given seed.
      *
-     * @tparam Args The types of the arguments to hash (see class template).
-     * @param args The values to hash.
-     * @return The hash value computed by the hash function.
+     * @param seed The seed used to generate the hash function constants.
      */
-    return_type hash(Args... args) {
-        return this->hash_function(args...);
+    void initialize_consts(const unsigned int& seed)
+    {
+        // Constant for other 4-wise independent hash function  (remember to use different seeds).
+        set_hash_constants(seed);
     }
+
 
 public:
 
     // Attributes
     hash_table_type hash_table;
+    hash_func_type hash_function;
 
     // Parameterized C-tor
     /**
@@ -84,12 +99,24 @@ public:
      this->l = fast_uint64_log_2(this->array_size); // if m = 2^l then l = log2(m).
      this->empty = true;
      initialize_hash_table();
+     initialize_consts(seed);
 
      // Initializing hash function as attribute.
         this->hash_function = hash_func;
     }
 
     // Methods
+    /**
+     * Computes a hash value using the provided arguments and the hash function
+     * specified in the constructor.
+     *
+     * @tparam Args The types of the arguments to hash (see class template).
+     * @param args The values to hash.
+     * @return The hash value computed by the hash function.
+     */
+    hash_return_type hash(hash_args... args) {
+        return this->hash_function(args...);
+    }
 
     /**
      * Checks whether the provided key is stored in the hash table.
@@ -106,7 +133,21 @@ public:
         /*
          * Checks whether the provided key is stored in the hash table.
          */
-        key_type array_index = multiply_shift_hash(key, this->a, this->l);
+
+        key_type array_index;
+        if constexpr (std::is_same_v<hash_return_type, std::pair<std::any, std::any>>) {
+            // if hash_return_type is std::pair
+            array_index = static_cast<key_type>(hash(static_cast<int64_t>(key),
+                                                           static_cast<uint64_t>(this->array_size),
+                                                           this->my_hash_constants).second);
+        }
+        else {
+            // if hash_return_type is not std::pair but single int
+            array_index = hash(static_cast<uint32_t>(key),
+                                     static_cast<uint32_t>(this->a),
+                                     static_cast<uint32_t>(this->l));
+        }
+
 
         // Only start iterating through linked list if bucket is not empty
         if(!this->hash_table[array_index].empty())

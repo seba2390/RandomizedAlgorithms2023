@@ -20,6 +20,8 @@
 #include <type_traits>
 #include <numeric> // std::inner_product for std::vector
 #include <functional> // for std::forward of args
+#include <utility>
+#include <any>
 
 #include <Eigen/Dense>
 
