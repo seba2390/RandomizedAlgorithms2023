@@ -4,20 +4,20 @@
 
 #include "Utilities.hpp"
 
-template <typename value_type, typename pair_type, typename array_type>
+template <typename value_type, typename pair_type, typename array_type, typename return_type, typename... Args>
 class Sketch
 {
 private:
     // Typedefs
     using hash_table_type = array_type;
     using sum_type = int64_t;
+    using hash_func_type = std::function<return_type(Args...)>;
 
     // Attributes
     unsigned int array_size;
-
-    // Equivalent to 2^MERSENNE_PRIME_EXPONENT - 1
     value_type mersenne_upper_bound = MERSENNE_PRIME;
     hashing_constants mersenne_hashing_constants;
+    hash_func_type hash_function;
 
 
     // Methods
@@ -62,6 +62,17 @@ private:
         set_mersenne_hash_constants(seed);
     }
 
+    /**
+     * Computes a hash value using the provided arguments and the hash function
+     * specified in the constructor.
+     *
+     * @tparam Args The types of the arguments to hash (see class template).
+     * @param args The values to hash.
+     * @return The hash value computed by the hash function.
+     */
+    return_type hash(Args... args) {
+        return this->hash_function(args...);
+    }
 public:
 
     // Attributes
@@ -74,7 +85,7 @@ public:
      * @param seed The seed used to generate the hash function constants.
      * @throws std::runtime_error if the array size is not a power of 2 or if the value_type is not 64-bit.
      */
-    [[maybe_unused]] explicit Sketch(const unsigned int& array_size, const unsigned int& seed)
+    [[maybe_unused]] explicit Sketch(const unsigned int& array_size, const unsigned int& seed, hash_func_type hash_func)
     {
         // For this purpose we assume 'array_size' to be r=2^R (i.e. power of 2).
         if((array_size & (array_size - 1)) != 0) throw std::runtime_error("Array size given to Sketch C-tor should be power of 2.");
@@ -83,6 +94,7 @@ public:
         this->array_size = array_size;
         initialize_hash_table();
         initialize_consts(seed);
+        this->hash_function = hash_func;
     }
 
     // Methods

@@ -121,6 +121,46 @@ uint32_t multiply_shift_hash(uint32_t key, uint32_t a, uint32_t l)
     return (a * key) >> (KEY_BIT_SIZE - l);
 }
 
+std::pair<int64_t,int64_t> multiply_shift_2_independent(int64_t key, uint64_t array_size, hashing_constants constants)
+{
+    uint64_t q = MERSENNE_PRIME_EXPONENT;
+    uint64_t p = MERSENNE_PRIME;
+
+    uint64_t k;
+
+    k = ((constants.a*key+constants.b)&p) + ((constants.a*key+constants.b)>>q);
+    if (k >= p) k-=p;
+
+
+    //TODO: Find out why three different k's are needed for correct result
+    /*
+     * (k2 & 1): returns the Least Significant Bit (LSB) of k2.
+     * LSB is the rightmost bit of the bitstring - this is always {0,1}.
+     * As such, 2 * (k2 & 1) - 1 always returns a number in {-1,+1}
+     */
+    uint64_t g = 2*(k & 1)-1;
+
+
+    /*
+     * (k2 >> 1): will shift the bits of k2 one position to the right.
+     * This is equivalent to floor(k2 / 2). (dividing w. 2, discarding remainder and rounding down).
+     * Or equivalent to dropping the LSB.
+     *
+     * (r-1): This operation produces a mask of bits that has all the bits set to 1 from the LSB
+     * up to the bit that corresponds to the highest power of 2 less than or equal to r.
+     *
+     * (k >> 1) & (r-1): produces a new value that has all the bits of (k2 >> 1) set to 0 from the LSB
+     * up to the bit that corresponds to the highest power of 2 less than or equal to r.
+     * Any higher-order bits of (k >> 1) that are above the bit corresponding to r are unaffected by the mask.
+     *
+     * Effectively (k >> 1) & (r-1) corresponds to first bit shifting k2 by 1, and then performing mod r, when r = 2^R (r is a power of 2).
+     */
+    uint64_t h = (k >> 1) & (array_size-1);
+
+    return std::make_pair(g,h);
+
+}
+
 /**
  * Computes the Mersenne 4-Independent Hash function on the given key, array size and hashing constants.
  * @param key the key to be hashed, a 64-bit signed integer

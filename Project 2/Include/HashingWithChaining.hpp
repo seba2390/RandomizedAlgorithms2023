@@ -5,7 +5,7 @@
 #include "Utilities.hpp"
 
 
-template <typename value_type, typename pair_type, typename list_type>
+template <typename value_type, typename pair_type, typename list_type, typename return_type, typename... Args>
 class HashingWithChaining
 {
 private:
@@ -13,11 +13,13 @@ private:
     using array_type = std::vector<list_type>;
     using hash_table_type = array_type;
     using sum_type = int64_t;
+    using hash_func_type = std::function<return_type(Args...)>;
 
     // Attributes
     uint32_t array_size;
     uint32_t a, l;
     bool empty;
+    hash_func_type hash_function;
 
     // Equivalent to 2^KEY_BIT_SIZE - 1
     uint32_t multiply_shift_upper_bound = static_cast<uint32_t>(std::pow(2,KEY_BIT_SIZE)) - 1;
@@ -40,6 +42,20 @@ private:
         for(key_type i = 0; i < this->array_size; i++) hash_table[i] = list_type{}; // Setting lists in array/vector.
     }
 
+
+
+    /**
+     * Computes a hash value using the provided arguments and the hash function
+     * specified in the constructor.
+     *
+     * @tparam Args The types of the arguments to hash (see class template).
+     * @param args The values to hash.
+     * @return The hash value computed by the hash function.
+     */
+    return_type hash(Args... args) {
+        return this->hash_function(args...);
+    }
+
 public:
 
     // Attributes
@@ -55,7 +71,7 @@ public:
      * @throws std::runtime_error if the value_type used in the Sketch template is not 64-bit.
      * @throws std::runtime_error if the array_size parameter is not a power of 2.
      */
-    [[maybe_unused]] explicit HashingWithChaining(const unsigned int& array_size, const unsigned int& seed)
+    [[maybe_unused]] explicit HashingWithChaining(const unsigned int& array_size, const unsigned int& seed, hash_func_type hash_func)
     {
      // Checking that 64-bit numbers are used c.f. exercise 6.
      if(!sizeof(value_type) * BITS_PR_BYTE == 64) throw std::runtime_error("'value_type' used in Sketch template should be 64-bit.");
@@ -68,6 +84,9 @@ public:
      this->l = fast_uint64_log_2(this->array_size); // if m = 2^l then l = log2(m).
      this->empty = true;
      initialize_hash_table();
+
+     // Initializing hash function as attribute.
+        this->hash_function = hash_func;
     }
 
     // Methods

@@ -114,8 +114,14 @@ int main()
 
     /// ----------- EXERCISE 7 ----------- ///
     std::cout <<"\n ========= Exercise 7 ======== \n";
-    using sketch_type = Sketch<value_type, pair_type, array_type>;
-    using hashing_with_chaining_type = HashingWithChaining<value_type, pair_type, linked_list_type>;
+    using mersenne_4_independent_return_type = std::pair<int64_t,int64_t>;
+    using multiply_shift_return_type = uint32_t;
+
+    using sketch_type_1                = Sketch<value_type, pair_type, array_type, mersenne_4_independent_return_type,
+                                                int64_t,uint64_t,hashing_constants>;
+
+    using hashing_with_chaining_type_1 = HashingWithChaining<value_type, pair_type, linked_list_type,
+                                                             multiply_shift_return_type, uint32_t,uint32_t,uint32_t>;
 
     const uint32_t N_MAX = 28;
     const uint32_t N_MIN = 6;
@@ -127,8 +133,8 @@ int main()
     for(const value_type& r : array_sizes)
     {
 
-        sketch_type my_sketch = sketch_type(r, seed);
-        hashing_with_chaining_type my_hashing_with_chaining(r, seed);
+        sketch_type_1 my_sketch = sketch_type_1(r, seed, mersenne_4_independent_hash);
+        hashing_with_chaining_type_1 my_hashing_with_chaining = hashing_with_chaining_type_1(r, seed, multiply_shift_hash);
         std::cout << "r: " << r << std::endl;
         for(uint32_t N = N_MIN; N <= N_MAX; N++)
         {
@@ -146,20 +152,22 @@ int main()
 
     /// ----------- EXERCISE 8 ----------- ///
     std::cout <<"\n ========= Exercise 8 ======== \n";
-    using sketch_type = Sketch<value_type, pair_type, array_type>;
-    using hashing_with_chaining_type = HashingWithChaining<value_type, pair_type, linked_list_type>;
 
     const uint32_t r_min = 3;
     const uint32_t r_max = 10; // TODO: Should be 20
     const auto N_UPDATES_2 = static_cast<int64_t>(std::pow(10,3));
-    const auto N_REPETITIONS = static_cast<int64_t>(std::pow(10,3));;
+    const auto N_REPETITIONS = static_cast<int64_t>(std::pow(10,3));
 
     // initialize vector inline with a loop using lambda function to generate values
-    array_type array_sizes_2 = { []()
-                                 {array_type v; for (uint64_t i = r_min; i <= r_max; ++i)
-                                  v.push_back(static_cast<value_type>(fast_uint64_pow_2(i)));
-                                  return v;}()
-                                };
+    array_type array_sizes_2 = {
+            []() {
+                array_type v;
+                for (uint64_t i = r_min; i <= r_max; ++i) {
+                    v.push_back(static_cast<value_type>(fast_uint64_pow_2(i)));
+                }
+                return v;
+            }()
+    };
 
     for(const value_type& r : array_sizes_2)
     {
@@ -167,8 +175,8 @@ int main()
         std::cout << "r: " << r << std::endl;
         for(uint32_t repetition = 0; repetition <= N_REPETITIONS; repetition++)
         {
-            sketch_type my_sketch = sketch_type(r, seed);
-            hashing_with_chaining_type my_hashing_with_chaining(r, seed);
+            sketch_type_1 my_sketch = sketch_type_1(r, seed, mersenne_4_independent_hash);
+            hashing_with_chaining_type_1 my_hashing_with_chaining = hashing_with_chaining_type_1(r, seed, multiply_shift_hash);
 
             // Performing updates, i.e. inserting (key, delta) pairs.
             for(int64_t update = 1; update < N_UPDATES_2; update++)
