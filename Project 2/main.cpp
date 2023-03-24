@@ -142,7 +142,7 @@ int main()
                                     (value_type)fast_uint64_pow_2(10),
                                     (value_type)fast_uint64_pow_2(20)};
 
-    // One for each value of 'r' + one for hashing w. chaining
+    // One for each value of 'r' for the sketch + one for hashing w. chaining
     std::vector<output_data_type> average_update_times(array_sizes.size()+1);
 
     for(const value_type& r : array_sizes)
