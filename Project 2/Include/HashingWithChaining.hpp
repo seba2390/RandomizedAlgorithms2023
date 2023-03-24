@@ -152,8 +152,9 @@ public:
     }
 
     /**
-     * Compute the norm square of the hash table.
-     * @return The norm square of the hash table.
+     * Computes the sum of squares of all values stored in the hash table.
+     *
+     * @return The sum of squares of all values stored in the hash table.
      */
     sum_type query() {
 

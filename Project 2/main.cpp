@@ -43,6 +43,17 @@ int main()
         if(std_impl!=fast_impl) throw std::runtime_error("fast_uint64_log_2 doesn't give same output as std::log2.");
     }
 
+    /// ----------- TESTING FAST REL_ERR FUNCTION ----------- ///
+    for(uint64_t a = 1; a < 1000; a++)
+    {
+        for(uint64_t b = 1; b < 1000; b++)
+        {
+            double std_impl = slow_relative_err(a,b);
+            double fast_impl = fast_relative_err(a,b);
+            if(std_impl!=fast_impl) throw std::runtime_error("fast_relative_err doesn't give same output as slow_relative_err.");
+        }
+    }
+
     /// ----------- EXERCISE 5 ----------- ///
     print(std::string("\n ========= Exercise 5 ======== \n"));
     const uint32_t seed = 4331;
@@ -171,6 +182,8 @@ int main()
             // Getting true ||f||^2 and ||f||^2 estimate.
             [[maybe_unused]] uint64_t estimated_value = my_sketch.query();
             [[maybe_unused]] uint64_t true_value = my_hashing_with_chaining.query();
+
+            [[maybe_unused]] double rel_err = fast_relative_err(estimated_value,true_value);
 
             }
 

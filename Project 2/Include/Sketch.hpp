@@ -20,8 +20,12 @@ private:
     hashing_constants mersenne_hashing_constants;
 
 
-
     // Methods
+    /**
+     * Initializes the hash table by allocating memory for the array/vector and filling it with nullified pairs.
+     *
+     * @return void
+     */
     void initialize_hash_table()
     {
         this->hash_table.reserve(this->array_size);        // allocate memory for the array/vector
@@ -30,6 +34,12 @@ private:
         for(int entry = 0; entry < this->array_size; entry++) this->hash_table[entry] = (value_type)0;
     }
 
+
+    /**
+     * Sets the constants for the 4-wise independent hash function using the Mersenne Twister algorithm with the given seed.
+     *
+     * @param seed The seed used to generate the hash function constants.
+     */
     void set_mersenne_hash_constants(const unsigned int& seed)
     {
         // Constant for other 4-wise independent hash function  (remember to use different seeds).
@@ -41,14 +51,13 @@ private:
 
 
 
+    /**
+     * Initializes the constants for the other 4-wise independent hash function with the given seed.
+     *
+     * @param seed The seed used to generate the hash function constants.
+     */
     void initialize_consts(const unsigned int& seed)
     {
-        /*
-         * Initializing constants for hash function here
-         * to avoid continuous recalculation when
-         * calling hash function.
-         * */
-
         // Constant for other 4-wise independent hash function  (remember to use different seeds).
         set_mersenne_hash_constants(seed);
     }
@@ -58,7 +67,13 @@ public:
     // Attributes
     hash_table_type hash_table;
 
-    // Parameterized C-tor
+    /**
+     * Constructs a new Sketch object with the given array size and seed.
+     *
+     * @param array_size The size of the array for the hash table. Must be a power of 2.
+     * @param seed The seed used to generate the hash function constants.
+     * @throws std::runtime_error if the array size is not a power of 2 or if the value_type is not 64-bit.
+     */
     [[maybe_unused]] explicit Sketch(const unsigned int& array_size, const unsigned int& seed)
     {
         // For this purpose we assume 'array_size' to be r=2^R (i.e. power of 2).

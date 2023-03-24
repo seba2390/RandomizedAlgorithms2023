@@ -72,6 +72,30 @@ int32_t fast_uint32_log_2(uint32_t x)
     return sizeof(uint32_t) * BITS_PR_BYTE - __builtin_clz(x) - 1;
 }
 
+/**
+ * Calculates the relative error between two unsigned 64-bit integers, `a` and `b`, as `|a - b| / b`.
+ * The function uses bitwise operations to compute the absolute difference between `a` and `b`.
+ *
+ * @param a An unsigned 64-bit integer representing the estimated value.
+ * @param b An unsigned 64-bit integer representing the actual value.
+ *
+ * @return A double value representing the relative error between `a` and `b`.
+ *         If `b` is zero, the function returns NaN (Not a Number).
+ */
+double fast_relative_err(uint64_t a, uint64_t b)
+{
+    if(b==0) throw std::runtime_error("Trying to compute |a-b|/b for b=0 is undefined behaviour.");
+    uint64_t diff = (a > b) ? (a - b) : (b - a);
+    uint64_t mask = (diff >> 63); // 0xFFFFFFFFFFFFFFFF if diff is negative, 0x0000000000000000 otherwise
+    uint64_t abs_diff = (diff ^ mask) - mask; // abs(a - b)
+    return static_cast<double>(abs_diff) / static_cast<double>(b);
+}
+
+double slow_relative_err(uint64_t a, uint64_t b)
+{
+    return static_cast<double>(std::abs(static_cast<int64_t>(a - b))) / static_cast<double>(b);
+}
+
 int64_t fast_uint64_log_2(uint64_t x)
 {
     /*

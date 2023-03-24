@@ -71,6 +71,10 @@ int32_t fast_uint32_log_2(uint32_t x);
 
 int64_t fast_uint64_log_2(uint64_t x);
 
+double fast_relative_err(uint64_t a, uint64_t b);
+
+double slow_relative_err(uint64_t a, uint64_t b);
+
 void append_to_file(std::string filename, std::string path, std::vector<output_data_type> data);
 
 void remove_file(std::string filename, std::string path);
