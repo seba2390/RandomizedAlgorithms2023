@@ -75,11 +75,8 @@ double fast_relative_err(uint64_t a, uint64_t b);
 
 double slow_relative_err(uint64_t a, uint64_t b);
 
-void append_to_file(std::string filename, std::string path, std::vector<output_data_type> data);
+void append_to_file(const std::string& filename, const std::string& path, const std::vector<output_data_type>& data);
 
-void remove_file(std::string filename, std::string path);
-
-template <typename T>
-void print(const T &value);
+void remove_file(const std::string& filename,  const std::string& path);
 
 #endif //PROJECT_2_UTILITIES_HPP

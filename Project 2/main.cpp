@@ -32,14 +32,14 @@ int main()
     {
         uint32_t x = fast_uint32_pow_2(pow);
         auto std_impl = static_cast<int32_t>(std::log2(x));
-        int32_t fast_impl = fast_uint32_log_2(x);
+        uint32_t fast_impl = fast_uint32_log_2(x);
         if(std_impl!=fast_impl) throw std::runtime_error("fast_uint32_log_2 doesn't give same output as std::log2.");
     }
     for(uint64_t pow = 1; pow < sizeof(uint64_t) * BITS_PR_BYTE; pow++)
     {
         uint64_t x = fast_uint64_pow_2(pow);
         auto std_impl = static_cast<int64_t>(std::log2(x));
-        int64_t fast_impl = fast_uint64_log_2(x);
+        uint64_t fast_impl = fast_uint64_log_2(x);
         if(std_impl!=fast_impl) throw std::runtime_error("fast_uint64_log_2 doesn't give same output as std::log2.");
     }
 
@@ -55,7 +55,7 @@ int main()
     }
 
     /// ----------- EXERCISE 5 ----------- ///
-    print(std::string("\n ========= Exercise 5 ======== \n"));
+    std::cout <<"\n ========= Exercise 5 ======== \n";
     const uint32_t seed = 4331;
     const value_type power = 24;
     const unsigned int array_size =  fast_uint32_pow_2(power);
@@ -113,7 +113,7 @@ int main()
 
 
     /// ----------- EXERCISE 7 ----------- ///
-    print(std::string("\n ========= Exercise 7 ======== \n"));
+    std::cout <<"\n ========= Exercise 7 ======== \n";
     using sketch_type = Sketch<value_type, pair_type, array_type>;
     using hashing_with_chaining_type = HashingWithChaining<value_type, pair_type, linked_list_type>;
 
@@ -145,7 +145,7 @@ int main()
 
 
     /// ----------- EXERCISE 8 ----------- ///
-    print(std::string("\n ========= Exercise 8 ======== \n"));
+    std::cout <<"\n ========= Exercise 8 ======== \n";
     using sketch_type = Sketch<value_type, pair_type, array_type>;
     using hashing_with_chaining_type = HashingWithChaining<value_type, pair_type, linked_list_type>;
 

@@ -150,7 +150,7 @@ std::pair<int64_t,int64_t> mersenne_4_independent_hash(int64_t key, uint64_t arr
      * LSB is the rightmost bit of the bitstring - this is always {0,1}.
      * As such, 2 * (k2 & 1) - 1 always returns a number in {-1,+1}
      */
-    int64_t g = 2*(k2 & 1)-1;
+    uint64_t g = 2*(k2 & 1)-1;
 
 
     /*
@@ -167,7 +167,7 @@ std::pair<int64_t,int64_t> mersenne_4_independent_hash(int64_t key, uint64_t arr
      *
      * Effectively (k2 >> 1) & (r-1) corresponds to first bit shifting k2 by 1, and then performing mod r, when r = 2^R (r is a power of 2).
      */
-    int64_t h = (k2 >> 1) & (array_size-1);
+    uint64_t h = (k2 >> 1) & (array_size-1);
 
     return std::make_pair(g,h);
 
@@ -175,12 +175,11 @@ std::pair<int64_t,int64_t> mersenne_4_independent_hash(int64_t key, uint64_t arr
 
 std::pair<int64_t,int64_t> slow_mersenne_4_independent_hash(int64_t key, uint64_t array_size, hashing_constants constants)
 {
-    int64_t r = array_size;
+    uint64_t r = array_size;
     uint64_t x = key;
-    uint64_t q = MERSENNE_PRIME_EXPONENT;
     uint64_t p = MERSENNE_PRIME;
 
-    int64_t k, k1, k2;
+    uint64_t k, k1, k2;
 
     k = (constants.a*x+constants.b) % p;
     if (k >= p) k-=p;
@@ -196,7 +195,7 @@ std::pair<int64_t,int64_t> slow_mersenne_4_independent_hash(int64_t key, uint64_
      * LSB is the rightmost bit of the bitstring - this is always {0,1}.
      * As such, 2 * (k2 & 1) - 1 always returns a number in {-1,+1}
      */
-    int64_t g = 2*(k2 & 1)-1;
+    uint64_t g = 2*(k2 & 1)-1;
 
 
     /*
@@ -213,13 +212,13 @@ std::pair<int64_t,int64_t> slow_mersenne_4_independent_hash(int64_t key, uint64_
      *
      * Effectively (k2 >> 1) & (r-1) corresponds to first bit shifting k2 by 1, and then performing mod r, when r = 2^R (r is a power of 2).
      */
-    int64_t h = k2 >> 1;
-    int64_t h2 = h % r;
+    uint64_t h = k2 >> 1;
+    uint64_t h2 = h % r;
     //int64_t h = (k2 >> 1) & (r-1);
 
     return std::make_pair(g,h2);
     }
-void append_to_file(std::string filename, std::string path, std::vector<output_data_type> data)
+void append_to_file(const std::string& filename, const std::string& path, const std::vector<output_data_type>& data)
 {
     std::ofstream output_stream(path+"/"+filename, std::ofstream::app); // Appending to end of file
     for(auto data_point : data) output_stream << data_point << "    ";
@@ -227,9 +226,8 @@ void append_to_file(std::string filename, std::string path, std::vector<output_d
     output_stream.close();
 }
 
-void remove_file(std::string filename,  std::string path)
+void remove_file(const std::string& filename,  const std::string& path)
 {
-    std::filesystem::path folder_path = "../../Data";
     if(std::filesystem::exists(path / (std::filesystem::path)filename))
     {
         // Remove the file
@@ -241,63 +239,3 @@ void remove_file(std::string filename,  std::string path)
     }
 }
 
-template <typename T>
-void print(const T &value) {
-    // First checking for normal printable single-item types
-    if constexpr (std::is_arithmetic_v<T> || std::is_same_v<T, std::string> || std::is_same_v<T, const char*>)
-    {
-        std::cout << value << std::endl;
-    }
-    else
-    {
-        // Checking if T is array type
-        if constexpr (std::is_array_v<T>) {
-            std::cout << '[';
-            for (const auto& element : value) {
-                std::cout << element << ", ";
-            }
-            std::cout << "\b\b]" << std::endl;
-        }
-
-        // Checking if T is vector type
-        else if constexpr (std::is_same_v<T, std::vector<typename T::value_type, typename T::allocator_type>>) {
-            std::cout << '[';
-            for (const auto& element : value) {
-                std::cout << element << ", ";
-            }
-            std::cout << "\b\b]" << std::endl;
-        }
-
-        // Checking if T is list type
-        else if constexpr (std::is_same_v<T, std::list<typename T::value_type, typename T::allocator_type>>) {
-            std::cout << '[';
-            for (const auto &element: value) {
-                std::cout << element << ", ";
-            }
-            std::cout << "\b\b]" << std::endl;
-        }
-            // Checking if T can be converted to std::string
-        else if constexpr (std::is_convertible_v<T, std::string>) {
-            std::cout << value << std::endl;
-        }
-    }
-}
-
-
-template void print<int>(const int&);
-template void print<double>(const double&);
-template void print<std::string>(const std::string&);
-template void print<const char*>(const char* const&);
-template void print<bool>(const bool&);
-
-template void print<std::vector<int>>(const std::vector<int>&);
-template void print<std::vector<double>>(const std::vector<double>&);
-template void print<std::vector<std::string>>(const std::vector<std::string>&);
-template void print<std::vector<const char*>>(const std::vector<const char*>&);
-template void print<std::vector<bool>>(const std::vector<bool>&);
-
-template void print<std::list<int>>(const std::list<int>&);
-template void print<std::list<double>>(const std::list<double>&);
-template void print<std::list<std::string>>(const std::list<std::string>&);
-template void print<std::list<const char*>>(const std::list<const char*>&);
-template void print<std::list<bool>>(const std::list<bool>&);
