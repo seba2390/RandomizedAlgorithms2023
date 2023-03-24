@@ -77,7 +77,7 @@ public:
         pair_type result = mersenne_4_independent_hash(pair.first,
                                                        this->array_size,
                                                        this->mersenne_hashing_constants);
-        (this->hash_table)[result.first] += result.second * pair.second;  // A[h(i)] += g(i) * delta;
+        (this->hash_table)[result.second] += result.first * pair.second;  // A[h(i)] += g(i) * delta;
 
     }
 

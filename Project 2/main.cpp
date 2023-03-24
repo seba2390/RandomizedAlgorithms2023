@@ -44,6 +44,7 @@ int main()
     }
 
     /// ----------- EXERCISE 5 ----------- ///
+    print(std::string("\n ========= Exercise 5 ======== \n"));
     const uint32_t seed = 4331;
     const value_type power = 24;
     const unsigned int array_size =  fast_uint32_pow_2(power);
@@ -101,6 +102,7 @@ int main()
 
 
     /// ----------- EXERCISE 7 ----------- ///
+    print(std::string("\n ========= Exercise 7 ======== \n"));
     using sketch_type = Sketch<value_type, pair_type, array_type>;
     using hashing_with_chaining_type = HashingWithChaining<value_type, pair_type, linked_list_type>;
 
@@ -132,33 +134,46 @@ int main()
 
 
     /// ----------- EXERCISE 8 ----------- ///
+    print(std::string("\n ========= Exercise 8 ======== \n"));
     using sketch_type = Sketch<value_type, pair_type, array_type>;
     using hashing_with_chaining_type = HashingWithChaining<value_type, pair_type, linked_list_type>;
 
-    const uint32_t N_MAX = 28;
-    const uint32_t N_MIN = 6;
-    const auto N_UPDATES = static_cast<int64_t>(std::pow(10,5)); // TODO: Should be 10^9
-    const array_type array_sizes = {(value_type)fast_uint64_pow_2(7),
-                                    (value_type)fast_uint64_pow_2(10),
-                                    (value_type)fast_uint64_pow_2(20)};
+    const uint32_t r_min = 3;
+    const uint32_t r_max = 10; // TODO: Should be 20
+    const auto N_UPDATES_2 = static_cast<int64_t>(std::pow(10,3));
+    const auto N_REPETITIONS = static_cast<int64_t>(std::pow(10,3));;
 
-    for(const value_type& r : array_sizes)
+    // initialize vector inline with a loop using lambda function to generate values
+    array_type array_sizes_2 = { []()
+                                 {array_type v; for (uint64_t i = r_min; i <= r_max; ++i)
+                                  v.push_back(static_cast<value_type>(fast_uint64_pow_2(i)));
+                                  return v;}()
+                                };
+
+    for(const value_type& r : array_sizes_2)
     {
 
-        sketch_type my_sketch = sketch_type(r, seed);
-        hashing_with_chaining_type my_hashing_with_chaining(r, seed);
         std::cout << "r: " << r << std::endl;
-        for(uint32_t N = N_MIN; N <= N_MAX; N++)
+        for(uint32_t repetition = 0; repetition <= N_REPETITIONS; repetition++)
         {
-            uint32_t n = fast_uint32_pow_2(N);
-            for(int64_t i = 1; i < N_UPDATES; i++)
+            sketch_type my_sketch = sketch_type(r, seed);
+            hashing_with_chaining_type my_hashing_with_chaining(r, seed);
+
+            // Performing updates, i.e. inserting (key, delta) pairs.
+            for(int64_t update = 1; update < N_UPDATES_2; update++)
             {
-                value_type delta = 1;
-                auto key = static_cast<key_type>(i & (n-1)); // Fast i mod n, when n=2^N.
+                auto delta = static_cast<value_type>(std::pow(update,2));
+                auto key = static_cast<key_type>(update);
                 my_sketch.update(std::make_pair(key,delta));
                 my_hashing_with_chaining.update(std::make_pair(key,delta));
             }
-        }
+
+            // Getting true ||f||^2 and ||f||^2 estimate.
+            [[maybe_unused]] uint64_t estimated_value = my_sketch.query();
+            [[maybe_unused]] uint64_t true_value = my_hashing_with_chaining.query();
+
+            }
+
     }
 
 
