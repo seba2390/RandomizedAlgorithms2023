@@ -16,7 +16,7 @@ private:
     // Attributes
     unsigned int array_size;
     value_type mersenne_upper_bound = MERSENNE_PRIME;
-    hashing_constants mersenne_hashing_constants;
+    hashing_constants my_hash_constants;
     hash_func_type hash_function;
 
 
@@ -40,13 +40,13 @@ private:
      *
      * @param seed The seed used to generate the hash function constants.
      */
-    void set_mersenne_hash_constants(const unsigned int& seed)
+    void set_hash_constants(const unsigned int& seed)
     {
         // Constant for other 4-wise independent hash function  (remember to use different seeds).
-        this->mersenne_hashing_constants.a = get_random_uint64(seed+0, this->mersenne_upper_bound);
-        this->mersenne_hashing_constants.b = get_random_uint64(seed+11, this->mersenne_upper_bound);
-        this->mersenne_hashing_constants.c = get_random_uint64(seed+431, this->mersenne_upper_bound);
-        this->mersenne_hashing_constants.d = get_random_uint64(seed+78, this->mersenne_upper_bound);
+        this->my_hash_constants.a = get_random_uint64(seed+0, this->mersenne_upper_bound);
+        this->my_hash_constants.b = get_random_uint64(seed+11, this->mersenne_upper_bound);
+        this->my_hash_constants.c = get_random_uint64(seed+431, this->mersenne_upper_bound);
+        this->my_hash_constants.d = get_random_uint64(seed+78, this->mersenne_upper_bound);
     }
 
 
@@ -59,7 +59,7 @@ private:
     void initialize_consts(const unsigned int& seed)
     {
         // Constant for other 4-wise independent hash function  (remember to use different seeds).
-        set_mersenne_hash_constants(seed);
+        set_hash_constants(seed);
     }
 
     /**
@@ -83,7 +83,10 @@ public:
      *
      * @param array_size The size of the array for the hash table. Must be a power of 2.
      * @param seed The seed used to generate the hash function constants.
-     * @throws std::runtime_error if the array size is not a power of 2 or if the value_type is not 64-bit.
+     * @throws std::runtime_error if
+     *                              1 - The array size is not a power of 2.
+     *                              2 - The value_type is not 64-bit.
+     *                              3 - The return type of hash func is not std::pair<some_type_1, some_type_2>.
      */
     [[maybe_unused]] explicit Sketch(const unsigned int& array_size, const unsigned int& seed, hash_func_type hash_func)
     {
@@ -91,6 +94,10 @@ public:
         if((array_size & (array_size - 1)) != 0) throw std::runtime_error("Array size given to Sketch C-tor should be power of 2.");
         // Checking that 64-bit numbers are used c.f. exercise 6.
         if(!sizeof(value_type) * BITS_PR_BYTE == 64) throw std::runtime_error("'value_type' used in Sketch template should be 64-bit.");
+        // Checking that return type of provided hash function is always std::pair<type_1,type_2>
+        if constexpr (!is_pair<hash_return_type>::value) throw std::runtime_error("Return type of provided hash function is not std::pair<some_type_1, some_type_2>.");
+
+
         this->array_size = array_size;
         initialize_hash_table();
         initialize_consts(seed);
@@ -101,9 +108,9 @@ public:
     void update(const pair_type& pair)
     {
         // First value in pair is key 'i' and second is update-value 'delta'.
-        pair_type result = mersenne_4_independent_hash(pair.first,
-                                                       this->array_size,
-                                                       this->mersenne_hashing_constants);
+        pair_type result = hash(static_cast<int64_t>(pair.first),
+                                static_cast<uint64_t>(this->array_size),
+                                this->my_hash_constants);
         (this->hash_table)[result.second] += result.first * pair.second;  // A[h(i)] += g(i) * delta;
 
     }

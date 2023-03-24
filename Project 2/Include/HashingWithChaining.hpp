@@ -23,6 +23,7 @@ private:
 
     // Equivalent to 2^KEY_BIT_SIZE - 1
     uint32_t multiply_shift_upper_bound = static_cast<uint32_t>(std::pow(2,KEY_BIT_SIZE)) - 1;
+    value_type mersenne_upper_bound = MERSENNE_PRIME; // TODO: Should this be the same for alle the hash funcs w. multiple constants?
 
 
 
@@ -50,10 +51,10 @@ private:
     void set_hash_constants(const unsigned int& seed)
     {
         // Constant for other 4-wise independent hash function  (remember to use different seeds).
-        this->mersenne_hashing_constants.a = get_random_uint64(seed+0, this->mersenne_upper_bound);
-        this->mersenne_hashing_constants.b = get_random_uint64(seed+11, this->mersenne_upper_bound);
-        this->mersenne_hashing_constants.c = get_random_uint64(seed+431, this->mersenne_upper_bound);
-        this->mersenne_hashing_constants.d = get_random_uint64(seed+78, this->mersenne_upper_bound);
+        this->my_hash_constants.a = get_random_uint64(seed+0, this->mersenne_upper_bound);
+        this->my_hash_constants.b = get_random_uint64(seed+11, this->mersenne_upper_bound);
+        this->my_hash_constants.c = get_random_uint64(seed+431, this->mersenne_upper_bound);
+        this->my_hash_constants.d = get_random_uint64(seed+78, this->mersenne_upper_bound);
     }
 
 
@@ -135,11 +136,12 @@ public:
          */
 
         key_type array_index;
-        if constexpr (std::is_same_v<hash_return_type, std::pair<std::any, std::any>>) {
+        if constexpr (is_pair<hash_return_type>::value) {
             // if hash_return_type is std::pair
-            array_index = static_cast<key_type>(hash(static_cast<int64_t>(key),
-                                                           static_cast<uint64_t>(this->array_size),
-                                                           this->my_hash_constants).second);
+            auto result = hash(static_cast<int64_t>(key),
+                                                   static_cast<uint64_t>(this->array_size),
+                                                   this->my_hash_constants);
+            array_index = static_cast<key_type>(result.second);
         }
         else {
             // if hash_return_type is not std::pair but single int

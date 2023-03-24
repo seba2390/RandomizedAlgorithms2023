@@ -21,6 +21,7 @@
 #include <numeric> // std::inner_product for std::vector
 #include <functional> // for std::forward of args
 #include <utility>
+#include <typeinfo> //
 #include <any>
 
 #include <Eigen/Dense>
@@ -83,5 +84,11 @@ double slow_relative_err(uint64_t a, uint64_t b);
 void append_to_file(const std::string& filename, const std::string& path, const std::vector<output_data_type>& data);
 
 void remove_file(const std::string& filename,  const std::string& path);
+
+template<typename T>
+struct is_pair : std::false_type {};
+
+template<typename T, typename U>
+struct is_pair<std::pair<T, U>> : std::true_type {};
 
 #endif //PROJECT_2_UTILITIES_HPP
