@@ -56,6 +56,12 @@ int main()
 
     /// ----------- EXERCISE 5 ----------- ///
     std::cout <<"\n ========= Exercise 5 ======== \n";
+
+    std::string folder_path = "../../Data";
+    std::string filename = "Exercise_5.txt";
+    remove_file(filename,folder_path); // Removing possibly already existing file with name 'filename' from drive.
+
+
     const uint32_t seed = 4331;
     const value_type power = 24;
     const unsigned int array_size =  fast_uint32_pow_2(power);
@@ -104,6 +110,12 @@ int main()
         auto duration_3 = duration_cast<std::chrono::nanoseconds>(stop_3 - start_3).count();
         avg_time_3 += static_cast<double>(duration_3) / (static_cast<double>(n_keys));
 
+        // Saving time and sizes
+        append_to_file(filename, folder_path, {static_cast<output_data_type>(key),
+                                               static_cast<output_data_type>(duration_1),
+                                               static_cast<output_data_type>(duration_2),
+                                               static_cast<output_data_type>(duration_3)});
+
     }
 
     std::cout << "--- Avg. pr. key hashing times --- " << std::endl;
@@ -130,23 +142,39 @@ int main()
                                     (value_type)fast_uint64_pow_2(10),
                                     (value_type)fast_uint64_pow_2(20)};
 
+    // One for each value of 'r' + one for hashing w. chaining
+    std::vector<output_data_type> average_update_times(array_sizes.size()+1);
+
     for(const value_type& r : array_sizes)
     {
-
         sketch_type_1 my_sketch = sketch_type_1(r, seed, mersenne_4_independent_hash);
         hashing_with_chaining_type_1 my_hashing_with_chaining = hashing_with_chaining_type_1(r, seed, multiply_shift_hash);
         std::cout << "r: " << r << std::endl;
+        output_data_type total_time_1 = 0.0;
+        output_data_type total_time_2 = 0.0;
+        output_data_type n_iterations = static_cast<output_data_type>((N_MAX-N_MIN)*(N_UPDATES-1));
         for(uint32_t N = N_MIN; N <= N_MAX; N++)
         {
             uint32_t n = fast_uint32_pow_2(N);
-            for(int64_t i = 1; i < N_UPDATES; i++)
+            for(int64_t i = 1; i <= N_UPDATES; i++)
             {
                 value_type delta = 1;
                 auto key = static_cast<key_type>(i & (n-1)); // Fast i mod n, when n=2^N.
+
+                auto start_1 = std::chrono::high_resolution_clock::now();
                 my_sketch.update(std::make_pair(key,delta));
+                auto stop_1 = std::chrono::high_resolution_clock::now();
+                auto duration_1 = static_cast<output_data_type>(duration_cast<std::chrono::nanoseconds>(stop_1 - start_1).count());
+                total_time_1+=duration_1;
+
+                auto start_2 = std::chrono::high_resolution_clock::now();
                 my_hashing_with_chaining.update(std::make_pair(key,delta));
+                auto stop_2 = std::chrono::high_resolution_clock::now();
+                auto duration_2 = static_cast<output_data_type>(duration_cast<std::chrono::nanoseconds>(stop_2 - start_2).count());
+                total_time_2+=duration_2;
             }
         }
+        average_update_times.push_back()
     }
 
 
@@ -197,6 +225,44 @@ int main()
 
     }
 
+    /// ----------- EXERCISE 9 ----------- ///
+    std::cout <<"\n ========= Exercise 9 ======== \n";
+    using mersenne_4_independent_return_type_2 = std::pair<int64_t,int64_t>;
+    using multiply_shift_2_independent_return_type_2 = std::pair<int64_t,int64_t>;
+
+    using sketch_type_2                = Sketch<value_type, pair_type, array_type, mersenne_4_independent_return_type_2,
+                                                int64_t,uint64_t,hashing_constants>;
+
+    using hashing_with_chaining_type_2 = HashingWithChaining<value_type, pair_type, linked_list_type,
+                                                        multiply_shift_2_independent_return_type_2, int64_t,uint64_t,hashing_constants>;
+
+    for(const value_type& r : array_sizes_2)
+    {
+
+        std::cout << "r: " << r << std::endl;
+        for(uint32_t repetition = 0; repetition <= N_REPETITIONS; repetition++)
+        {
+            sketch_type_2 my_sketch = sketch_type_2(r, seed, multiply_shift_2_independent);
+            hashing_with_chaining_type_2 my_hashing_with_chaining = hashing_with_chaining_type_2(r, seed, multiply_shift_2_independent);
+
+            // Performing updates, i.e. inserting (key, delta) pairs.
+            for(int64_t update = 1; update < N_UPDATES_2; update++)
+            {
+                auto delta = static_cast<value_type>(std::pow(update,2));
+                auto key = static_cast<key_type>(update);
+                my_sketch.update(std::make_pair(key,delta));
+                my_hashing_with_chaining.update(std::make_pair(key,delta));
+            }
+
+            // Getting true ||f||^2 and ||f||^2 estimate.
+            [[maybe_unused]] uint64_t estimated_value = my_sketch.query();
+            [[maybe_unused]] uint64_t true_value = my_hashing_with_chaining.query();
+
+            [[maybe_unused]] double rel_err = fast_relative_err(estimated_value,true_value);
+
+        }
+
+    }
 
 
 

@@ -44,10 +44,10 @@ private:
     }
 
     /**
- * Sets the constants for the 4-wise independent hash function using the Mersenne Twister algorithm with the given seed.
- *
- * @param seed The seed used to generate the hash function constants.
- */
+     * Sets the constants for the 4-wise independent hash function using the Mersenne Twister algorithm with the given seed.
+     *
+     * @param seed The seed used to generate the hash function constants.
+     */
     void set_hash_constants(const unsigned int& seed)
     {
         // Constant for other 4-wise independent hash function  (remember to use different seeds).
@@ -149,7 +149,6 @@ public:
                                      static_cast<uint32_t>(this->a),
                                      static_cast<uint32_t>(this->l));
         }
-
 
         // Only start iterating through linked list if bucket is not empty
         if(!this->hash_table[array_index].empty())

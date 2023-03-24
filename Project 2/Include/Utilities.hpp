@@ -85,9 +85,28 @@ void append_to_file(const std::string& filename, const std::string& path, const 
 
 void remove_file(const std::string& filename,  const std::string& path);
 
+/**
+ * Type trait that determines whether a given type is a std::pair.
+ *
+ * This type trait provides a static constant value `value` that is true if and only if
+ * the given type is a std::pair. The trait is implemented using partial specialization,
+ * with a primary template that matches any type and returns false, and a partial
+ * specialization that matches std::pair<T, U> and returns true.
+ *
+ * @tparam T The type to check.
+ */
 template<typename T>
 struct is_pair : std::false_type {};
 
+/**
+ * Partial specialization of is_pair that matches std::pair<T, U>.
+ *
+ * This specialization returns true for any std::pair, regardless of the types of its
+ * elements.
+ *
+ * @tparam T The first type of the std::pair.
+ * @tparam U The second type of the std::pair.
+ */
 template<typename T, typename U>
 struct is_pair<std::pair<T, U>> : std::true_type {};
 
