@@ -57,7 +57,7 @@ uint64_t fast_uint64_pow_2(const uint64_t& power)
     return 1ULL << power;
 }
 
-int32_t fast_uint32_log_2(uint32_t x)
+uint32_t fast_uint32_log_2(uint32_t x)
 {
     /*
      * Calculates log2(r) assuming r=2^R is some positive power of 2
@@ -69,24 +69,23 @@ int32_t fast_uint32_log_2(uint32_t x)
      * the number of bits in x gives the position of the most significant bit, which is the base-2 logarithm of x.
      * */
 
-    return sizeof(uint32_t) * BITS_PR_BYTE - __builtin_clz(x) - 1;
+    return static_cast<uint32_t>(sizeof(uint32_t) * BITS_PR_BYTE - __builtin_clz(x) - 1);
 }
 
 /**
- * Calculates the relative error between two unsigned 64-bit integers, `a` and `b`, as `|a - b| / b`.
- * The function uses bitwise operations to compute the absolute difference between `a` and `b`.
+ * Computes the relative error between two unsigned 64-bit integers `a` and `b`
+ * as |a-b|/b, using a fast implementation that avoids signed conversions.
  *
- * @param a An unsigned 64-bit integer representing the estimated value.
- * @param b An unsigned 64-bit integer representing the actual value.
- *
- * @return A double value representing the relative error between `a` and `b`.
- *         If `b` is zero, the function returns NaN (Not a Number).
+ * @param a The first unsigned 64-bit integer.
+ * @param b The second unsigned 64-bit integer.
+ * @throws std::runtime_error if b is equal to 0.
+ * @return The relative error between `a` and `b`, as a double.
  */
 double fast_relative_err(uint64_t a, uint64_t b)
 {
     if(b==0) throw std::runtime_error("Trying to compute |a-b|/b for b=0 is undefined behaviour.");
     uint64_t diff = (a > b) ? (a - b) : (b - a);
-    uint64_t mask = (diff >> 63); // 0xFFFFFFFFFFFFFFFF if diff is negative, 0x0000000000000000 otherwise
+    uint64_t mask = (diff >> ((sizeof(uint64_t)*BITS_PR_BYTE)-1)); // 0xFFFFFFFFFFFFFFFF if diff is negative, 0x0000000000000000 otherwise
     uint64_t abs_diff = (diff ^ mask) - mask; // abs(a - b)
     return static_cast<double>(abs_diff) / static_cast<double>(b);
 }
@@ -96,7 +95,7 @@ double slow_relative_err(uint64_t a, uint64_t b)
     return static_cast<double>(std::abs(static_cast<int64_t>(a - b))) / static_cast<double>(b);
 }
 
-int64_t fast_uint64_log_2(uint64_t x)
+uint64_t fast_uint64_log_2(uint64_t x)
 {
     /*
      * Calculates log2(r) assuming r=2^R is some positive power of 2
@@ -108,7 +107,7 @@ int64_t fast_uint64_log_2(uint64_t x)
      * the number of bits in x gives the position of the most significant bit, which is the base-2 logarithm of x.
      * */
 
-    return sizeof(uint64_t) * BITS_PR_BYTE - __builtin_clzll(x) - 1;
+    return static_cast<uint64_t>(sizeof(uint64_t) * BITS_PR_BYTE - __builtin_clzll(x) - 1);
 }
 
 uint32_t multiply_shift_hash(uint32_t key, uint32_t a, uint32_t l)
@@ -131,20 +130,18 @@ uint32_t multiply_shift_hash(uint32_t key, uint32_t a, uint32_t l)
  * */
 std::pair<int64_t,int64_t> mersenne_4_independent_hash(int64_t key, uint64_t array_size, hashing_constants constants)
 {
-    int64_t r = array_size;
-    uint64_t x = key;
     uint64_t q = MERSENNE_PRIME_EXPONENT;
     uint64_t p = MERSENNE_PRIME;
 
-    int64_t k, k1, k2;
+    uint64_t k, k1, k2;
 
-    k = ((constants.a*x+constants.b)&p) + ((constants.a*x+constants.b)>>q);
+    k = ((constants.a*key+constants.b)&p) + ((constants.a*key+constants.b)>>q);
     if (k >= p) k-=p;
 
-    k1 = ((k*x+constants.c)&p) + ((k*x+constants.c)>>q);
+    k1 = ((k*key+constants.c)&p) + ((k*key+constants.c)>>q);
     if (k1 >= p) k1-=p;
 
-    k2 = ((k1*x+constants.d)&p) + ((k1*x+constants.d)>>q);
+    k2 = ((k1*key+constants.d)&p) + ((k1*key+constants.d)>>q);
     if (k2 >= p) k2-=p;
 
     //TODO: Find out why three different k's are needed for correct result
@@ -170,7 +167,7 @@ std::pair<int64_t,int64_t> mersenne_4_independent_hash(int64_t key, uint64_t arr
      *
      * Effectively (k2 >> 1) & (r-1) corresponds to first bit shifting k2 by 1, and then performing mod r, when r = 2^R (r is a power of 2).
      */
-    int64_t h = (k2 >> 1) & (r-1);
+    int64_t h = (k2 >> 1) & (array_size-1);
 
     return std::make_pair(g,h);
 

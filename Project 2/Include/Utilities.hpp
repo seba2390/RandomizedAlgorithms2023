@@ -67,9 +67,9 @@ uint32_t fast_uint32_pow_2(const uint32_t& power);
 
 uint64_t fast_uint64_pow_2(const uint64_t& power);
 
-int32_t fast_uint32_log_2(uint32_t x);
+uint32_t fast_uint32_log_2(uint32_t x);
 
-int64_t fast_uint64_log_2(uint64_t x);
+uint64_t fast_uint64_log_2(uint64_t x);
 
 double fast_relative_err(uint64_t a, uint64_t b);
 
