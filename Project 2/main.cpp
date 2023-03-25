@@ -299,41 +299,57 @@ int main()
 
     /// ----------- EXERCISE 9 ----------- ///
     std::cout <<"\n ========= Exercise 9 ======== \n";
-    using mersenne_4_independent_return_type_2 = std::pair<int64_t,int64_t>;
     using multiply_shift_2_independent_return_type_2 = std::pair<int64_t,int64_t>;
 
-    using sketch_type_2                = Sketch<value_type, pair_type, array_type, mersenne_4_independent_return_type_2,
+    using sketch_type_2                = Sketch<value_type, pair_type, array_type, multiply_shift_2_independent_return_type_2,
                                                 int64_t,uint64_t,hashing_constants>;
 
-    using hashing_with_chaining_type_2 = HashingWithChaining<value_type, pair_type, linked_list_type,
-                                                        multiply_shift_2_independent_return_type_2, int64_t,uint64_t,hashing_constants>;
+    std::vector<output_data_type> avg_relative_errs_2(array_sizes_2.size());
+    std::vector<output_data_type> max_relative_errs_2(array_sizes_2.size());
 
-    for(const value_type& r : array_sizes_2)
+    // Perform the experiments for each value of 'r'.
+    for(int r_idx = 0; r_idx < array_sizes_2.size(); r_idx++)
     {
-
+        const value_type r = array_sizes_2[r_idx];
         std::cout << "r: " << r << std::endl;
-        for(uint32_t repetition = 0; repetition <= N_REPETITIONS; repetition++)
-        {
-            sketch_type_2 my_sketch = sketch_type_2(r, seed, multiply_shift_2_independent);
-            hashing_with_chaining_type_2 my_hashing_with_chaining = hashing_with_chaining_type_2(r, seed, multiply_shift_2_independent);
 
-            // Performing updates, i.e. inserting (key, delta) pairs.
+        double avg_error_sum = 0;
+        double max_error = 0;
+
+        // Repeat the experiment N_REPETITIONS times
+        for(uint32_t experiment = 0; experiment <= N_REPETITIONS; experiment++)
+        {
+            // Initialize new Sketch
+            sketch_type_2 my_sketch = sketch_type_2(r, seed+(r_idx), multiply_shift_2_independent);
+
+            // Performing the 'N_UPDATES_2' updates, i.e. inserting (key, delta) pairs.
+            uint64_t true_value = 0;
             for(int64_t update = 1; update < N_UPDATES_2; update++)
             {
                 auto delta = static_cast<value_type>(std::pow(update,2));
+                true_value += delta;
                 auto key = static_cast<key_type>(update);
                 my_sketch.update(std::make_pair(key,delta));
-                my_hashing_with_chaining.update(std::make_pair(key,delta));
             }
-
-            // Getting true ||f||^2 and ||f||^2 estimate.
-            [[maybe_unused]] uint64_t estimated_value = my_sketch.query();
-            [[maybe_unused]] uint64_t true_value = my_hashing_with_chaining.query();
-
-            [[maybe_unused]] double rel_err = fast_relative_err(estimated_value,true_value);
-
+            // Calculate the relative error for this experiment
+            uint64_t estimated_value = my_sketch.query();
+            // Updating avg. err.
+            double rel_err = slow_relative_err(estimated_value,true_value);
+            if(rel_err > true_value) std::cout << rel_err << std::endl;
+            avg_error_sum += rel_err;
+            // Checking for new max. err.
+            if (rel_err > max_error) max_error = rel_err;
         }
+        avg_relative_errs_2[r_idx] = avg_error_sum / static_cast<output_data_type>(N_REPETITIONS);
+        max_relative_errs_2[r_idx] = max_error;
+    }
 
+    // Saving errors to drive
+    filename = "Exercise_9.txt";
+    remove_file(filename,folder_path); // Removing possibly already existing file with name 'filename' from drive.
+    for(int r = 0; r < avg_relative_errs_2.size(); r++)
+    {
+        append_to_file(filename, folder_path, {avg_relative_errs_2[r], max_relative_errs_2[r]});
     }
 
 
