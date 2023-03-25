@@ -126,24 +126,25 @@ int main()
 
     /// ----------- EXERCISE 7 ----------- ///
     std::cout <<"\n ========= Exercise 7 ======== \n";
+    // Define return types for hash functions
     using mersenne_4_independent_return_type = std::pair<int64_t,int64_t>;
     using multiply_shift_return_type = uint32_t;
 
+    // Define sketch and hashing classes with corresponding template arguments
     using sketch_type_1 = Sketch<value_type, pair_type, array_type, mersenne_4_independent_return_type,
-                                 int64_t,uint64_t,hashing_constants>;
+            int64_t,uint64_t,hashing_constants>;
 
     using hashing_with_chaining_type_1 = HashingWithChaining<value_type, pair_type, linked_list_type,
-                                                             multiply_shift_return_type, uint32_t,uint32_t,uint32_t>;
+            multiply_shift_return_type, uint32_t,uint32_t,uint32_t>;
 
-    std::cout <<"\n ========= flag ======== \n";
-
-    const uint32_t N_POWER_MAX = 25;
-    const uint32_t N_POWER_MIN = 6;
-    const uint32_t N_UPDATES_POWER = 5;
-    const auto N_UPDATES = static_cast<int64_t>(std::pow(10,N_UPDATES_POWER)); // TODO: Should be 10^9
+    // Define constants for the experiment
+    const uint32_t N_POWER_MAX = 20;  // Maximum power of 2 to test (TODO: Should be 28)
+    const uint32_t N_POWER_MIN = 6;   // Minimum power of 2 to test
+    const uint32_t N_UPDATES_POWER = 5;   // Power of 10 for number of updates (TODO: Should be 9)
+    const auto N_UPDATES = static_cast<int64_t>(std::pow(10,N_UPDATES_POWER)); // Total number of updates
     const array_type array_sizes = {(value_type)fast_uint64_pow_2(7),
                                     (value_type)fast_uint64_pow_2(10),
-                                    (value_type)fast_uint64_pow_2(20)};
+                                    (value_type)fast_uint64_pow_2(20)};   // Array sizes to test
     const array_type n_values = {
             []() {
                 array_type v;
@@ -152,50 +153,68 @@ int main()
                 }
                 return v;
             }()
-    };
-    std::cout <<"\n ========= flag ======== \n";
+    }; // Vector of values of n to test
 
     std::vector<output_data_type> average_HWC_update_times(n_values.size());
     std::vector<std::vector<output_data_type>> average_sketch_update_times = {{},{},{},{}};
+
+    // iterate over array of n values
     for(const value_type& n : n_values)
     {
         std::cout <<"n: " << n << std::endl;
 
+        // create a new hashing_with_chaining_type_1 object with given n, seed and multiply_shift_hash
         hashing_with_chaining_type_1 my_hashing_with_chaining = hashing_with_chaining_type_1(n, seed, multiply_shift_hash);
         output_data_type HWC_time = 0.0;
+
+        // iterate over N_UPDATES, update hashing_with_chaining_type_1 object with each update
         for(int64_t update = 1; update <= N_UPDATES; update++)
         {
             value_type delta = 1;
             auto key = static_cast<key_type>(update & (n-1)); // Fast i mod n, when n=2^N.
             if((update % n) != key) throw std::runtime_error("not correct modulo operation"); // TODO: include line number in exception
 
+            // record start time and update object
             auto start = std::chrono::high_resolution_clock::now();
             my_hashing_with_chaining.update(std::make_pair(key,delta));
             auto stop = std::chrono::high_resolution_clock::now();
+
+            // calculate duration and add to total time
             auto duration = static_cast<output_data_type>(duration_cast<std::chrono::nanoseconds>(stop - start).count());
             HWC_time+=duration;
         }
+
+        // add average update time for this value of n to the vector
         average_HWC_update_times.push_back(HWC_time / static_cast<output_data_type>(N_UPDATES));
 
+        // iterate over array_sizes, for each size create a new sketch_type_1 object with given r, seed and mersenne_4_independent_hash
         for(const value_type& r: array_sizes)
         {
             sketch_type_1 my_sketch = sketch_type_1(r, seed, mersenne_4_independent_hash);
             output_data_type sketch_time = 0.0;
+
+            // iterate over N_UPDATES, update sketch_type_1 object with each update
             for(int64_t update = 1; update <= N_UPDATES; update++)
             {
                 value_type delta = 1;
                 auto key = static_cast<key_type>(update & (n-1)); // Fast i mod n, when n=2^N.
                 if((update % n) != key) throw std::runtime_error("not correct modulo operation"); // TODO: include line number in exception
 
+                // record start time and update object
                 auto start = std::chrono::high_resolution_clock::now();
                 my_sketch.update(std::make_pair(key,delta));
                 auto stop = std::chrono::high_resolution_clock::now();
+
+                // calculate duration and add to total time
                 auto duration = static_cast<output_data_type>(duration_cast<std::chrono::nanoseconds>(stop - start).count());
                 sketch_time+=duration;
             }
+
+            // add average update time for this value of r and n to the vector
             average_sketch_update_times[r].push_back(sketch_time / static_cast<output_data_type>(N_UPDATES));
         }
     }
+
 
 
     /// ----------- EXERCISE 8 ----------- ///
