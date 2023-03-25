@@ -161,6 +161,7 @@ int main()
     {
         const value_type n = n_values[n_idx];
         std::cout <<"n: " << n << std::endl;
+        // TODO: Investigate and determine if hashing with chaining should have m=n
 
         // create a new hashing_with_chaining_type_1 object with given n, seed and multiply_shift_hash
         hashing_with_chaining_type_1 my_hashing_with_chaining = hashing_with_chaining_type_1(n, seed, multiply_shift_hash);
