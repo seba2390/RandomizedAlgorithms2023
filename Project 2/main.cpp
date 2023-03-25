@@ -219,10 +219,12 @@ int main()
 
     for(int n = 0; n < n_values.size(); n++)
     {
-        append_to_file(filename, folder_path, {static_cast<output_data_type>(average_HWC_update_times[n]),
-                                               static_cast<output_data_type>(average_sketch_update_times[0][n]),
-                                               static_cast<output_data_type>(average_sketch_update_times[1][n]),
-                                               static_cast<output_data_type>(average_sketch_update_times[2][n])});
+        append_to_file(filename, folder_path, {
+            static_cast<output_data_type>(n_values[n]),
+            static_cast<output_data_type>(average_HWC_update_times[n]),
+            static_cast<output_data_type>(average_sketch_update_times[0][n]),
+            static_cast<output_data_type>(average_sketch_update_times[1][n]),
+            static_cast<output_data_type>(average_sketch_update_times[2][n])});
     }
 
 
@@ -291,7 +293,10 @@ int main()
     remove_file(filename,folder_path); // Removing possibly already existing file with name 'filename' from drive.
     for(int r = 0; r < avg_relative_errs.size(); r++)
     {
-        append_to_file(filename, folder_path, {avg_relative_errs[r], max_relative_errs[r]});
+        append_to_file(filename, folder_path, {
+            static_cast<output_data_type>(array_sizes_2[r]),
+            avg_relative_errs[r],
+            max_relative_errs[r]});
     }
 
 
@@ -346,7 +351,10 @@ int main()
     remove_file(filename,folder_path); // Removing possibly already existing file with name 'filename' from drive.
     for(int r = 0; r < avg_relative_errs_2.size(); r++)
     {
-        append_to_file(filename, folder_path, {avg_relative_errs_2[r], max_relative_errs_2[r]});
+        append_to_file(filename, folder_path, {
+            static_cast<output_data_type>(array_sizes_2[r]),
+            avg_relative_errs_2[r],
+            max_relative_errs_2[r]});
     }
 
 
