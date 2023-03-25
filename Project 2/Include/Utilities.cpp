@@ -29,6 +29,7 @@ uint64_t get_random_uint64(const uint64_t& seed, const uint64_t& upper_bound) {
 uint32_t get_random_odd_uint32(const uint32_t& seed, const uint32_t& upper_bound)
 {
     unsigned int counter = 1;
+
     uint32_t a =  get_random_uint32(seed, upper_bound);
 
     while ( a % 2 == 0) {

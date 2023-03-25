@@ -54,6 +54,7 @@ int main()
         }
     }
 
+
     /// ----------- EXERCISE 5 ----------- ///
     std::cout <<"\n ========= Exercise 5 ======== \n";
 
@@ -71,18 +72,15 @@ int main()
     {
         keys.push_back(i);
     }
-
     uint64_t mersenne_upper_bound = fast_uint64_pow_2(31) - 1;
     hashing_constants constants = {get_random_uint64(seed, mersenne_upper_bound),
                                    get_random_uint64(seed, mersenne_upper_bound),
                                    get_random_uint64(seed, mersenne_upper_bound),
                                    get_random_uint64(seed, mersenne_upper_bound)};
 
-
-    uint32_t multiply_shift_upper_bound = static_cast<uint32_t>(std::pow(2,KEY_BIT_SIZE)) - 1;
+    uint32_t multiply_shift_upper_bound = static_cast<uint32_t>(std::pow(2,KEY_BIT_SIZE) - 1);
     const auto a = static_cast<int32_t>(get_random_odd_uint32(seed,multiply_shift_upper_bound));
     const auto l = static_cast<uint32_t>(std::log2(array_size));
-
     double avg_time_1 = 0;
     double avg_time_2 = 0;
     double avg_time_3 = 0;

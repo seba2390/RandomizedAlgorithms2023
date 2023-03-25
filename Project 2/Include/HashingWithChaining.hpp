@@ -22,7 +22,7 @@ private:
     bool empty;
 
     // Equivalent to 2^KEY_BIT_SIZE - 1
-    uint32_t multiply_shift_upper_bound = static_cast<uint32_t>(std::pow(2,KEY_BIT_SIZE)) - 1;
+    uint32_t multiply_shift_upper_bound = static_cast<uint32_t>(std::pow(2,KEY_BIT_SIZE) - 1);
     value_type mersenne_upper_bound = MERSENNE_PRIME; // TODO: Should this be the same for alle the hash funcs w. multiple constants?
 
 
