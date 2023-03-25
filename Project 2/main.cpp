@@ -56,7 +56,7 @@ int main()
 
     const uint32_t N_SEEDS = 5;
     const uint32_t SEED_MULTIPLIER = 11;
-    for(uint32_t seed = 1; seed < N_SEEDS; seed++) {
+    for(uint32_t seed = 6; seed < N_SEEDS+6; seed++) {
         std::cout << "\n ############## SEED ROUND: " << seed << " ############## " << std::endl;
 
         /// ----------- EXERCISE 5 ----------- ///
@@ -133,7 +133,7 @@ int main()
         // Define return types for hash functions
         using mersenne_4_independent_return_type = std::pair<int64_t, int64_t>;
         using multiply_shift_return_type = uint32_t;
-        
+
         // Define sketch and hashing classes with corresponding template arguments
         using sketch_type_1 = Sketch<value_type, pair_type, array_type, mersenne_4_independent_return_type,
                 int64_t, uint64_t, hashing_constants>;
