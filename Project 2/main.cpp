@@ -65,9 +65,9 @@ int main()
     const uint32_t seed = 4331;
     const value_type power = 24;
     const unsigned int array_size =  fast_uint32_pow_2(power);
-    auto n_keys = static_cast<uint64_t>(std::pow(10,3));// TODO: Should be 10^6
+    auto n_keys = static_cast<uint64_t>(std::pow(10,5));// TODO: Should be 10^6
     std::vector<int64_t> keys{};
-    for(int64_t i = 0; i < n_keys; i++)
+    for(int64_t i = 1; i <= n_keys; i++)
     {
         keys.push_back(i);
     }
@@ -138,9 +138,9 @@ int main()
             multiply_shift_return_type, uint32_t,uint32_t,uint32_t>;
 
     // Define constants for the experiment
-    const uint32_t N_POWER_MAX = 20;  // Maximum power of 2 to test (TODO: Should be 28)
+    const uint32_t N_POWER_MAX = 26;  // Maximum power of 2 to test (TODO: Should be 28)
     const uint32_t N_POWER_MIN = 6;   // Minimum power of 2 to test
-    const uint32_t N_UPDATES_POWER = 5;   // Power of 10 for number of updates (TODO: Should be 9)
+    const uint32_t N_UPDATES_POWER = 6;   // Power of 10 for number of updates (TODO: Should be 9)
     const auto N_UPDATES = static_cast<int64_t>(std::pow(10,N_UPDATES_POWER)); // Total number of updates
     const array_type array_sizes = {(value_type)fast_uint64_pow_2(7),
                                     (value_type)fast_uint64_pow_2(10),
@@ -233,7 +233,7 @@ int main()
     std::cout <<"\n ========= Exercise 8 ======== \n";
 
     const uint32_t r_min = 3;
-    const uint32_t r_max = 10; // TODO: Should be 20
+    const uint32_t r_max = 19; // TODO: Should be 20
     const auto N_UPDATES_2 = static_cast<int64_t>(std::pow(10,3));
     const auto N_REPETITIONS = static_cast<int64_t>(std::pow(10,3));
 
@@ -279,7 +279,7 @@ int main()
             uint64_t estimated_value = my_sketch.query();
             // Updating avg. err.
             double rel_err = slow_relative_err(estimated_value,true_value);
-            if(rel_err > true_value) std::cout << rel_err << std::endl;
+
             avg_error_sum += rel_err;
             // Checking for new max. err.
             if (rel_err > max_error) max_error = rel_err;
@@ -335,7 +335,6 @@ int main()
             uint64_t estimated_value = my_sketch.query();
             // Updating avg. err.
             double rel_err = slow_relative_err(estimated_value,true_value);
-            if(rel_err > true_value) std::cout << rel_err << std::endl;
             avg_error_sum += rel_err;
             // Checking for new max. err.
             if (rel_err > max_error) max_error = rel_err;
