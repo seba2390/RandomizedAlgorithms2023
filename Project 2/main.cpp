@@ -156,11 +156,12 @@ int main()
     }; // Vector of values of n to test
 
     std::vector<output_data_type> average_HWC_update_times(n_values.size());
-    std::vector<std::vector<output_data_type>> average_sketch_update_times = {{},{},{},{}};
+    output_data_type average_sketch_update_times[array_sizes.size()][n_values.size()];
 
     // iterate over array of n values
-    for(const value_type& n : n_values)
+    for(int n_idx = 0; n_idx < n_values.size(); n_idx++)
     {
+        const value_type n = n_values[n_idx];
         std::cout <<"n: " << n << std::endl;
 
         // create a new hashing_with_chaining_type_1 object with given n, seed and multiply_shift_hash
@@ -181,15 +182,16 @@ int main()
 
             // calculate duration and add to total time
             auto duration = static_cast<output_data_type>(duration_cast<std::chrono::nanoseconds>(stop - start).count());
-            HWC_time+=duration;
+            HWC_time+=duration/static_cast<output_data_type>(N_UPDATES);
         }
 
         // add average update time for this value of n to the vector
-        average_HWC_update_times.push_back(HWC_time / static_cast<output_data_type>(N_UPDATES));
+        average_HWC_update_times.push_back(HWC_time);
 
         // iterate over array_sizes, for each size create a new sketch_type_1 object with given r, seed and mersenne_4_independent_hash
-        for(const value_type& r: array_sizes)
+        for(int r_idx = 0; r_idx < array_sizes.size(); r_idx++)
         {
+            const value_type r = array_sizes[r_idx];
             sketch_type_1 my_sketch = sketch_type_1(r, seed, mersenne_4_independent_hash);
             output_data_type sketch_time = 0.0;
 
@@ -211,8 +213,20 @@ int main()
             }
 
             // add average update time for this value of r and n to the vector
-            average_sketch_update_times[r].push_back(sketch_time / static_cast<output_data_type>(N_UPDATES));
+            average_sketch_update_times[r_idx][n_idx] = sketch_time / static_cast<output_data_type>(N_UPDATES);
         }
+    }
+
+    // Saving times to drive
+    filename = "Exercise_7.txt";
+    remove_file(filename,folder_path); // Removing possibly already existing file with name 'filename' from drive.
+
+    for(int n = 0; n < n_values.size(); n++)
+    {
+        append_to_file(filename, folder_path, {static_cast<output_data_type>(average_HWC_update_times[n]),
+                                               static_cast<output_data_type>(average_sketch_update_times[0][n]),
+                                               static_cast<output_data_type>(average_sketch_update_times[1][n]),
+                                               static_cast<output_data_type>(average_sketch_update_times[2][n])});
     }
 
 
