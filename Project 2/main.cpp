@@ -181,11 +181,11 @@ int main()
 
             // calculate duration and add to total time
             auto duration = static_cast<output_data_type>(duration_cast<std::chrono::nanoseconds>(stop - start).count());
-            HWC_time+=duration/static_cast<output_data_type>(N_UPDATES);
+            HWC_time+=duration;
         }
 
         // add average update time for this value of n to the vector
-        average_HWC_update_times.push_back(HWC_time);
+        average_HWC_update_times[n_idx] = HWC_time/static_cast<output_data_type>(N_UPDATES);
 
         // iterate over array_sizes, for each size create a new sketch_type_1 object with given r, seed and mersenne_4_independent_hash
         for(int r_idx = 0; r_idx < array_sizes.size(); r_idx++)
@@ -284,16 +284,14 @@ int main()
             // Checking for new max. err.
             if (rel_err > max_error) max_error = rel_err;
             }
-        std::cout << "avg: " << avg_error_sum / static_cast<output_data_type>(N_REPETITIONS) << std::endl;
-        std::cout << "max: " << max_error  << std::endl;
-        avg_relative_errs.push_back(avg_error_sum / static_cast<output_data_type>(N_REPETITIONS));
-        max_relative_errs.push_back(max_error);
+        avg_relative_errs[r_idx] = avg_error_sum / static_cast<output_data_type>(N_REPETITIONS);
+        max_relative_errs[r_idx] = max_error;
     }
 
     // Saving errors to drive
     filename = "Exercise_8.txt";
     remove_file(filename,folder_path); // Removing possibly already existing file with name 'filename' from drive.
-    for(int r = 0; r < array_sizes_2.size(); r++)
+    for(int r = 0; r < avg_relative_errs.size(); r++)
     {
         append_to_file(filename, folder_path, {avg_relative_errs[r], max_relative_errs[r]});
     }
