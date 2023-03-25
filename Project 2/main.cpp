@@ -264,7 +264,7 @@ int main()
         for(uint32_t experiment = 0; experiment <= N_REPETITIONS; experiment++)
         {
             // Initialize new Sketch
-            sketch_type_1 my_sketch = sketch_type_1(r, seed, mersenne_4_independent_hash);
+            sketch_type_1 my_sketch = sketch_type_1(r, seed+(r_idx), mersenne_4_independent_hash);
 
             // Performing the 'N_UPDATES_2' updates, i.e. inserting (key, delta) pairs.
             uint64_t true_value = 0;
@@ -275,15 +275,17 @@ int main()
                 auto key = static_cast<key_type>(update);
                 my_sketch.update(std::make_pair(key,delta));
             }
-
             // Calculate the relative error for this experiment
             uint64_t estimated_value = my_sketch.query();
             // Updating avg. err.
-            double rel_err = fast_relative_err(estimated_value,true_value);
+            double rel_err = slow_relative_err(estimated_value,true_value);
+            if(rel_err > true_value) std::cout << rel_err << std::endl;
             avg_error_sum += rel_err;
             // Checking for new max. err.
             if (rel_err > max_error) max_error = rel_err;
             }
+        std::cout << "avg: " << avg_error_sum / static_cast<output_data_type>(N_REPETITIONS) << std::endl;
+        std::cout << "max: " << max_error  << std::endl;
         avg_relative_errs.push_back(avg_error_sum / static_cast<output_data_type>(N_REPETITIONS));
         max_relative_errs.push_back(max_error);
     }
