@@ -56,7 +56,7 @@ int main()
 
     const uint32_t N_SEEDS = 5;
     const uint32_t SEED_MULTIPLIER = 11;
-    for(uint32_t seed = 6; seed < N_SEEDS+6; seed++) {
+    for(uint32_t seed = 0; seed <= 20; seed++) {
         std::cout << "\n ############## SEED ROUND: " << seed << " ############## " << std::endl;
 
         /// ----------- EXERCISE 5 ----------- ///
