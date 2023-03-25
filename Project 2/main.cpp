@@ -135,16 +135,31 @@ int main()
     using hashing_with_chaining_type_1 = HashingWithChaining<value_type, pair_type, linked_list_type,
                                                              multiply_shift_return_type, uint32_t,uint32_t,uint32_t>;
 
-    const uint32_t N_MAX = 28;
-    const uint32_t N_MIN = 6;
-    const auto N_UPDATES = static_cast<int64_t>(std::pow(10,5)); // TODO: Should be 10^9
+    const uint32_t N_POWER_MAX = 28;
+    const uint32_t N_POWER_MIN = 6;
+    const uint32_t N_UPDATES_POWER = 5;
+    const auto N_UPDATES = static_cast<int64_t>(std::pow(10,N_UPDATES_POWER)); // TODO: Should be 10^9
     const array_type array_sizes = {(value_type)fast_uint64_pow_2(7),
                                     (value_type)fast_uint64_pow_2(10),
                                     (value_type)fast_uint64_pow_2(20)};
-
+    const array_type n_values = {
+            []() {
+                array_type v;
+                for (uint64_t i = N_POWER_MIN; i <= N_POWER_MAX; ++i) {
+                    v.push_back(static_cast<value_type>(fast_uint64_pow_2(i)));
+                }
+                return v;
+            }()
+    };
     // One for each value of 'r' for the sketch + one for hashing w. chaining
     std::vector<output_data_type> average_update_times(array_sizes.size()+1);
 
+    for(const value_type& r : n_values)
+    {
+        hashing_with_chaining_type_1 my_hashing_with_chaining = hashing_with_chaining_type_1(r, seed, multiply_shift_hash);
+
+
+    }
     for(const value_type& r : array_sizes)
     {
         sketch_type_1 my_sketch = sketch_type_1(r, seed, mersenne_4_independent_hash);
