@@ -31,7 +31,7 @@
 #define KEY_BIT_SIZE 32
 #define NAN_TOKEN 0
 #define MERSENNE_PRIME_EXPONENT 31
-#define MERSENNE_PRIME (1ULL << MERSENNE_PRIME_EXPONENT) - 1
+#define MERSENNE_PRIME static_cast<uint64_t>(std::pow(2,31)-1)
 #define BITS_PR_BYTE CHAR_BIT
 
 // Defining types.

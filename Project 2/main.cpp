@@ -54,10 +54,10 @@ int main()
         }
     }
 
-    const uint32_t N_SEEDS = 5;
+    const uint32_t N_SEEDS = 3;
     const uint32_t SEED_MULTIPLIER = 11;
-    for(uint32_t seed = 0; seed <= 20; seed++) {
-        std::cout << "\n ############## SEED ROUND: " << seed << " ############## " << std::endl;
+    for(uint32_t seed = 0; seed < N_SEEDS; seed++) {
+        std::cout << "\n ############## SEED ROUND: " << seed+1 << "/" << N_SEEDS << " ############## " << std::endl;
 
         /// ----------- EXERCISE 5 ----------- ///
         std::cout << "\n ========= Exercise 5 ======== \n";
@@ -234,7 +234,7 @@ int main()
                     static_cast<output_data_type>(average_sketch_update_times[2][n])});
         }
 
-
+        // TODO: Investigate why the avg. relative error is greater than 1 in exercise 8 and 9!!
 
         /// ----------- EXERCISE 8 ----------- ///
         std::cout << "\n ========= Exercise 8 ======== \n";
@@ -274,7 +274,7 @@ int main()
                 // Performing the 'N_UPDATES_2' updates, i.e. inserting (key, delta) pairs.
                 uint64_t true_value = 0;
                 for (int64_t update = 1; update < N_UPDATES_2; update++) {
-                    auto delta = static_cast<value_type>(std::pow(update, 2));
+                    auto delta = static_cast<value_type>(std::pow(update, 4)); // Remember to put (i^2)^2 = i^4
                     true_value += delta;
                     auto key = static_cast<key_type>(update);
                     my_sketch.update(std::make_pair(key, delta));
@@ -330,7 +330,7 @@ int main()
                 // Performing the 'N_UPDATES_2' updates, i.e. inserting (key, delta) pairs.
                 uint64_t true_value = 0;
                 for (int64_t update = 1; update < N_UPDATES_2; update++) {
-                    auto delta = static_cast<value_type>(std::pow(update, 2));
+                    auto delta = static_cast<value_type>(std::pow(update, 4)); // Remember to put (i^2)^2 = i^4
                     true_value += delta;
                     auto key = static_cast<key_type>(update);
                     my_sketch.update(std::make_pair(key, delta));
@@ -357,5 +357,7 @@ int main()
                     avg_relative_errs_2[r],
                     max_relative_errs_2[r]});
         }
+
     }
+
 }
