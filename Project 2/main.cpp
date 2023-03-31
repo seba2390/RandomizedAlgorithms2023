@@ -54,7 +54,7 @@ int main()
         }
     }
 
-    const uint32_t N_SEEDS = 1;
+    const uint32_t N_SEEDS = 10;
     const uint32_t SEED_MULTIPLIER = 11;
     for(uint32_t seed = 0; seed < N_SEEDS; seed++) {
         std::cout << "\n ############## SEED ROUND: " << seed+1 << "/" << N_SEEDS << " ############## " << std::endl;
@@ -142,7 +142,7 @@ int main()
                 multiply_shift_return_type, uint32_t, uint32_t, uint32_t>;
 
         // Define constants for the experiment
-        const uint32_t N_POWER_MAX = 25;  // Maximum power of 2 to test (TODO: Should be 28)
+        const uint32_t N_POWER_MAX = 28;  // Maximum power of 2 to test (TODO: Should be 28)
         const uint32_t N_POWER_MIN = 6;   // Minimum power of 2 to test
         const uint32_t N_UPDATES_POWER = 6;   // Power of 10 for number of updates (TODO: Should be 9)
         const auto N_UPDATES = static_cast<int64_t>(std::pow(10, N_UPDATES_POWER)); // Total number of updates
@@ -165,7 +165,7 @@ int main()
         // iterate over array of n values
         for (int n_idx = 0; n_idx < n_values.size(); n_idx++) {
             const value_type n = n_values[n_idx];
-            std::cout << "n: " << n << std::endl;
+            std::cout << "n= " << n << " <--> N= " << N_POWER_MIN+n_idx << " / " << N_POWER_MAX <<  std::endl;
             // TODO: Investigate and determine if hashing with chaining should have m=n
 
             // create a new hashing_with_chaining_type_1 object with given n, seed and multiply_shift_hash
@@ -235,7 +235,6 @@ int main()
         }
 
 
-        // TODO: Investigate why the avg. relative error is greater than 1 in exercise 8 and 9!!
 
         /// ----------- EXERCISE 8 ----------- ///
         std::cout << "\n ========= Exercise 8 ======== \n";
@@ -262,7 +261,7 @@ int main()
         // Perform the experiments for each value of 'r'.
         for (int r_idx = 0; r_idx < array_sizes_2.size(); r_idx++) {
             const value_type r = array_sizes_2[r_idx];
-            std::cout << "r: " << r << std::endl;
+            std::cout << "r= " << r << " <--> R= " << r_min+r_idx << " / " << r_max << std::endl;
 
             double avg_error_sum = 0;
             double max_error = 0;
@@ -306,6 +305,7 @@ int main()
 
 
         /// ----------- EXERCISE 9 ----------- ///
+        // TODO: determine why error is so much bigger for 2-wise multiply shift (this exercise) than 4-wise (exercise 8)
         std::cout << "\n ========= Exercise 9 ======== \n";
         using multiply_shift_2_independent_return_type_2 = std::pair<int64_t, int64_t>;
 
@@ -318,7 +318,7 @@ int main()
         // Perform the experiments for each value of 'r'.
         for (int r_idx = 0; r_idx < array_sizes_2.size(); r_idx++) {
             const value_type r = array_sizes_2[r_idx];
-            std::cout << "r: " << r << std::endl;
+            std::cout << "r= " << r << " <--> R= " << r_min+r_idx << " / " << r_max << std::endl;
 
             double avg_error_sum = 0;
             double max_error = 0;
@@ -327,9 +327,8 @@ int main()
             for (uint32_t experiment = 0; experiment <= N_REPETITIONS; experiment++) {
                 // Initialize new Sketch
                 sketch_type_2 my_sketch = sketch_type_2(r, 0+seed*SEED_MULTIPLIER + (r_idx), multiply_shift_2_independent);
-
-                // Performing the 'N_UPDATES_2' updates, i.e. inserting (key, delta) pairs.
                 uint64_t true_value = 0;
+                // Performing the 'N_UPDATES_2' updates, i.e. inserting (key, delta) pairs.
                 for (int64_t update = 1; update < N_UPDATES_2; update++) {
                     auto delta = static_cast<value_type>(std::pow(update, 2));
                     true_value += static_cast<uint64_t>(std::pow(delta,2));
@@ -337,9 +336,10 @@ int main()
                     my_sketch.update(std::make_pair(key, delta));
                 }
                 // Calculate the relative error for this experiment
-                uint64_t estimated_value = my_sketch.query();
+                auto estimated_value = my_sketch.query();
                 // Updating avg. err.
                 double rel_err = slow_relative_err(estimated_value, true_value);
+
                 avg_error_sum += rel_err;
                 // Checking for new max. err.
                 if (rel_err > max_error) max_error = rel_err;
