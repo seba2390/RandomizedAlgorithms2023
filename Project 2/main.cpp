@@ -54,7 +54,7 @@ int main()
         }
     }
 
-    const uint32_t N_SEEDS = 3;
+    const uint32_t N_SEEDS = 1;
     const uint32_t SEED_MULTIPLIER = 11;
     for(uint32_t seed = 0; seed < N_SEEDS; seed++) {
         std::cout << "\n ############## SEED ROUND: " << seed+1 << "/" << N_SEEDS << " ############## " << std::endl;
@@ -81,7 +81,7 @@ int main()
                                        get_random_uint64(0+seed*SEED_MULTIPLIER, mersenne_upper_bound),
                                        get_random_uint64(0+seed*SEED_MULTIPLIER, mersenne_upper_bound)};
 
-        uint32_t multiply_shift_upper_bound = static_cast<uint32_t>(std::pow(2, KEY_BIT_SIZE) - 1);
+        auto multiply_shift_upper_bound = static_cast<uint32_t>(std::pow(2, KEY_BIT_SIZE) - 1);
         const auto a = static_cast<int32_t>(get_random_odd_uint32(0+seed*SEED_MULTIPLIER, multiply_shift_upper_bound));
         const auto l = static_cast<uint32_t>(std::log2(array_size));
         double avg_time_1 = 0;
@@ -234,15 +234,16 @@ int main()
                     static_cast<output_data_type>(average_sketch_update_times[2][n])});
         }
 
+
         // TODO: Investigate why the avg. relative error is greater than 1 in exercise 8 and 9!!
 
         /// ----------- EXERCISE 8 ----------- ///
         std::cout << "\n ========= Exercise 8 ======== \n";
 
         const uint32_t r_min = 3;
-        const uint32_t r_max = 19; // TODO: Should be 20
-        const auto N_UPDATES_2 = static_cast<int64_t>(std::pow(10, 3));
-        const auto N_REPETITIONS = static_cast<int64_t>(std::pow(10, 3));
+        const uint32_t r_max = 20; // TODO: Should be 20
+        const auto N_UPDATES_2 = static_cast<int64_t>(std::pow(10, 3)); // TODO: Should be 10^3
+        const auto N_REPETITIONS = static_cast<int64_t>(std::pow(10, 3)); // TODO: Should be 10^3
 
         // initialize vector inline with a loop using lambda function to generate values
         array_type array_sizes_2 = {
@@ -270,17 +271,16 @@ int main()
             for (uint32_t experiment = 0; experiment <= N_REPETITIONS; experiment++) {
                 // Initialize new Sketch
                 sketch_type_1 my_sketch = sketch_type_1(r, 0+seed*SEED_MULTIPLIER + (r_idx), mersenne_4_independent_hash);
-
-                // Performing the 'N_UPDATES_2' updates, i.e. inserting (key, delta) pairs.
                 uint64_t true_value = 0;
+                // Performing the 'N_UPDATES_2' updates, i.e. inserting (key, delta) pairs.
                 for (int64_t update = 1; update < N_UPDATES_2; update++) {
-                    auto delta = static_cast<value_type>(std::pow(update, 4)); // Remember to put (i^2)^2 = i^4
-                    true_value += delta;
+                    auto delta = static_cast<value_type>(std::pow(update, 2));
+                    true_value += static_cast<uint64_t>(std::pow(delta,2));
                     auto key = static_cast<key_type>(update);
                     my_sketch.update(std::make_pair(key, delta));
                 }
                 // Calculate the relative error for this experiment
-                uint64_t estimated_value = my_sketch.query();
+                auto estimated_value = my_sketch.query();
                 // Updating avg. err.
                 double rel_err = slow_relative_err(estimated_value, true_value);
 
@@ -291,6 +291,7 @@ int main()
             avg_relative_errs[r_idx] = avg_error_sum / static_cast<output_data_type>(N_REPETITIONS);
             max_relative_errs[r_idx] = max_error;
         }
+
 
         // Saving errors to drive
         filename = "Exercise_8_seed_" + std::to_string(0+seed*SEED_MULTIPLIER) + ".txt";
@@ -330,8 +331,8 @@ int main()
                 // Performing the 'N_UPDATES_2' updates, i.e. inserting (key, delta) pairs.
                 uint64_t true_value = 0;
                 for (int64_t update = 1; update < N_UPDATES_2; update++) {
-                    auto delta = static_cast<value_type>(std::pow(update, 4)); // Remember to put (i^2)^2 = i^4
-                    true_value += delta;
+                    auto delta = static_cast<value_type>(std::pow(update, 2));
+                    true_value += static_cast<uint64_t>(std::pow(delta,2));
                     auto key = static_cast<key_type>(update);
                     my_sketch.update(std::make_pair(key, delta));
                 }
