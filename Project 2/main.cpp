@@ -142,7 +142,7 @@ int main()
                 multiply_shift_return_type, uint32_t, uint32_t, uint32_t>;
 
         // Define constants for the experiment
-        const uint32_t N_POWER_MAX = 28;  // Maximum power of 2 to test (TODO: Should be 28)
+        const uint32_t N_POWER_MAX = 26;  // Maximum power of 2 to test (TODO: Should be 28)
         const uint32_t N_POWER_MIN = 6;   // Minimum power of 2 to test
         const uint32_t N_UPDATES_POWER = 6;   // Power of 10 for number of updates (TODO: Should be 9)
         const auto N_UPDATES = static_cast<int64_t>(std::pow(10, N_UPDATES_POWER)); // Total number of updates
@@ -339,6 +339,13 @@ int main()
                 auto estimated_value = my_sketch.query();
                 // Updating avg. err.
                 double rel_err = slow_relative_err(estimated_value, true_value);
+                if(estimated_value > 2*true_value){
+                        std::cout << "estimated_value= " << estimated_value << std::endl;
+                        std::cout << "true_value= " << true_value << std::endl << std::endl;
+                        std::cout << "estimated_value/true_value= " << static_cast<double >(estimated_value)/static_cast<double >(true_value) << std::endl;
+                }
+
+
 
                 avg_error_sum += rel_err;
                 // Checking for new max. err.

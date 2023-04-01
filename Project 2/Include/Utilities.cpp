@@ -124,12 +124,9 @@ uint32_t multiply_shift_hash(uint32_t key, uint32_t a, uint32_t l)
 
 std::pair<int64_t,int64_t> multiply_shift_2_independent(int64_t key, uint64_t array_size, hashing_constants constants)
 {
-    uint64_t q = MERSENNE_PRIME_EXPONENT;
-    uint64_t p = MERSENNE_PRIME;
-
     uint64_t k;
 
-    k = (constants.a*key+constants.b) >> static_cast<int64_t>(KEY_BIT_SIZE + 1);
+    k = (constants.a*key+constants.b) >> static_cast<int64_t>(33);
 
     //TODO: Find out why three different k's are needed for correct result
     /*
@@ -155,7 +152,21 @@ std::pair<int64_t,int64_t> multiply_shift_2_independent(int64_t key, uint64_t ar
      * Effectively (k >> 1) & (r-1) corresponds to first bit shifting k by 1, and then performing mod r, when r = 2^R (r is a power of 2).
      */
     uint64_t h = (k >> 1) & (array_size-1);
-
+    if(! (h < array_size)) {
+        std::cout<< "array size, h :" << array_size << "," << h << std::endl;
+        throw std::runtime_error("Error in multiply_shift_2_independent - h too large.");
+    }
+    if(! (h >= 0)) {
+        std::cout<< "array size, h :" << array_size << "," << h << std::endl;
+        throw std::runtime_error("Error in multiply_shift_2_independent - h too small.");
+    }
+    if(!((g==-1)||(g==1)))
+    {
+        std::cout<< "array size, g :" << array_size << "," << g << std::endl;
+        throw std::runtime_error("Error in multiply_shift_2_independent");
+    }
+    //std::cout << "a:" << constants.a << " b:" << constants.b << std::endl;
+    //std::cout << "h=" << h << ",key=" << key << std::endl << std::endl;
     return std::make_pair(g,h);
 
 }
