@@ -40,7 +40,7 @@ private:
     {
         hash_table.reserve(this->array_size);    // allocate memory for the array/vector
         hash_table.resize(this->array_size);        // initialize the array/vector with the given size
-        for(key_type i = 0; i < this->array_size; i++) hash_table[i] = list_type{}; // Setting lists in array/vector.
+        for(key_type i = 0; i < static_cast<key_type>(this->array_size); i++) hash_table[i] = list_type{}; // Setting lists in array/vector.
     }
 
     /**

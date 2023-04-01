@@ -31,7 +31,7 @@ private:
         this->hash_table.reserve(this->array_size);        // allocate memory for the array/vector
         this->hash_table.resize(this->array_size);        // initialize the array/vector with the given size
         // Filling with nullified pairs.
-        for(int entry = 0; entry < this->array_size; entry++) this->hash_table[entry] = (value_type)0;
+        for(unsigned int entry = 0; entry < this->array_size; entry++) this->hash_table[entry] = (value_type)0;
     }
 
 

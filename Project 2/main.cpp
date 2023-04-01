@@ -17,44 +17,45 @@ int main()
     for(uint32_t pow = 0; pow < sizeof(uint32_t) * BITS_PR_BYTE; pow++)
     {
         auto std_impl = static_cast<uint32_t>(std::pow(2,pow));
-        uint32_t fast_impl = fast_uint32_pow_2(pow);
+        const uint32_t fast_impl = fast_uint32_pow_2(pow);
         if(std_impl!=fast_impl) throw std::runtime_error("fast_uint32_pow_2 doesn't give same output as std::pow.");
     }
     for(uint64_t pow = 0; pow < sizeof(uint64_t) * BITS_PR_BYTE; pow++)
     {
         auto std_impl = static_cast<uint64_t>(std::pow(2,pow));
-        uint64_t fast_impl = fast_uint64_pow_2(pow);
+        const uint64_t fast_impl = fast_uint64_pow_2(pow);
         if(std_impl!=fast_impl) throw std::runtime_error("fast_uint64_pow_2 doesn't give same output as std::pow.");
     }
 
     /// ----------- TESTING FAST LOG2 FUNCTIONS ----------- ///
     for(uint32_t pow = 1; pow < sizeof(uint32_t) * BITS_PR_BYTE; pow++)
     {
-        uint32_t x = fast_uint32_pow_2(pow);
-        auto std_impl = static_cast<int32_t>(std::log2(x));
-        uint32_t fast_impl = fast_uint32_log_2(x);
+        const uint32_t x = fast_uint32_pow_2(pow);
+        auto std_impl = static_cast<uint32_t>(std::log2(x));
+        const uint32_t fast_impl = fast_uint32_log_2(x);
         if(std_impl!=fast_impl) throw std::runtime_error("fast_uint32_log_2 doesn't give same output as std::log2.");
     }
     for(uint64_t pow = 1; pow < sizeof(uint64_t) * BITS_PR_BYTE; pow++)
     {
-        uint64_t x = fast_uint64_pow_2(pow);
-        auto std_impl = static_cast<int64_t>(std::log2(x));
-        uint64_t fast_impl = fast_uint64_log_2(x);
+        const uint64_t x = fast_uint64_pow_2(pow);
+        auto std_impl = static_cast<uint64_t>(std::log2(x));
+        const uint64_t fast_impl = fast_uint64_log_2(x);
         if(std_impl!=fast_impl) throw std::runtime_error("fast_uint64_log_2 doesn't give same output as std::log2.");
     }
 
     /// ----------- TESTING FAST REL_ERR FUNCTION ----------- ///
-    for(uint64_t a = 1; a < 1000; a++)
+    const uint64_t N_trials = 1000;
+    for(uint64_t a = 1; a < N_trials; a++)
     {
-        for(uint64_t b = 1; b < 1000; b++)
+        for(uint64_t b = 1; b < N_trials; b++)
         {
-            double std_impl = slow_relative_err(a,b);
-            double fast_impl = fast_relative_err(a,b);
+            const double std_impl = slow_relative_err(a,b);
+            const double fast_impl = fast_relative_err(a,b);
             if(std_impl!=fast_impl) throw std::runtime_error("fast_relative_err doesn't give same output as slow_relative_err.");
         }
     }
 
-    const uint32_t N_SEEDS = 10;
+    const uint32_t N_SEEDS = 3;
     const uint32_t SEED_MULTIPLIER = 11;
     for(uint32_t seed = 0; seed < N_SEEDS; seed++) {
         std::cout << "\n ############## SEED ROUND: " << seed+1 << "/" << N_SEEDS << " ############## " << std::endl;
@@ -70,13 +71,13 @@ int main()
 
         const value_type power = 24;
         const unsigned int array_size = fast_uint32_pow_2(power);
-        auto n_keys = static_cast<uint64_t>(std::pow(10, 5));// TODO: Should be 10^6
+        auto n_keys = static_cast<int64_t>(std::pow(10, 5));// TODO: Should be 10^6
         std::vector<int64_t> keys{};
         for (int64_t i = 1; i <= n_keys; i++) {
             keys.push_back(i);
         }
-        uint64_t mersenne_upper_bound = fast_uint64_pow_2(31) - 1;
-        hashing_constants constants = {get_random_uint64(0+seed*SEED_MULTIPLIER, mersenne_upper_bound),
+        const uint64_t mersenne_upper_bound = fast_uint64_pow_2(31) - 1;
+        const hashing_constants constants = {get_random_uint64(0+seed*SEED_MULTIPLIER, mersenne_upper_bound),
                                        get_random_uint64(0+seed*SEED_MULTIPLIER, mersenne_upper_bound),
                                        get_random_uint64(0+seed*SEED_MULTIPLIER, mersenne_upper_bound),
                                        get_random_uint64(0+seed*SEED_MULTIPLIER, mersenne_upper_bound)};
@@ -160,10 +161,11 @@ int main()
         }; // Vector of values of n to test
 
         std::vector<output_data_type> average_HWC_update_times(n_values.size());
-        output_data_type average_sketch_update_times[array_sizes.size()][n_values.size()];
+        std::vector<std::vector<output_data_type>> average_sketch_update_times;
+        average_sketch_update_times.resize(array_sizes.size(), std::vector<output_data_type>(n_values.size()));
 
         // iterate over array of n values
-        for (int n_idx = 0; n_idx < n_values.size(); n_idx++) {
+        for (unsigned int n_idx = 0; n_idx < n_values.size(); n_idx++) {
             const value_type n = n_values[n_idx];
             std::cout << "n= " << n << " <--> N= " << N_POWER_MIN+n_idx << " / " << N_POWER_MAX <<  std::endl;
             // TODO: Investigate and determine if hashing with chaining should have m=n
@@ -175,7 +177,7 @@ int main()
 
             // iterate over N_UPDATES, update hashing_with_chaining_type_1 object with each update
             for (int64_t update = 1; update <= N_UPDATES; update++) {
-                value_type delta = 1;
+                const value_type delta = 1;
                 auto key = static_cast<key_type>(update & (n - 1)); // Fast i mod n, when n=2^N.
 
                 // record start time and update object
@@ -193,14 +195,14 @@ int main()
             average_HWC_update_times[n_idx] = HWC_time / static_cast<output_data_type>(N_UPDATES);
 
             // iterate over array_sizes, for each size create a new sketch_type_1 object with given r, seed and mersenne_4_independent_hash
-            for (int r_idx = 0; r_idx < array_sizes.size(); r_idx++) {
+            for (unsigned int r_idx = 0; r_idx < array_sizes.size(); r_idx++) {
                 const value_type r = array_sizes[r_idx];
                 sketch_type_1 my_sketch = sketch_type_1(r, 0+seed*SEED_MULTIPLIER, mersenne_4_independent_hash);
                 output_data_type sketch_time = 0.0;
 
                 // iterate over N_UPDATES, update sketch_type_1 object with each update
                 for (int64_t update = 1; update <= N_UPDATES; update++) {
-                    value_type delta = 1;
+                    const value_type delta = 1;
                     auto key = static_cast<key_type>(update & (n - 1)); // Fast i mod n, when n=2^N.
 
                     // record start time and update object
@@ -225,7 +227,7 @@ int main()
 
         remove_file(filename, folder_path); // Removing possibly already existing file with name 'filename' from drive.
 
-        for (int n = 0; n < n_values.size(); n++) {
+        for (unsigned int n = 0; n < n_values.size(); n++) {
             append_to_file(filename, folder_path, {
                     static_cast<output_data_type>(n_values[n]),
                     static_cast<output_data_type>(average_HWC_update_times[n]),
@@ -259,7 +261,7 @@ int main()
         std::vector<output_data_type> max_relative_errs(array_sizes_2.size());
 
         // Perform the experiments for each value of 'r'.
-        for (int r_idx = 0; r_idx < array_sizes_2.size(); r_idx++) {
+        for (unsigned int r_idx = 0; r_idx < array_sizes_2.size(); r_idx++) {
             const value_type r = array_sizes_2[r_idx];
             std::cout << "r= " << r << " <--> R= " << r_min+r_idx << " / " << r_max << std::endl;
 
@@ -281,7 +283,7 @@ int main()
                 // Calculate the relative error for this experiment
                 auto estimated_value = my_sketch.query();
                 // Updating avg. err.
-                double rel_err = slow_relative_err(estimated_value, true_value);
+                const double rel_err = slow_relative_err(estimated_value, true_value);
 
                 avg_error_sum += rel_err;
                 // Checking for new max. err.
@@ -296,7 +298,7 @@ int main()
         filename = "Exercise_8_seed_" + std::to_string(0+seed*SEED_MULTIPLIER) + ".txt";
         folder_path = "../../Data/Exercise_8";
         remove_file(filename, folder_path); // Removing possibly already existing file with name 'filename' from drive.
-        for (int r = 0; r < avg_relative_errs.size(); r++) {
+        for (unsigned int r = 0; r < avg_relative_errs.size(); r++) {
             append_to_file(filename, folder_path, {
                     static_cast<output_data_type>(array_sizes_2[r]),
                     avg_relative_errs[r],
@@ -316,7 +318,7 @@ int main()
         std::vector<output_data_type> max_relative_errs_2(array_sizes_2.size());
 
         // Perform the experiments for each value of 'r'.
-        for (int r_idx = 0; r_idx < array_sizes_2.size(); r_idx++) {
+        for (unsigned int r_idx = 0; r_idx < array_sizes_2.size(); r_idx++) {
             const value_type r = array_sizes_2[r_idx];
             std::cout << "r= " << r << " <--> R= " << r_min+r_idx << " / " << r_max << std::endl;
 
@@ -338,8 +340,8 @@ int main()
                 // Calculate the relative error for this experiment
                 auto estimated_value = my_sketch.query();
                 // Updating avg. err.
-                double rel_err = slow_relative_err(estimated_value, true_value);
-                if(estimated_value > 2*true_value){
+                const double rel_err = slow_relative_err(estimated_value, true_value);
+                if(static_cast<uint64_t>(estimated_value) > 2*true_value){
                         std::cout << "estimated_value= " << estimated_value << std::endl;
                         std::cout << "true_value= " << true_value << std::endl << std::endl;
                         std::cout << "estimated_value/true_value= " << static_cast<double >(estimated_value)/static_cast<double >(true_value) << std::endl;
@@ -359,7 +361,7 @@ int main()
         filename = "Exercise_9_seed_" + std::to_string(0+seed*SEED_MULTIPLIER) + ".txt";
         folder_path = "../../Data/Exercise_9";
         remove_file(filename, folder_path); // Removing possibly already existing file with name 'filename' from drive.
-        for (int r = 0; r < avg_relative_errs_2.size(); r++) {
+        for (unsigned int r = 0; r < avg_relative_errs_2.size(); r++) {
             append_to_file(filename, folder_path, {
                     static_cast<output_data_type>(array_sizes_2[r]),
                     avg_relative_errs_2[r],
