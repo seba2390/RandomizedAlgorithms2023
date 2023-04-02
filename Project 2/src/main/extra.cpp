@@ -20,9 +20,9 @@ int main()
 
         // Constants
         const uint32_t R_MIN = 3;
-        const uint32_t R_MAX = 24;
+        const uint32_t R_MAX = 20;
         const auto N_UPDATES = static_cast<int64_t>(std::pow(10, 3));
-        const auto N_REPETITIONS = static_cast<int64_t>(std::pow(10, 3));
+        const auto N_REPETITIONS = static_cast<int64_t>(std::pow(10, 4));
 
 
         // initialize vector inline with a loop using lambda function to generate values
@@ -38,7 +38,7 @@ int main()
 
     // Create a vector to hold the variances for each value of 'r' and the correct value of the squared norm-square.
     std::vector<output_data_type> variances(array_sizes.size());
-    std::vector<output_data_type> squared_norm_squared(array_sizes.size());
+    std::vector<output_data_type> bounds(array_sizes.size());
 
 // Loop over each value of 'r' and perform the experiments.
     for (unsigned int r_idx = 0; r_idx < array_sizes.size(); r_idx++) {
@@ -66,7 +66,7 @@ int main()
                 my_sketch.update(std::make_pair(key, delta));
                 }
             estimates.at(experiment_idx) = my_sketch.query();
-            squared_norm_squared.at(r_idx) = true_value;
+            bounds.at(r_idx) = 2*true_value*true_value / static_cast<double>(r);
             }
 
         // Compute the sample variance of the estimates for the current value of 'r'.
@@ -81,7 +81,7 @@ int main()
             append_to_file(filename, folder_path, {
                     static_cast<output_data_type>(array_sizes[r]),
                     static_cast<output_data_type>(variances[r]),
-                    static_cast<output_data_type>(squared_norm_squared[r])});
+                    static_cast<output_data_type>(bounds[r])});
         }
 
 
