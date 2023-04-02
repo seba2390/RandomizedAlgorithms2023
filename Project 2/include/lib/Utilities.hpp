@@ -29,6 +29,13 @@
 #include <indicators/progress_bar.hpp>
 #include <lib/Xoshiro.hpp>
 
+#ifdef _WIN32
+#include <windows.h>
+#define CLEAR_SCREEN system("cls")
+#else
+#define CLEAR_SCREEN printf("\033c")
+#endif
+
 #define KEY_BIT_SIZE 32
 #define NAN_TOKEN 0
 #define MERSENNE_PRIME_EXPONENT 31

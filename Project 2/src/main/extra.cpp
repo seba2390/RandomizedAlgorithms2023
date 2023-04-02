@@ -34,8 +34,10 @@ int main()
     const unsigned int NR_SEEDS = 20, MULTIPLIER = 11235;
     for(unsigned int seed_count = 0; seed_count < NR_SEEDS; seed_count++)
     {
-        printf("\033c"); // Clear screen - So that progress bar is no printed over and over
+        // Clear screen - So that progress bar is not printed over and over (see definition in top of Utilities.hpp)
+        CLEAR_SCREEN;
         bar.tick();
+
         // Setting new seed
         const unsigned int seed = seed_count*MULTIPLIER;
 
