@@ -24,19 +24,17 @@ int main()
             option::Remainder{"-"},
             option::End{"]"},
             option::PrefixText{"Recording variance of Sketch for multiple RNG seeds 👀"},
-            option::ForegroundColor{Color::yellow},
+            option::ForegroundColor{Color::blue},
             option::ShowElapsedTime{true},
             option::ShowRemainingTime{true},
             option::FontStyles{std::vector<FontStyle>{FontStyle::bold}}
     };
 
-    // Show cursor
-    show_console_cursor(true);
 
-
-    const unsigned int NR_SEEDS = 100, MULTIPLIER = 11235;
+    const unsigned int NR_SEEDS = 20, MULTIPLIER = 11235;
     for(unsigned int seed_count = 0; seed_count < NR_SEEDS; seed_count++)
     {
+        printf("\033c"); // Clear screen - So that progress bar is no printed over and over
         bar.tick();
         // Setting new seed
         const unsigned int seed = seed_count*MULTIPLIER;
@@ -69,7 +67,7 @@ int main()
         std::vector<output_data_type> variances(array_sizes.size());
         std::vector<output_data_type> bounds(array_sizes.size());
 
-// Loop over each value of 'r' and perform the experiments.
+        // Loop over each value of 'r' and perform the experiments.
         for (unsigned int r_idx = 0; r_idx < array_sizes.size(); r_idx++) {
 
             const value_type r = array_sizes[r_idx];
@@ -100,6 +98,7 @@ int main()
             variances.at(r_idx) = variance(estimates);
         }
 
+
         // Saving to drive
         std::string filename = "variance_test_seed"+std::to_string(seed)+".txt";
         std::string folder_path = "../../../../Data/Extra";
@@ -111,6 +110,9 @@ int main()
                     static_cast<output_data_type>(bounds[r])});
         }
     }
+
+    // Show cursor
+    show_console_cursor(true);
 
 }
 
