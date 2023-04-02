@@ -13,8 +13,7 @@
 		[
 			"_add_library",
 			"add_library",
-			"include_directories",
-			"target_include_directories"
+			"include_directories"
 		],
 		"files" : 
 		[
@@ -45,14 +44,14 @@
 			{
 				"command" : 2,
 				"file" : 2,
-				"line" : 12,
+				"line" : 40,
 				"parent" : 3
 			},
 			{
-				"command" : 3,
-				"file" : 1,
-				"line" : 11,
-				"parent" : 0
+				"command" : 2,
+				"file" : 2,
+				"line" : 44,
+				"parent" : 3
 			}
 		]
 	},
@@ -72,11 +71,11 @@
 			[
 				{
 					"backtrace" : 4,
-					"path" : "/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2/include"
+					"path" : "/opt/homebrew/include"
 				},
 				{
 					"backtrace" : 5,
-					"path" : "/Users/sebastianyde/Tools/indicators/include"
+					"path" : "/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2/include"
 				}
 			],
 			"language" : "CXX",

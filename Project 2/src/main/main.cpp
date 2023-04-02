@@ -12,14 +12,16 @@ static_assert((CHAR_BIT * sizeof(key_type) == KEY_BIT_SIZE), "Adjust key_type to
 int main()
 {
 
+    // Define constants
     const uint32_t N_SEEDS = 30;
     const uint32_t SEED_MULTIPLIER = 11;
+
+    // create a progress bar that displays a message
+    boost::timer::progress_display progress(N_SEEDS, std::cout, "Processing... \n");
     for(uint32_t seed = 0; seed < N_SEEDS; seed++) {
-        std::cout << "\n ############## SEED ROUND: " << seed+1 << "/" << N_SEEDS << " ############## " << std::endl;
+
 
         /// ----------- EXERCISE 5 ----------- ///
-        std::cout << "\n ========= Exercise 5 ======== \n";
-
         std::string folder_path = "../../../../Data/Exercise_5";
         std::string filename = "Exercise_5_" + std::to_string(0+seed*SEED_MULTIPLIER) + ".txt";
         remove_file(filename, folder_path); // Removing possibly already existing file with name 'filename' from drive.
@@ -80,14 +82,13 @@ int main()
 
         }
 
-        std::cout << "--- Avg. pr. key hashing times --- " << std::endl;
-        std::cout << "Fast: " << avg_time_1 << " [ns]" << std::endl;
-        std::cout << "Slow: " << avg_time_2 << " [ns]" << std::endl;
-        std::cout << "Multiply-shift: " << avg_time_3 << " [ns]" << std::endl;
+        //std::cout << "--- Avg. pr. key hashing times --- " << std::endl;
+        //std::cout << "Fast: " << avg_time_1 << " [ns]" << std::endl;
+        //std::cout << "Slow: " << avg_time_2 << " [ns]" << std::endl;
+        //std::cout << "Multiply-shift: " << avg_time_3 << " [ns]" << std::endl;
 
 
         /// ----------- EXERCISE 7 ----------- ///
-        std::cout << "\n ========= Exercise 7 ======== \n";
         // Define return types for hash functions
         using mersenne_4_independent_return_type = std::pair<int64_t, int64_t>;
         using multiply_shift_return_type = uint32_t;
@@ -124,7 +125,6 @@ int main()
         // iterate over array of n values
         for (unsigned int n_idx = 0; n_idx < n_values.size(); n_idx++) {
             const value_type n = n_values[n_idx];
-            std::cout << "n= " << n << " <--> N= " << N_POWER_MIN+n_idx << " / " << N_POWER_MAX <<  std::endl;
             // TODO: Investigate and determine if hashing with chaining should have m=n
 
             // create a new hashing_with_chaining_type_1 object with given n, seed and multiply_shift_hash
@@ -196,8 +196,6 @@ int main()
 
 
         /// ----------- EXERCISE 8 ----------- ///
-        std::cout << "\n ========= Exercise 8 ======== \n";
-
         const uint32_t r_min = 3;
         const uint32_t r_max = 20; // TODO: Should be 20
         const auto N_UPDATES_2 = static_cast<int64_t>(std::pow(10, 3)); // TODO: Should be 10^3
@@ -220,7 +218,6 @@ int main()
         // Perform the experiments for each value of 'r'.
         for (unsigned int r_idx = 0; r_idx < array_sizes_2.size(); r_idx++) {
             const value_type r = array_sizes_2[r_idx];
-            std::cout << "r= " << r << " <--> R= " << r_min+r_idx << " / " << r_max << std::endl;
 
             double avg_error_sum = 0;
             double max_error = 0;
@@ -266,7 +263,6 @@ int main()
         /// ----------- EXERCISE 9 ----------- ///
         // TODO: determine why error is so much bigger for 2-wise multiply shift (this exercise) than 4-wise (exercise 8)
         // TODO: Numerically off by approx factor 555 (equivalent to hash function mapping all-to-one entry) - see overleaf doc.
-        std::cout << "\n ========= Exercise 9 ======== \n";
         using multiply_shift_2_independent_return_type_2 = std::pair<int64_t, int64_t>;
 
         using sketch_type_2 = Sketch<value_type, pair_type, array_type, multiply_shift_2_independent_return_type_2,
@@ -278,7 +274,6 @@ int main()
         // Perform the experiments for each value of 'r'.
         for (unsigned int r_idx = 0; r_idx < array_sizes_2.size(); r_idx++) {
             const value_type r = array_sizes_2[r_idx];
-            std::cout << "r= " << r << " <--> R= " << r_min+r_idx << " / " << r_max << std::endl;
 
             double avg_error_sum = 0;
             double max_error = 0;
@@ -316,8 +311,11 @@ int main()
                     static_cast<output_data_type>(array_sizes_2[r]),
                     static_cast<output_data_type>(avg_relative_errs_2[r]),
                     static_cast<output_data_type>(max_relative_errs_2[r])});
-        }
+        };
+
+        ++progress; // Increment progress bar
 
     }
+
 
 }

@@ -320,7 +320,7 @@ void remove_file(const std::string& filename,  const std::string& path)
     {
         // Remove the file
         if (std::filesystem::remove((std::filesystem::path)path / filename)) {
-            std::cout << "\nPre-existing file " << (std::filesystem::path)path / filename << " was successfully deleted." << std::endl;
+            //std::cout << "\nPre-existing file " << (std::filesystem::path)path / filename << " was successfully deleted." << std::endl;
         } else {
             std::cerr << "Error deleting file: " << (std::filesystem::path)path / filename << std::endl;
         }

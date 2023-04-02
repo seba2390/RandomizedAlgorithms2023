@@ -95,7 +95,13 @@
 			{
 				"command" : 8,
 				"file" : 4,
-				"line" : 12,
+				"line" : 44,
+				"parent" : 11
+			},
+			{
+				"command" : 8,
+				"file" : 4,
+				"line" : 40,
 				"parent" : 11
 			}
 		]
@@ -106,7 +112,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-O3 -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -fcolor-diagnostics"
+					"fragment" : "-Werror -Wall -Wpedantic -Wextra -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -fcolor-diagnostics"
 				},
 				{
 					"backtrace" : 10,
@@ -139,7 +145,7 @@
 					"path" : "/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2/include"
 				},
 				{
-					"backtrace" : 3,
+					"backtrace" : 13,
 					"isSystem" : true,
 					"path" : "/opt/homebrew/include"
 				}
@@ -191,7 +197,7 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "-O3 -O3 -DNDEBUG",
+				"fragment" : "-Werror -Wall -Wpedantic -Wextra -g",
 				"role" : "flags"
 			},
 			{

@@ -8,4 +8,8 @@ set(LIBNAME Utilities)
 add_library(${LIBNAME} STATIC ${SOURCE_FILES})
 
 # Include the header-only library 'indicators'
-target_include_directories(${LIBNAME} PRIVATE /Users/sebastianyde/Tools/indicators/include)
+#target_include_directories(${LIBNAME} PRIVATE /Users/sebastianyde/Tools/indicators/include)
+
+# Include the library boost
+target_include_directories(${LIBNAME} PRIVATE ${Boost_INCLUDE_DIRS})
+target_link_libraries(${LIBNAME}  ${Boost_LIBRARIES})

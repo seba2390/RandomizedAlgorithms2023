@@ -11,32 +11,15 @@ static_assert((CHAR_BIT * sizeof(key_type) == KEY_BIT_SIZE), "Adjust key_type to
 
 int main()
 {
-    using namespace indicators;
-
-    // Hide cursor
-    show_console_cursor(false);
-
-    indicators::ProgressBar bar{
-            option::BarWidth{50},
-            option::Start{" ["},
-            option::Fill{"█"},
-            option::Lead{"█"},
-            option::Remainder{"-"},
-            option::End{"]"},
-            option::PrefixText{"Recording variance of Sketch for multiple RNG seeds 👀"},
-            option::ForegroundColor{Color::blue},
-            option::ShowElapsedTime{true},
-            option::ShowRemainingTime{true},
-            option::FontStyles{std::vector<FontStyle>{FontStyle::bold}}
-    };
 
 
-    const unsigned int NR_SEEDS = 20, MULTIPLIER = 11235;
+    const unsigned int NR_SEEDS = 5, MULTIPLIER = 11235;
+
+    // create a progress bar that displays a message
+    boost::timer::progress_display progress(NR_SEEDS, std::cout, "Processing: \n");
+
     for(unsigned int seed_count = 0; seed_count < NR_SEEDS; seed_count++)
     {
-        // Clear screen - So that progress bar is not printed over and over (see definition in top of Utilities.hpp)
-        CLEAR_SCREEN;
-        bar.tick();
 
         // Setting new seed
         const unsigned int seed = seed_count*MULTIPLIER;
@@ -111,10 +94,11 @@ int main()
                     static_cast<output_data_type>(variances[r]),
                     static_cast<output_data_type>(bounds[r])});
         }
+
+        ++progress; // increment the progress bar
     }
 
-    // Show cursor
-    show_console_cursor(true);
+
 
 }
 

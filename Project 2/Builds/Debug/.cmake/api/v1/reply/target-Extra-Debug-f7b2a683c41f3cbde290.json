@@ -13,8 +13,7 @@
 			"_add_executable",
 			"add_executable",
 			"target_link_libraries",
-			"include_directories",
-			"target_include_directories"
+			"include_directories"
 		],
 		"files" : 
 		[
@@ -30,7 +29,7 @@
 			{
 				"command" : 1,
 				"file" : 1,
-				"line" : 23,
+				"line" : 25,
 				"parent" : 0
 			},
 			{
@@ -42,13 +41,7 @@
 			{
 				"command" : 2,
 				"file" : 1,
-				"line" : 25,
-				"parent" : 0
-			},
-			{
-				"command" : 2,
-				"file" : 1,
-				"line" : 29,
+				"line" : 27,
 				"parent" : 0
 			},
 			{
@@ -57,14 +50,14 @@
 			{
 				"command" : 3,
 				"file" : 2,
-				"line" : 12,
-				"parent" : 5
+				"line" : 40,
+				"parent" : 4
 			},
 			{
-				"command" : 4,
-				"file" : 1,
-				"line" : 27,
-				"parent" : 0
+				"command" : 3,
+				"file" : 2,
+				"line" : 44,
+				"parent" : 4
 			}
 		]
 	},
@@ -83,12 +76,12 @@
 			"includes" : 
 			[
 				{
-					"backtrace" : 6,
-					"path" : "/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2/include"
+					"backtrace" : 5,
+					"path" : "/opt/homebrew/include"
 				},
 				{
-					"backtrace" : 7,
-					"path" : "/Users/sebastianyde/Tools/indicators/include"
+					"backtrace" : 6,
+					"path" : "/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2/include"
 				}
 			],
 			"language" : "CXX",
@@ -129,11 +122,6 @@
 			{
 				"backtrace" : 3,
 				"fragment" : "src/lib/libUtilities.a",
-				"role" : "libraries"
-			},
-			{
-				"backtrace" : 4,
-				"fragment" : "-lindicators",
 				"role" : "libraries"
 			}
 		],

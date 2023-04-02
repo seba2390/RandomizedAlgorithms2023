@@ -14,6 +14,9 @@
 # EXTERNAL cache entries
 ########################
 
+//The directory containing a CMake configuration file for Boost.
+Boost_DIR:PATH=/opt/homebrew/lib/cmake/Boost-1.81.0
+
 //Path to a program.
 CMAKE_ADDR2LINE:FILEPATH=CMAKE_ADDR2LINE-NOTFOUND
 
@@ -186,8 +189,8 @@ CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 //Path to a program.
 CMAKE_STRIP:FILEPATH=/Library/Developer/CommandLineTools/usr/bin/strip
 
-//No help, variable specified on the command line.
-CMAKE_TOOLCHAIN_FILE:UNINITIALIZED=/Users/sebastianyde/.clion-vcpkg/vcpkg/scripts/buildsystems/vcpkg.cmake
+//The CMake toolchain file
+CMAKE_TOOLCHAIN_FILE:FILEPATH=/Users/sebastianyde/.clion-vcpkg/vcpkg/scripts/buildsystems/vcpkg.cmake
 
 //If this value is on, makefiles will be generated without the
 // .SILENT directive, and all commands will be echoed to the console
@@ -253,8 +256,8 @@ Z_VCPKG_CL:FILEPATH=Z_VCPKG_CL-NOTFOUND
 // triplet
 _VCPKG_INSTALLED_DIR:PATH=/Users/sebastianyde/.clion-vcpkg/vcpkg/installed
 
-//The directory containing a CMake configuration file for indicators.
-indicators_DIR:PATH=/Users/sebastianyde/.clion-vcpkg/vcpkg/installed/arm64-osx/share/indicators
+//The directory containing a CMake configuration file for boost_headers.
+boost_headers_DIR:PATH=/opt/homebrew/lib/cmake/boost_headers-1.81.0
 
 
 ########################
@@ -317,8 +320,6 @@ CMAKE_GENERATOR_INSTANCE:INTERNAL=
 CMAKE_GENERATOR_PLATFORM:INTERNAL=
 //Name of generator toolset.
 CMAKE_GENERATOR_TOOLSET:INTERNAL=
-//Test CMAKE_HAVE_LIBC_PTHREAD
-CMAKE_HAVE_LIBC_PTHREAD:INTERNAL=1
 //Source directory with the top level CMakeLists.txt file for this
 // project
 CMAKE_HOME_DIRECTORY:INTERNAL=/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2
@@ -384,8 +385,6 @@ CMAKE_TOOLCHAIN_FILE-ADVANCED:INTERNAL=1
 CMAKE_UNAME:INTERNAL=/usr/bin/uname
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
-//Details about finding Threads
-FIND_PACKAGE_MESSAGE_DETAILS_Threads:INTERNAL=[TRUE][v()]
 //Install the dependencies listed in your manifest:
 //\n    If this is off, you will have to manually install your dependencies.
 //\n    See https://github.com/microsoft/vcpkg/tree/master/docs/specifications/manifests.md
@@ -398,4 +397,6 @@ VCPKG_VERBOSE-ADVANCED:INTERNAL=1
 Z_VCPKG_CHECK_MANIFEST_MODE:INTERNAL=OFF
 //Vcpkg root directory
 Z_VCPKG_ROOT_DIR:INTERNAL=/Users/sebastianyde/.clion-vcpkg/vcpkg
+//ADVANCED property for variable: boost_headers_DIR
+boost_headers_DIR-ADVANCED:INTERNAL=1
 
