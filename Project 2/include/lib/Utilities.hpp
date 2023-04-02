@@ -25,6 +25,7 @@
 #include <any>
 
 #include <boost/timer/progress_display.hpp>
+#include <boost/timer/timer.hpp>
 
 #include <lib/Xoshiro.hpp>
 

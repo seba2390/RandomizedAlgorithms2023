@@ -1,12 +1,8 @@
 # ninja log v5
-0	483	1680468914950208103	src/lib/CMakeFiles/Utilities.dir/Utilities.cpp.o	f99c0b877d88ff1d
-485	501	1680468914970165000	src/lib/libUtilities.a	13c601fbf02dff2a
-0	529	1680468914995392393	src/main/CMakeFiles/Extra.dir/extra.cpp.o	5f1846a1e63b327f
-529	563	1680468915031241239	src/main/Extra_exe	659b0de609e98b61
-1	476	1680468939729268884	src/main/CMakeFiles/Extra.dir/extra.cpp.o	5f1846a1e63b327f
-476	507	1680468939762415044	src/main/Extra_exe	659b0de609e98b61
-1	466	1680468986804629151	src/lib/CMakeFiles/Utilities.dir/Utilities.cpp.o	f99c0b877d88ff1d
-466	484	1680468986824704000	src/lib/libUtilities.a	13c601fbf02dff2a
-484	519	1680468986859838055	src/main/Extra_exe	659b0de609e98b61
-2	872	1680469094677803060	src/main/CMakeFiles/Main.dir/main.cpp.o	81d96f0420df1a72
-873	915	1680469094722806349	src/main/Main_exe	10b8ede5d3d4345f
+0	478	1680469652371101549	src/lib/CMakeFiles/Utilities.dir/Utilities.cpp.o	f99c0b877d88ff1d
+479	496	1680469652392005000	src/lib/libUtilities.a	13c601fbf02dff2a
+0	520	1680469652413116510	src/main/CMakeFiles/Extra.dir/extra.cpp.o	5f1846a1e63b327f
+2	480	1680469782414774118	src/main/CMakeFiles/Extra.dir/extra.cpp.o	5f1846a1e63b327f
+480	512	1680469782448263355	src/main/Extra_exe	659b0de609e98b61
+2	496	1680469849719775187	src/main/CMakeFiles/Extra.dir/extra.cpp.o	5f1846a1e63b327f
+496	528	1680469849753643467	src/main/Extra_exe	659b0de609e98b61
