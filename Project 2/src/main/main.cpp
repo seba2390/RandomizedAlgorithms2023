@@ -265,7 +265,7 @@ int main()
 
         /// ----------- EXERCISE 9 ----------- ///
         // TODO: determine why error is so much bigger for 2-wise multiply shift (this exercise) than 4-wise (exercise 8)
-        // TODO: Numerically off by approx factor 555 (equivalent to hash function mapping all to one entry) - se overleaf doc.
+        // TODO: Numerically off by approx factor 555 (equivalent to hash function mapping all-to-one entry) - see overleaf doc.
         std::cout << "\n ========= Exercise 9 ======== \n";
         using multiply_shift_2_independent_return_type_2 = std::pair<int64_t, int64_t>;
 

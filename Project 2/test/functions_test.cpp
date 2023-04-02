@@ -21,6 +21,7 @@ TEST_CASE("Relative Error", "[Fast functions]")
             REQUIRE(fast_impl==std_impl);
         }
     }
+    std::cout << "## ====== RELATIVE ERROR FUNCTIONS TEST SUCCESSFUL ====== ##" << std::endl;
 }
 
 TEST_CASE("Pow2", "[Fast functions]")
@@ -37,6 +38,8 @@ TEST_CASE("Pow2", "[Fast functions]")
         auto std_impl = static_cast<uint64_t>(std::pow(2,pow));
         const uint64_t fast_impl = fast_uint64_pow_2(pow);
         REQUIRE(fast_impl==std_impl);    }
+
+    std::cout << "## ====== POW2 FUNCTIONS TEST SUCCESSFUL ======= ##" << std::endl;
     }
 
 TEST_CASE("Log2", "[Fast functions]")
@@ -56,4 +59,38 @@ TEST_CASE("Log2", "[Fast functions]")
         const uint64_t fast_impl = fast_uint64_log_2(x);
         REQUIRE(fast_impl==std_impl);
     }
+    std::cout << "## ====== LOG2 FUNCTIONS TEST SUCCESSFUL ====== ##" << std::endl;
+}
+
+TEST_CASE("Slow_VS_Fast", "[Hash functions]")
+{
+    // Get the current time
+    auto now = std::chrono::high_resolution_clock::now();
+
+    // Get the current time as a long integer
+    auto seed = now.time_since_epoch().count();
+
+    const value_type power = 24;
+    const unsigned int array_size = fast_uint32_pow_2(power);
+    auto n_keys = static_cast<int64_t>(std::pow(10, 7));
+    std::vector<int64_t> keys{};
+    for (int64_t i = 1; i <= n_keys; i++) {
+        keys.push_back(i);
+    }
+    const uint64_t mersenne_upper_bound = fast_uint64_pow_2(31) - 1;
+    const hashing_constants constants = {get_random_uint64(seed+0, mersenne_upper_bound),
+                                         get_random_uint64(seed+1114, mersenne_upper_bound),
+                                         get_random_uint64(seed+78, mersenne_upper_bound),
+                                         get_random_uint64(seed+31, mersenne_upper_bound)};
+
+    for (const auto &key: keys) {
+        auto result1 = mersenne_4_independent_hash(key, array_size, constants);
+        auto result2 = slow_mersenne_4_independent_hash(key, array_size, constants);
+
+
+        REQUIRE(result1.first == result2.first);
+        REQUIRE(result1.second == result2.second);
+    }
+    std::cout << "## ====== SLOW_VS_FAST HASH TEST SUCCESSFUL ====== ##" << std::endl;
+
 }
