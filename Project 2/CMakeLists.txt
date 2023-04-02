@@ -1,12 +1,18 @@
+# Set the minimum version of CMake required to build the project
 cmake_minimum_required(VERSION 3.22)
-project(Project_1  LANGUAGES CXX)
 
+# Set the name of the project and the programming language used
+project(Project_2  LANGUAGES CXX)
+
+# Set the C++ standard to use
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-find_package(Eigen3 CONFIG REQUIRED)
+# Add the 'include' directory to the list of directories to search for header files
+include_directories(include)
 
-add_executable(main main.cpp Include/Utilities.cpp)
-target_include_directories(main PUBLIC Include)
+# Add the 'src' subdirectory, which contains the source code for the project
+add_subdirectory(src)
 
-target_link_libraries(main Eigen3::Eigen)
+# Add the 'test' subdirectory, which contains the unit tests for the project
+add_subdirectory(test)

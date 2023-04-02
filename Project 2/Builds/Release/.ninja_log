@@ -1,7 +1,0 @@
-# ninja log v5
-2	675	1680307162446978003	CMakeFiles/main.dir/Include/Utilities.cpp.o	c8ccbc6a74fd06d2
-2	1064	1680307876897719315	CMakeFiles/main.dir/main.cpp.o	931c9653a77efd7e
-1065	1141	1680307876972835802	main	8049c32a9592d15b
-3	1006	1680375128458007642	CMakeFiles/main.dir/Include/Utilities.cpp.o	ead5e09c4386dda0
-2	1322	1680375128773804121	CMakeFiles/main.dir/main.cpp.o	2c59dd5df0b8f8fe
-1322	1365	1680375128820071222	main	30b78f80324f22fd

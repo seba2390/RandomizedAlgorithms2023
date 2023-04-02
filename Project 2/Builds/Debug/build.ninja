@@ -11,7 +11,7 @@
 # =============================================================================
 
 # =============================================================================
-# Project: Project_1
+# Project: Project_2
 # Configurations: Debug
 # =============================================================================
 
@@ -39,52 +39,13 @@ include CMakeFiles/rules.ninja
 #############################################
 # Logical path to working directory; prefix for absolute paths.
 
-cmake_ninja_workdir = /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div.$ Github$ projekter/RandomizedAlgorithms2023/Project$ 2/Builds/Debug/
-# =============================================================================
-# Object build statements for EXECUTABLE target main
-
-
-#############################################
-# Order-only phony target for main
-
-build cmake_object_order_depends_target_main: phony || CMakeFiles/main.dir
-
-build CMakeFiles/main.dir/main.cpp.o: CXX_COMPILER__main_Debug /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div.$ Github$ projekter/RandomizedAlgorithms2023/Project$ 2/main.cpp || cmake_object_order_depends_target_main
-  DEP_FILE = CMakeFiles/main.dir/main.cpp.o.d
-  FLAGS = -Wall -Werror -Wextra -Wpendantic -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -fcolor-diagnostics -std=gnu++20
-  INCLUDES = -I"/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2/Include" -isystem /opt/homebrew/include/eigen3
-  OBJECT_DIR = CMakeFiles/main.dir
-  OBJECT_FILE_DIR = CMakeFiles/main.dir
-
-build CMakeFiles/main.dir/Include/Utilities.cpp.o: CXX_COMPILER__main_Debug /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div.$ Github$ projekter/RandomizedAlgorithms2023/Project$ 2/Include/Utilities.cpp || cmake_object_order_depends_target_main
-  DEP_FILE = CMakeFiles/main.dir/Include/Utilities.cpp.o.d
-  FLAGS = -Wall -Werror -Wextra -Wpendantic -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -fcolor-diagnostics -std=gnu++20
-  INCLUDES = -I"/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2/Include" -isystem /opt/homebrew/include/eigen3
-  OBJECT_DIR = CMakeFiles/main.dir
-  OBJECT_FILE_DIR = CMakeFiles/main.dir/Include
-
-
-# =============================================================================
-# Link build statements for EXECUTABLE target main
-
-
-#############################################
-# Link the executable main
-
-build main: CXX_EXECUTABLE_LINKER__main_Debug CMakeFiles/main.dir/main.cpp.o CMakeFiles/main.dir/Include/Utilities.cpp.o
-  FLAGS = -Wall -Werror -Wextra -Wpendantic -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk
-  OBJECT_DIR = CMakeFiles/main.dir
-  POST_BUILD = :
-  PRE_LINK = :
-  TARGET_FILE = main
-  TARGET_PDB = main.dbg
-
+cmake_ninja_workdir = /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div.$ Github$ projekter/RandomizedAlgorithms2023/Project$ 2$ v2/Builds/Debug/
 
 #############################################
 # Utility command for edit_cache
 
 build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd "/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2/Builds/Debug" && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  COMMAND = cd "/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/Builds/Debug" && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
   DESC = No interactive CMake dialog available...
   restat = 1
 
@@ -95,7 +56,7 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 # Utility command for rebuild_cache
 
 build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd "/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2/Builds/Debug" && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S"/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2" -B"/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2/Builds/Debug"
+  COMMAND = cd "/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/Builds/Debug" && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S"/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2" -B"/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/Builds/Debug"
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -103,7 +64,228 @@ build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
 build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 
 # =============================================================================
+# Write statements declared in CMakeLists.txt:
+# /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/CMakeLists.txt
+# =============================================================================
+
+
+#############################################
+# Utility command for edit_cache
+
+build src/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd "/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/Builds/Debug/src" && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build src/edit_cache: phony src/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build src/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd "/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/Builds/Debug/src" && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S"/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2" -B"/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/Builds/Debug"
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build src/rebuild_cache: phony src/CMakeFiles/rebuild_cache.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/src/CMakeLists.txt
+# =============================================================================
+
+# =============================================================================
+# Object build statements for STATIC_LIBRARY target Utilities
+
+
+#############################################
+# Order-only phony target for Utilities
+
+build cmake_object_order_depends_target_Utilities: phony || src/lib/CMakeFiles/Utilities.dir
+
+build src/lib/CMakeFiles/Utilities.dir/Utilities.cpp.o: CXX_COMPILER__Utilities_Debug /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div.$ Github$ projekter/RandomizedAlgorithms2023/Project$ 2$ v2/src/lib/Utilities.cpp || cmake_object_order_depends_target_Utilities
+  DEP_FILE = src/lib/CMakeFiles/Utilities.dir/Utilities.cpp.o.d
+  FLAGS = -Werror -Wall -Wpedantic -Wextra -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -fcolor-diagnostics -std=gnu++20
+  INCLUDES = -I"/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/include"
+  OBJECT_DIR = src/lib/CMakeFiles/Utilities.dir
+  OBJECT_FILE_DIR = src/lib/CMakeFiles/Utilities.dir
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target Utilities
+
+
+#############################################
+# Link the static library src/lib/libUtilities.a
+
+build src/lib/libUtilities.a: CXX_STATIC_LIBRARY_LINKER__Utilities_Debug src/lib/CMakeFiles/Utilities.dir/Utilities.cpp.o
+  ARCH_FLAGS = -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk
+  LANGUAGE_COMPILE_FLAGS = -Werror -Wall -Wpedantic -Wextra -g
+  OBJECT_DIR = src/lib/CMakeFiles/Utilities.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = src/lib/libUtilities.a
+  TARGET_PDB = Utilities.a.dbg
+
+
+#############################################
+# Utility command for edit_cache
+
+build src/lib/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd "/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/Builds/Debug/src/lib" && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build src/lib/edit_cache: phony src/lib/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build src/lib/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd "/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/Builds/Debug/src/lib" && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S"/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2" -B"/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/Builds/Debug"
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build src/lib/rebuild_cache: phony src/lib/CMakeFiles/rebuild_cache.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/src/CMakeLists.txt
+# =============================================================================
+
+# =============================================================================
+# Object build statements for EXECUTABLE target Main
+
+
+#############################################
+# Order-only phony target for Main
+
+build cmake_object_order_depends_target_Main: phony || cmake_object_order_depends_target_Utilities
+
+build src/main/CMakeFiles/Main.dir/main.cpp.o: CXX_COMPILER__Main_Debug /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div.$ Github$ projekter/RandomizedAlgorithms2023/Project$ 2$ v2/src/main/main.cpp || cmake_object_order_depends_target_Main
+  DEP_FILE = src/main/CMakeFiles/Main.dir/main.cpp.o.d
+  FLAGS = -Werror -Wall -Wpedantic -Wextra -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -fcolor-diagnostics -std=gnu++20
+  INCLUDES = -I"/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/include"
+  OBJECT_DIR = src/main/CMakeFiles/Main.dir
+  OBJECT_FILE_DIR = src/main/CMakeFiles/Main.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target Main
+
+
+#############################################
+# Link the executable src/main/Main_exe
+
+build src/main/Main_exe: CXX_EXECUTABLE_LINKER__Main_Debug src/main/CMakeFiles/Main.dir/main.cpp.o | src/lib/libUtilities.a || src/lib/libUtilities.a
+  FLAGS = -Werror -Wall -Wpedantic -Wextra -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk
+  LINK_LIBRARIES = src/lib/libUtilities.a
+  OBJECT_DIR = src/main/CMakeFiles/Main.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = src/main/Main_exe
+  TARGET_PDB = Main_exe.dbg
+
+
+#############################################
+# Utility command for edit_cache
+
+build src/main/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd "/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/Builds/Debug/src/main" && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build src/main/edit_cache: phony src/main/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build src/main/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd "/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/Builds/Debug/src/main" && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S"/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2" -B"/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/Builds/Debug"
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build src/main/rebuild_cache: phony src/main/CMakeFiles/rebuild_cache.util
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/CMakeLists.txt
+# =============================================================================
+
+# =============================================================================
+# Object build statements for EXECUTABLE target functions_test
+
+
+#############################################
+# Order-only phony target for functions_test
+
+build cmake_object_order_depends_target_functions_test: phony || cmake_object_order_depends_target_Utilities
+
+build test/CMakeFiles/functions_test.dir/functions_test.cpp.o: CXX_COMPILER__functions_test_Debug /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div.$ Github$ projekter/RandomizedAlgorithms2023/Project$ 2$ v2/test/functions_test.cpp || cmake_object_order_depends_target_functions_test
+  DEP_FILE = test/CMakeFiles/functions_test.dir/functions_test.cpp.o.d
+  FLAGS = -Werror -Wall -Wpedantic -Wextra -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -fcolor-diagnostics -Wall -Wextra -Werror -Wpedantic -ffile-prefix-map=/tmp/catch2-20221017-40515-sdyxr1/Catch2-3.1.1/= -std=gnu++20
+  INCLUDES = -I"/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/include" -isystem /opt/homebrew/include
+  OBJECT_DIR = test/CMakeFiles/functions_test.dir
+  OBJECT_FILE_DIR = test/CMakeFiles/functions_test.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target functions_test
+
+
+#############################################
+# Link the executable test/functions_test
+
+build test/functions_test: CXX_EXECUTABLE_LINKER__functions_test_Debug test/CMakeFiles/functions_test.dir/functions_test.cpp.o | src/lib/libUtilities.a /opt/homebrew/lib/libCatch2Main.a /opt/homebrew/lib/libCatch2.a || src/lib/libUtilities.a
+  FLAGS = -Werror -Wall -Wpedantic -Wextra -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk
+  LINK_LIBRARIES = src/lib/libUtilities.a  /opt/homebrew/lib/libCatch2Main.a  /opt/homebrew/lib/libCatch2.a
+  OBJECT_DIR = test/CMakeFiles/functions_test.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = test/functions_test
+  TARGET_PDB = functions_test.dbg
+
+
+#############################################
+# Utility command for edit_cache
+
+build test/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd "/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/Builds/Debug/test" && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build test/edit_cache: phony test/CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build test/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd "/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/Builds/Debug/test" && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S"/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2" -B"/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/Builds/Debug"
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build test/rebuild_cache: phony test/CMakeFiles/rebuild_cache.util
+
+# =============================================================================
 # Target aliases.
+
+build Main: phony src/main/Main_exe
+
+build Main_exe: phony src/main/Main_exe
+
+build Utilities: phony src/lib/libUtilities.a
+
+build functions_test: phony test/functions_test
+
+build libUtilities.a: phony src/lib/libUtilities.a
 
 # =============================================================================
 # Folder targets.
@@ -111,9 +293,37 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # =============================================================================
 
 #############################################
-# Folder: /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2/Builds/Debug
+# Folder: /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/Builds/Debug
 
-build all: phony main
+build all: phony src/all test/all
+
+# =============================================================================
+
+#############################################
+# Folder: /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/Builds/Debug/src
+
+build src/all: phony src/lib/all src/main/all
+
+# =============================================================================
+
+#############################################
+# Folder: /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/Builds/Debug/src/lib
+
+build src/lib/all: phony src/lib/libUtilities.a
+
+# =============================================================================
+
+#############################################
+# Folder: /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/Builds/Debug/src/main
+
+build src/main/all: phony src/main/Main_exe
+
+# =============================================================================
+
+#############################################
+# Folder: /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2 v2/Builds/Debug/test
+
+build test/all: phony test/functions_test
 
 # =============================================================================
 # Built-in targets
@@ -122,14 +332,14 @@ build all: phony main
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeCXXInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Compiler/AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Platform/Apple-AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Platform/Apple-Clang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Platform/UnixPaths.cmake /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div.$ Github$ projekter/RandomizedAlgorithms2023/Project$ 2/CMakeLists.txt /opt/homebrew/share/eigen3/cmake/Eigen3Config.cmake /opt/homebrew/share/eigen3/cmake/Eigen3ConfigVersion.cmake /opt/homebrew/share/eigen3/cmake/Eigen3Targets.cmake CMakeCache.txt CMakeFiles/3.25.2/CMakeCXXCompiler.cmake CMakeFiles/3.25.2/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeCXXInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Compiler/AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Platform/Apple-AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Platform/Apple-Clang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Platform/UnixPaths.cmake /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div.$ Github$ projekter/RandomizedAlgorithms2023/Project$ 2$ v2/CMakeLists.txt /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div.$ Github$ projekter/RandomizedAlgorithms2023/Project$ 2$ v2/src/CMakeLists.txt /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div.$ Github$ projekter/RandomizedAlgorithms2023/Project$ 2$ v2/src/lib/CMakeLists.txt /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div.$ Github$ projekter/RandomizedAlgorithms2023/Project$ 2$ v2/src/main/CMakeLists.txt /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div.$ Github$ projekter/RandomizedAlgorithms2023/Project$ 2$ v2/test/CMakeLists.txt /opt/homebrew/lib/cmake/Catch2/Catch2Config.cmake /opt/homebrew/lib/cmake/Catch2/Catch2ConfigVersion.cmake /opt/homebrew/lib/cmake/Catch2/Catch2Targets-release.cmake /opt/homebrew/lib/cmake/Catch2/Catch2Targets.cmake CMakeCache.txt CMakeFiles/3.25.2/CMakeCXXCompiler.cmake CMakeFiles/3.25.2/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeCXXInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Compiler/AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Platform/Apple-AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Platform/Apple-Clang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Platform/UnixPaths.cmake /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div.$ Github$ projekter/RandomizedAlgorithms2023/Project$ 2/CMakeLists.txt /opt/homebrew/share/eigen3/cmake/Eigen3Config.cmake /opt/homebrew/share/eigen3/cmake/Eigen3ConfigVersion.cmake /opt/homebrew/share/eigen3/cmake/Eigen3Targets.cmake CMakeCache.txt CMakeFiles/3.25.2/CMakeCXXCompiler.cmake CMakeFiles/3.25.2/CMakeSystem.cmake: phony
+build /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeCXXInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeCommonLanguageInclude.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeGenericSystem.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeInitializeConfigs.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeLanguageInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeSystemSpecificInformation.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/CMakeSystemSpecificInitialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Compiler/AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Compiler/CMakeCommonCompilerMacros.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Compiler/Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Compiler/GNU.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Platform/Apple-AppleClang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Platform/Apple-Clang-CXX.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Platform/Apple-Clang.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Platform/Darwin-Initialize.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Platform/Darwin.cmake /Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.25/Modules/Platform/UnixPaths.cmake /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div.$ Github$ projekter/RandomizedAlgorithms2023/Project$ 2$ v2/CMakeLists.txt /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div.$ Github$ projekter/RandomizedAlgorithms2023/Project$ 2$ v2/src/CMakeLists.txt /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div.$ Github$ projekter/RandomizedAlgorithms2023/Project$ 2$ v2/src/lib/CMakeLists.txt /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div.$ Github$ projekter/RandomizedAlgorithms2023/Project$ 2$ v2/src/main/CMakeLists.txt /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div.$ Github$ projekter/RandomizedAlgorithms2023/Project$ 2$ v2/test/CMakeLists.txt /opt/homebrew/lib/cmake/Catch2/Catch2Config.cmake /opt/homebrew/lib/cmake/Catch2/Catch2ConfigVersion.cmake /opt/homebrew/lib/cmake/Catch2/Catch2Targets-release.cmake /opt/homebrew/lib/cmake/Catch2/Catch2Targets.cmake CMakeCache.txt CMakeFiles/3.25.2/CMakeCXXCompiler.cmake CMakeFiles/3.25.2/CMakeSystem.cmake: phony
 
 
 #############################################
