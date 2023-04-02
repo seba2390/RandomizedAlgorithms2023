@@ -81,6 +81,8 @@ double fast_relative_err(uint64_t a, uint64_t b);
 
 double slow_relative_err(uint64_t a, uint64_t b);
 
+double variance(const std::vector<int64_t>& values);
+
 void append_to_file(const std::string& filename, const std::string& path, const std::vector<output_data_type>& data);
 
 void remove_file(const std::string& filename,  const std::string& path);

@@ -12,7 +12,7 @@ static_assert((CHAR_BIT * sizeof(key_type) == KEY_BIT_SIZE), "Adjust key_type to
 int main()
 {
 
-    const uint32_t N_SEEDS = 100;
+    const uint32_t N_SEEDS = 30;
     const uint32_t SEED_MULTIPLIER = 11;
     for(uint32_t seed = 0; seed < N_SEEDS; seed++) {
         std::cout << "\n ############## SEED ROUND: " << seed+1 << "/" << N_SEEDS << " ############## " << std::endl;
@@ -20,7 +20,7 @@ int main()
         /// ----------- EXERCISE 5 ----------- ///
         std::cout << "\n ========= Exercise 5 ======== \n";
 
-        std::string folder_path = "../../Data/Exercise_5";
+        std::string folder_path = "../../../../Data/Exercise_5";
         std::string filename = "Exercise_5_" + std::to_string(0+seed*SEED_MULTIPLIER) + ".txt";
         remove_file(filename, folder_path); // Removing possibly already existing file with name 'filename' from drive.
 
@@ -180,7 +180,7 @@ int main()
 
         // Saving times to drive
         filename = "Exercise_7_seed_" + std::to_string(0+seed*SEED_MULTIPLIER) + ".txt";
-        folder_path = "../../Data/Exercise_7";
+        folder_path = "../../../../Data/Exercise_7";
 
         remove_file(filename, folder_path); // Removing possibly already existing file with name 'filename' from drive.
 
@@ -233,8 +233,8 @@ int main()
                 // Performing the 'N_UPDATES_2' updates, i.e. inserting (key, delta) pairs.
                 for (int64_t update = 1; update < N_UPDATES_2; update++) {
                     auto delta = static_cast<value_type>(std::pow(update, 2));
-                    true_value += static_cast<uint64_t>(std::pow(delta,2));
                     auto key = static_cast<key_type>(update);
+                    true_value += static_cast<uint64_t>(delta*delta);
                     my_sketch.update(std::make_pair(key, delta));
                 }
                 // Calculate the relative error for this experiment
@@ -253,18 +253,19 @@ int main()
 
         // Saving errors to drive
         filename = "Exercise_8_seed_" + std::to_string(0+seed*SEED_MULTIPLIER) + ".txt";
-        folder_path = "../../Data/Exercise_8";
+        folder_path = "../../../../Data/Exercise_8";
         remove_file(filename, folder_path); // Removing possibly already existing file with name 'filename' from drive.
         for (unsigned int r = 0; r < avg_relative_errs.size(); r++) {
             append_to_file(filename, folder_path, {
                     static_cast<output_data_type>(array_sizes_2[r]),
-                    avg_relative_errs[r],
-                    max_relative_errs[r]});
+                    static_cast<output_data_type>(avg_relative_errs[r]),
+                    static_cast<output_data_type>(max_relative_errs[r])});
         }
 
 
         /// ----------- EXERCISE 9 ----------- ///
         // TODO: determine why error is so much bigger for 2-wise multiply shift (this exercise) than 4-wise (exercise 8)
+        // TODO: Numerically off by approx factor 555 (equivalent to hash function mapping all to one entry) - se overleaf doc.
         std::cout << "\n ========= Exercise 9 ======== \n";
         using multiply_shift_2_independent_return_type_2 = std::pair<int64_t, int64_t>;
 
@@ -290,23 +291,14 @@ int main()
                 // Performing the 'N_UPDATES_2' updates, i.e. inserting (key, delta) pairs.
                 for (int64_t update = 1; update < N_UPDATES_2; update++) {
                     auto delta = static_cast<value_type>(std::pow(update, 2));
-                    true_value += static_cast<uint64_t>(std::pow(delta,2));
                     auto key = static_cast<key_type>(update);
+                    true_value += static_cast<uint64_t>(delta*delta);
                     my_sketch.update(std::make_pair(key, delta));
                 }
                 // Calculate the relative error for this experiment
                 auto estimated_value = my_sketch.query();
                 // Updating avg. err.
                 const double rel_err = slow_relative_err(estimated_value, true_value);
-                if(static_cast<uint64_t>(estimated_value) > 2*true_value){
-                        //std::cout << "estimated_value= " << estimated_value << std::endl;
-                        //std::cout << "true_value= " << true_value << std::endl << std::endl;
-                        //std::cout << "estimated_value/true_value= " << static_cast<double >(estimated_value)/static_cast<double >(true_value) << std::endl;
-                        //std::cout << "R = " << r_min+r_idx << std::endl << std::endl;
-                }
-
-
-
                 avg_error_sum += rel_err;
                 // Checking for new max. err.
                 if (rel_err > max_error) max_error = rel_err;
@@ -317,13 +309,13 @@ int main()
 
         // Saving errors to drive
         filename = "Exercise_9_seed_" + std::to_string(0+seed*SEED_MULTIPLIER) + ".txt";
-        folder_path = "../../Data/Exercise_9";
+        folder_path = "../../../../Data/Exercise_9";
         remove_file(filename, folder_path); // Removing possibly already existing file with name 'filename' from drive.
         for (unsigned int r = 0; r < avg_relative_errs_2.size(); r++) {
             append_to_file(filename, folder_path, {
                     static_cast<output_data_type>(array_sizes_2[r]),
-                    avg_relative_errs_2[r],
-                    max_relative_errs_2[r]});
+                    static_cast<output_data_type>(avg_relative_errs_2[r]),
+                    static_cast<output_data_type>(max_relative_errs_2[r])});
         }
 
     }

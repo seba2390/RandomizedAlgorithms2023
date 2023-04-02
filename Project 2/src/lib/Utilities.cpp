@@ -264,13 +264,55 @@ std::pair<int64_t,int64_t> slow_mersenne_4_independent_hash(int64_t key, uint64_
 
     return std::make_pair(g,h2);
     }
+
+/**
+ * Calculates the variance of a vector of integer values.
+ *
+ * This function calculates the sample variance of the given vector of integer values.
+ * The sample variance is an unbiased estimator of the population variance, which measures
+ * the amount of variation or spread in the data.
+ *
+ * @param values A vector of integer values.
+ * @throws std::runtime_error If the given vector is empty.
+ * @return The sample variance of the vector.
+ */
+double variance(const std::vector<int64_t>& values)
+{
+    // Check if the vector is empty
+    if (values.empty())
+    {
+        throw std::runtime_error("Given vector of values is empty.");
+    }
+
+    // Calculate the average of the values
+    double avg = static_cast<double>(std::accumulate(values.begin(), values.end(), static_cast<int64_t>(0))) / static_cast<double>(values.size());
+
+    // Calculate the sum of squares of deviations from the mean
+    double result = 0;
+    for (const int64_t& value : values)
+    {
+        result += (static_cast<double>(value) - avg) * (static_cast<double>(value) - avg);
+    }
+
+    // Calculate the sample variance and return it
+    return result / static_cast<double>(values.size() - 1);
+}
+
+
 void append_to_file(const std::string& filename, const std::string& path, const std::vector<output_data_type>& data)
 {
+    // Check if the path exists
+    if (!std::filesystem::exists(path)) {
+        std::cerr << "Error: path " << path << " does not exist" << std::endl;
+        return;
+    }
+
     std::ofstream output_stream(path+"/"+filename, std::ofstream::app); // Appending to end of file
     for(auto data_point : data) output_stream << data_point << "    ";
     output_stream << std::endl;
     output_stream.close();
 }
+
 
 void remove_file(const std::string& filename,  const std::string& path)
 {

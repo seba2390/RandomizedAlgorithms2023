@@ -126,15 +126,7 @@ public:
 
         // Check if array_type is std::vector
         sum_type result = 0;
-        if constexpr (std::is_same_v<array_type, std::vector<typename array_type::value_type, typename array_type::allocator_type>>) {
-            // If array_type is std::vector, use std::inner_product to compute the sum of squares
-            return std::inner_product(this->hash_table.begin(), this->hash_table.end(), this->hash_table.begin(), static_cast<sum_type>(0));
-        } else {
-            // If array_type is not std::vector, use std::accumulate and lambda function to compute the sum of squares
-            result += std::accumulate(this->hash_table.begin(), this->hash_table.end(), static_cast<sum_type>(0), [](const auto& acc, const auto& val) {
-                return acc + val * val;
-            });
-            return result;
-        }
+        for(const auto& entry : this->hash_table) result += static_cast<sum_type>(entry * entry);
+        return result;
     }
 };
