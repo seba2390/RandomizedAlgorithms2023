@@ -6,3 +6,6 @@ set(LIBNAME Utilities)
 
 # Create a static library target with the specified name and source files
 add_library(${LIBNAME} STATIC ${SOURCE_FILES})
+
+# Include the header-only library 'indicators'
+target_include_directories(${LIBNAME} PRIVATE /Users/sebastianyde/Tools/indicators/include)

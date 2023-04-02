@@ -5,7 +5,7 @@ set(TESTNAME functions_test)
 add_executable(${TESTNAME} functions_test.cpp)
 
 # Find the Catch2 testing framework and set the search path to /opt/homebrew/Cellar/catch2/3.0.1/include
-find_package(Catch2 REQUIRED PATHS /opt/homebrew/Cellar/catch2/3.0.1/include)
+find_package(Catch2 REQUIRED PATHS /opt/homebrew/Cellar/catch2/3.1.1/include)
 
 # Set the compiler options for the test target to include additional warnings
 target_compile_options(${TESTNAME} PRIVATE -Wall -Wextra -Werror -Wpedantic)

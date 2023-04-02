@@ -25,7 +25,8 @@
 #include <any>
 
 
-
+#include <indicators/cursor_control.hpp>
+#include <indicators/progress_bar.hpp>
 #include <lib/Xoshiro.hpp>
 
 #define KEY_BIT_SIZE 32
