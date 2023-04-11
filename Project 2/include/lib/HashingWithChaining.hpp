@@ -134,7 +134,6 @@ public:
         /*
          * Checks whether the provided key is stored in the hash table.
          */
-
         key_type array_index;
         if constexpr (is_pair<hash_return_type>::value) {
             // if hash_return_type is std::pair

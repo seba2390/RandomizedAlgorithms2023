@@ -1,10 +1,4 @@
-/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/ninja -D CMAKE_CXX_FLAGS=-O3 -DCMAKE_TOOLCHAIN_FILE=/Users/sebastianyde/.clion-vcpkg/vcpkg/scripts/buildsystems/vcpkg.cmake -G Ninja -S "/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2" -B "/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2/Builds/Release"
--- The CXX compiler identification is AppleClang 14.0.0.14000029
--- Detecting CXX compiler ABI info
--- Detecting CXX compiler ABI info - done
--- Check for working CXX compiler: /Library/Developer/CommandLineTools/usr/bin/c++ - skipped
--- Detecting CXX compile features
--- Detecting CXX compile features - done
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/ninja -D CMAKE_CXX_FLAGS=-O3 -DCMAKE_TOOLCHAIN_FILE=/Users/sebastianyde/.clion-vcpkg/vcpkg/scripts/buildsystems/vcpkg.cmake -D CMAKE_CXX_FLAGS=-O3 -G Ninja -S "/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/Privat/RandomizedAlgorithms2023/Project 2" -B "/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/Privat/RandomizedAlgorithms2023/Project 2/Builds/Release"
 ===== Boost found! ======
 Boost_VERSION_STRING is defined: 1.81.0
 Boost_INCLUDE_DIRS is defined: /opt/homebrew/include
@@ -13,4 +7,4 @@ Setting Boost_LIBRARY_DIRS to:
 /opt/homebrew/Cellar/boost/1.81.0_1/lib
 -- Configuring done
 -- Generating done
--- Build files have been written to: /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2/Builds/Release
+-- Build files have been written to: /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/Privat/RandomizedAlgorithms2023/Project 2/Builds/Release

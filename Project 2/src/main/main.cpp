@@ -13,12 +13,15 @@ int main()
 {
 
     // Define constants
-    const uint32_t N_SEEDS = 30;
+    const uint32_t N_SEEDS = 37;
     const uint32_t SEED_MULTIPLIER = 11;
 
     // create a progress bar that displays a message
-    boost::timer::progress_display progress(N_SEEDS, std::cout, "Processing... \n");
-    for(uint32_t seed = 0; seed < N_SEEDS; seed++) {
+    //boost::timer::progress_display progress(N_SEEDS, std::cout, "Processing... \n");
+    for(uint32_t seed = 35; seed < N_SEEDS; seed++) {
+
+        std::cout << "Seed: " << seed << " / " << N_SEEDS << std::endl;
+        std::cout << "Multiplier: " << SEED_MULTIPLIER << std::endl;
 
 
         /// ----------- EXERCISE 5 ----------- ///
@@ -124,59 +127,64 @@ int main()
 
         // iterate over array of n values
         for (unsigned int n_idx = 0; n_idx < n_values.size(); n_idx++) {
+            std::cout << "=== loop start ===" << std::endl;
             const value_type n = n_values[n_idx];
             // TODO: Investigate and determine if hashing with chaining should have m=n
 
-            // create a new hashing_with_chaining_type_1 object with given n, seed and multiply_shift_hash
-            hashing_with_chaining_type_1 my_hashing_with_chaining = hashing_with_chaining_type_1(n, 0+seed*SEED_MULTIPLIER,
-                                                                                                 multiply_shift_hash);
-            output_data_type HWC_time = 0.0;
+                std::cout << "exercise 7 n_idx: " << n_idx << " / " << n_values.size() << std::endl;
+                // create a new hashing_with_chaining_type_1 object with given n, seed and multiply_shift_hash
+                hashing_with_chaining_type_1 my_hashing_with_chaining = hashing_with_chaining_type_1(n, 0+seed*SEED_MULTIPLIER,
+                                                                                                     multiply_shift_hash);
+                output_data_type HWC_time = 0.0;
 
-            // iterate over N_UPDATES, update hashing_with_chaining_type_1 object with each update
-            for (int64_t update = 1; update <= N_UPDATES; update++) {
-                const value_type delta = 1;
-                auto key = static_cast<key_type>(update & (n - 1)); // Fast i mod n, when n=2^N.
-
-                // record start time and update object
-                auto start = std::chrono::high_resolution_clock::now();
-                my_hashing_with_chaining.update(std::make_pair(key, delta));
-                auto stop = std::chrono::high_resolution_clock::now();
-
-                // calculate duration and add to total time
-                auto duration = static_cast<output_data_type>(duration_cast<std::chrono::nanoseconds>(
-                        stop - start).count());
-                HWC_time += duration;
-            }
-
-            // add average update time for this value of n to the vector
-            average_HWC_update_times[n_idx] = HWC_time / static_cast<output_data_type>(N_UPDATES);
-
-            // iterate over array_sizes, for each size create a new sketch_type_1 object with given r, seed and mersenne_4_independent_hash
-            for (unsigned int r_idx = 0; r_idx < array_sizes.size(); r_idx++) {
-                const value_type r = array_sizes[r_idx];
-                sketch_type_1 my_sketch = sketch_type_1(r, 0+seed*SEED_MULTIPLIER, mersenne_4_independent_hash);
-                output_data_type sketch_time = 0.0;
-
-                // iterate over N_UPDATES, update sketch_type_1 object with each update
+                // iterate over N_UPDATES, update hashing_with_chaining_type_1 object with each update
                 for (int64_t update = 1; update <= N_UPDATES; update++) {
                     const value_type delta = 1;
                     auto key = static_cast<key_type>(update & (n - 1)); // Fast i mod n, when n=2^N.
 
                     // record start time and update object
                     auto start = std::chrono::high_resolution_clock::now();
-                    my_sketch.update(std::make_pair(key, delta));
+                    my_hashing_with_chaining.update(std::make_pair(key, delta));
                     auto stop = std::chrono::high_resolution_clock::now();
 
                     // calculate duration and add to total time
                     auto duration = static_cast<output_data_type>(duration_cast<std::chrono::nanoseconds>(
                             stop - start).count());
-                    sketch_time += duration;
+                    HWC_time += duration;
                 }
 
-                // add average update time for this value of r and n to the vector
-                average_sketch_update_times[r_idx][n_idx] = sketch_time / static_cast<output_data_type>(N_UPDATES);
-            }
+                // add average update time for this value of n to the vector
+                average_HWC_update_times[n_idx] = HWC_time / static_cast<output_data_type>(N_UPDATES);
+
+                // iterate over array_sizes, for each size create a new sketch_type_1 object with given r, seed and mersenne_4_independent_hash
+                for (unsigned int r_idx = 0; r_idx < array_sizes.size(); r_idx++) {
+                    std::cout << "r_idx: " << r_idx << std::endl;
+                    const value_type r = array_sizes[r_idx];
+                    sketch_type_1 my_sketch = sketch_type_1(r, 0+seed*SEED_MULTIPLIER, mersenne_4_independent_hash);
+                    output_data_type sketch_time = 0.0;
+
+                    // iterate over N_UPDATES, update sketch_type_1 object with each update
+                    for (int64_t update = 1; update <= N_UPDATES; update++) {
+                        const value_type delta = 1;
+                        auto key = static_cast<key_type>(update & (n - 1)); // Fast i mod n, when n=2^N.
+
+                        // record start time and update object
+                        auto start = std::chrono::high_resolution_clock::now();
+                        my_sketch.update(std::make_pair(key, delta));
+                        auto stop = std::chrono::high_resolution_clock::now();
+
+                        // calculate duration and add to total time
+                        auto duration = static_cast<output_data_type>(duration_cast<std::chrono::nanoseconds>(
+                                stop - start).count());
+                        sketch_time += duration;
+                    }
+
+                    // add average update time for this value of r and n to the vector
+                    average_sketch_update_times[r_idx][n_idx] = sketch_time / static_cast<output_data_type>(N_UPDATES);
+                }
+            std::cout << "=== loop end ===" << std::endl;
         }
+
 
         // Saving times to drive
         filename = "Exercise_7_seed_" + std::to_string(0+seed*SEED_MULTIPLIER) + ".txt";
@@ -313,7 +321,7 @@ int main()
                     static_cast<output_data_type>(max_relative_errs_2[r])});
         };
 
-        ++progress; // Increment progress bar
+        //++progress; // Increment progress bar
 
     }
 

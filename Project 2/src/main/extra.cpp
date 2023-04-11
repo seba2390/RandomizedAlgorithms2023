@@ -12,7 +12,7 @@ static_assert((CHAR_BIT * sizeof(key_type) == KEY_BIT_SIZE), "Adjust key_type to
 int main()
 {
 
-    const unsigned int NR_SEEDS = 5, MULTIPLIER = 11235;
+    const unsigned int NR_SEEDS = 37, MULTIPLIER = 11235;
 
     // create a progress bar that displays a message
     boost::timer::progress_display progress(NR_SEEDS, std::cout, "Progress ... \n");
