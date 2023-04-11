@@ -34,7 +34,7 @@ CMAKE_COLOR_DIAGNOSTICS:BOOL=ON
 CMAKE_CXX_COMPILER:FILEPATH=/Library/Developer/CommandLineTools/usr/bin/c++
 
 //Flags used by the CXX compiler during all build types.
-CMAKE_CXX_FLAGS:STRING=-g -fsanitize=address
+CMAKE_CXX_FLAGS:STRING=-g -fsanitize=address -Wall -Werror -Wextra
 
 //Flags used by the CXX compiler during DEBUG builds.
 CMAKE_CXX_FLAGS_DEBUG:STRING=-g

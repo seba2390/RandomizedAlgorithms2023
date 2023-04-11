@@ -1,12 +1,6 @@
 # ninja log v5
-442	465	1680615464230627000	src/lib/libUtilities.a	13c601fbf02dff2a
-561	608	1681198865710814990	src/main/Main_exe	9cd34923426d8c80
-1	560	1681198865649779842	src/main/CMakeFiles/Main.dir/main.cpp.o	5543ef617f28115e
-0	441	1680615464204352892	src/lib/CMakeFiles/Utilities.dir/Utilities.cpp.o	3802c31e1c49c571
-4	61	1681199182445049246	build.ninja	c7c1ea348fd77d1a
-2	589	1681199185126862832	src/lib/CMakeFiles/Utilities.dir/Utilities.cpp.o	9315b5138567d61b
 589	637	1681199185177200000	src/lib/libUtilities.a	13c601fbf02dff2a
-2	754	1681199185287244303	src/main/CMakeFiles/Main.dir/main.cpp.o	706bc3056a360343
-754	800	1681199185339804607	src/main/Main_exe	3e00e5e16159adf0
-2	591	1681203465557978500	src/main/CMakeFiles/Main.dir/main.cpp.o	706bc3056a360343
 591	628	1681203465598886075	src/main/Main_exe	3e00e5e16159adf0
+2	591	1681203465557978500	src/main/CMakeFiles/Main.dir/main.cpp.o	706bc3056a360343
+2	589	1681199185126862832	src/lib/CMakeFiles/Utilities.dir/Utilities.cpp.o	9315b5138567d61b
+4	61	1681205483241516103	build.ninja	c7c1ea348fd77d1a

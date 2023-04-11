@@ -13,15 +13,12 @@ int main()
 {
 
     // Define constants
-    const uint32_t N_SEEDS = 37;
+    const uint32_t N_SEEDS = 100;
     const uint32_t SEED_MULTIPLIER = 11;
 
     // create a progress bar that displays a message
-    //boost::timer::progress_display progress(N_SEEDS, std::cout, "Processing... \n");
-    for(uint32_t seed = 35; seed < N_SEEDS; seed++) {
-
-        std::cout << "Seed: " << seed << " / " << N_SEEDS << std::endl;
-        std::cout << "Multiplier: " << SEED_MULTIPLIER << std::endl;
+    boost::timer::progress_display progress(N_SEEDS, std::cout, "Processing... \n");
+    for(uint32_t seed = 0; seed < N_SEEDS; seed++) {
 
 
         /// ----------- EXERCISE 5 ----------- ///
@@ -47,9 +44,9 @@ int main()
         auto multiply_shift_upper_bound = static_cast<uint32_t>(std::pow(2, KEY_BIT_SIZE) - 1);
         const auto a = static_cast<int32_t>(get_random_odd_uint32(0+seed*SEED_MULTIPLIER, multiply_shift_upper_bound));
         const auto l = static_cast<uint32_t>(std::log2(array_size));
-        double avg_time_1 = 0;
-        double avg_time_2 = 0;
-        double avg_time_3 = 0;
+        [[maybe_unused]] double avg_time_1 = 0;
+        [[maybe_unused]] double avg_time_2 = 0;
+        [[maybe_unused]] double avg_time_3 = 0;
         for (const auto &key: keys) {
             auto start_1 = std::chrono::high_resolution_clock::now();
             auto result1 = mersenne_4_independent_hash(key, array_size, constants);
@@ -127,11 +124,9 @@ int main()
 
         // iterate over array of n values
         for (unsigned int n_idx = 0; n_idx < n_values.size(); n_idx++) {
-            std::cout << "=== loop start ===" << std::endl;
             const value_type n = n_values[n_idx];
             // TODO: Investigate and determine if hashing with chaining should have m=n
 
-                std::cout << "exercise 7 n_idx: " << n_idx << " / " << n_values.size() << std::endl;
                 // create a new hashing_with_chaining_type_1 object with given n, seed and multiply_shift_hash
                 hashing_with_chaining_type_1 my_hashing_with_chaining = hashing_with_chaining_type_1(n, 0+seed*SEED_MULTIPLIER,
                                                                                                      multiply_shift_hash);
@@ -158,7 +153,6 @@ int main()
 
                 // iterate over array_sizes, for each size create a new sketch_type_1 object with given r, seed and mersenne_4_independent_hash
                 for (unsigned int r_idx = 0; r_idx < array_sizes.size(); r_idx++) {
-                    std::cout << "r_idx: " << r_idx << std::endl;
                     const value_type r = array_sizes[r_idx];
                     sketch_type_1 my_sketch = sketch_type_1(r, 0+seed*SEED_MULTIPLIER, mersenne_4_independent_hash);
                     output_data_type sketch_time = 0.0;
@@ -182,7 +176,6 @@ int main()
                     // add average update time for this value of r and n to the vector
                     average_sketch_update_times[r_idx][n_idx] = sketch_time / static_cast<output_data_type>(N_UPDATES);
                 }
-            std::cout << "=== loop end ===" << std::endl;
         }
 
 
@@ -321,7 +314,7 @@ int main()
                     static_cast<output_data_type>(max_relative_errs_2[r])});
         };
 
-        //++progress; // Increment progress bar
+        ++progress; // Increment progress bar
 
     }
 

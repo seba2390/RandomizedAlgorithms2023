@@ -107,7 +107,7 @@ build cmake_object_order_depends_target_Utilities: phony || src/lib/CMakeFiles/U
 
 build src/lib/CMakeFiles/Utilities.dir/Utilities.cpp.o: CXX_COMPILER__Utilities_Debug /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div.$ Github$ projekter/Privat/RandomizedAlgorithms2023/Project$ 2/src/lib/Utilities.cpp || cmake_object_order_depends_target_Utilities
   DEP_FILE = src/lib/CMakeFiles/Utilities.dir/Utilities.cpp.o.d
-  FLAGS = -g -fsanitize=address -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -fcolor-diagnostics -std=gnu++20
+  FLAGS = -g -fsanitize=address -Wall -Werror -Wextra -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -fcolor-diagnostics -std=gnu++20
   INCLUDES = -I/opt/homebrew/include -I"/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/Privat/RandomizedAlgorithms2023/Project 2/include"
   OBJECT_DIR = src/lib/CMakeFiles/Utilities.dir
   OBJECT_FILE_DIR = src/lib/CMakeFiles/Utilities.dir
@@ -124,7 +124,7 @@ build src/lib/CMakeFiles/Utilities.dir/Utilities.cpp.o: CXX_COMPILER__Utilities_
 
 build src/lib/libUtilities.a: CXX_STATIC_LIBRARY_LINKER__Utilities_Debug src/lib/CMakeFiles/Utilities.dir/Utilities.cpp.o
   ARCH_FLAGS = -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk
-  LANGUAGE_COMPILE_FLAGS = -g -fsanitize=address -g
+  LANGUAGE_COMPILE_FLAGS = -g -fsanitize=address -Wall -Werror -Wextra -g
   OBJECT_DIR = src/lib/CMakeFiles/Utilities.dir
   POST_BUILD = :
   PRE_LINK = :
@@ -171,7 +171,7 @@ build cmake_object_order_depends_target_Main: phony || cmake_object_order_depend
 
 build src/main/CMakeFiles/Main.dir/main.cpp.o: CXX_COMPILER__Main_Debug /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div.$ Github$ projekter/Privat/RandomizedAlgorithms2023/Project$ 2/src/main/main.cpp || cmake_object_order_depends_target_Main
   DEP_FILE = src/main/CMakeFiles/Main.dir/main.cpp.o.d
-  FLAGS = -g -fsanitize=address -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -fcolor-diagnostics -std=gnu++20
+  FLAGS = -g -fsanitize=address -Wall -Werror -Wextra -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -fcolor-diagnostics -std=gnu++20
   INCLUDES = -I/opt/homebrew/include -I"/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/Privat/RandomizedAlgorithms2023/Project 2/include"
   OBJECT_DIR = src/main/CMakeFiles/Main.dir
   OBJECT_FILE_DIR = src/main/CMakeFiles/Main.dir
@@ -187,7 +187,7 @@ build src/main/CMakeFiles/Main.dir/main.cpp.o: CXX_COMPILER__Main_Debug /Users/s
 # Link the executable src/main/Main_exe
 
 build src/main/Main_exe: CXX_EXECUTABLE_LINKER__Main_Debug src/main/CMakeFiles/Main.dir/main.cpp.o | src/lib/libUtilities.a || src/lib/libUtilities.a
-  FLAGS = -g -fsanitize=address -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk
+  FLAGS = -g -fsanitize=address -Wall -Werror -Wextra -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk
   LINK_LIBRARIES = src/lib/libUtilities.a
   OBJECT_DIR = src/main/CMakeFiles/Main.dir
   POST_BUILD = :
@@ -207,7 +207,7 @@ build cmake_object_order_depends_target_Extra: phony || cmake_object_order_depen
 
 build src/main/CMakeFiles/Extra.dir/extra.cpp.o: CXX_COMPILER__Extra_Debug /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div.$ Github$ projekter/Privat/RandomizedAlgorithms2023/Project$ 2/src/main/extra.cpp || cmake_object_order_depends_target_Extra
   DEP_FILE = src/main/CMakeFiles/Extra.dir/extra.cpp.o.d
-  FLAGS = -g -fsanitize=address -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -fcolor-diagnostics -std=gnu++20
+  FLAGS = -g -fsanitize=address -Wall -Werror -Wextra -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -fcolor-diagnostics -std=gnu++20
   INCLUDES = -I/opt/homebrew/include -I"/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/Privat/RandomizedAlgorithms2023/Project 2/include"
   OBJECT_DIR = src/main/CMakeFiles/Extra.dir
   OBJECT_FILE_DIR = src/main/CMakeFiles/Extra.dir
@@ -223,7 +223,7 @@ build src/main/CMakeFiles/Extra.dir/extra.cpp.o: CXX_COMPILER__Extra_Debug /User
 # Link the executable src/main/Extra_exe
 
 build src/main/Extra_exe: CXX_EXECUTABLE_LINKER__Extra_Debug src/main/CMakeFiles/Extra.dir/extra.cpp.o | src/lib/libUtilities.a || src/lib/libUtilities.a
-  FLAGS = -g -fsanitize=address -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk
+  FLAGS = -g -fsanitize=address -Wall -Werror -Wextra -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk
   LINK_LIBRARIES = src/lib/libUtilities.a
   OBJECT_DIR = src/main/CMakeFiles/Extra.dir
   POST_BUILD = :
@@ -271,7 +271,7 @@ build cmake_object_order_depends_target_functions_test: phony || cmake_object_or
 
 build test/CMakeFiles/functions_test.dir/functions_test.cpp.o: CXX_COMPILER__functions_test_Debug /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div.$ Github$ projekter/Privat/RandomizedAlgorithms2023/Project$ 2/test/functions_test.cpp || cmake_object_order_depends_target_functions_test
   DEP_FILE = test/CMakeFiles/functions_test.dir/functions_test.cpp.o.d
-  FLAGS = -g -fsanitize=address -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -fcolor-diagnostics -Wall -Wextra -Werror -Wpedantic -ffile-prefix-map=/tmp/catch2-20221017-40515-sdyxr1/Catch2-3.1.1/= -std=gnu++20
+  FLAGS = -g -fsanitize=address -Wall -Werror -Wextra -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -fcolor-diagnostics -Wall -Wextra -Werror -Wpedantic -ffile-prefix-map=/tmp/catch2-20221017-40515-sdyxr1/Catch2-3.1.1/= -std=gnu++20
   INCLUDES = -I"/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/Privat/RandomizedAlgorithms2023/Project 2/include" -isystem /opt/homebrew/include
   OBJECT_DIR = test/CMakeFiles/functions_test.dir
   OBJECT_FILE_DIR = test/CMakeFiles/functions_test.dir
@@ -287,7 +287,7 @@ build test/CMakeFiles/functions_test.dir/functions_test.cpp.o: CXX_COMPILER__fun
 # Link the executable test/functions_test
 
 build test/functions_test: CXX_EXECUTABLE_LINKER__functions_test_Debug test/CMakeFiles/functions_test.dir/functions_test.cpp.o | src/lib/libUtilities.a /opt/homebrew/lib/libCatch2Main.a /opt/homebrew/lib/libCatch2.a || src/lib/libUtilities.a
-  FLAGS = -g -fsanitize=address -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk
+  FLAGS = -g -fsanitize=address -Wall -Werror -Wextra -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk
   LINK_LIBRARIES = src/lib/libUtilities.a  /opt/homebrew/lib/libCatch2Main.a  /opt/homebrew/lib/libCatch2.a
   OBJECT_DIR = test/CMakeFiles/functions_test.dir
   POST_BUILD = :

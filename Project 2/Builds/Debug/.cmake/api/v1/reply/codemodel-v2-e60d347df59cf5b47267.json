@@ -1,0 +1,151 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						4
+					],
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"projectIndex" : 0,
+					"source" : "."
+				},
+				{
+					"build" : "src",
+					"childIndexes" : 
+					[
+						2,
+						3
+					],
+					"jsonFile" : "directory-src-Debug-b6cf2213fc5053b67c22.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "src"
+				},
+				{
+					"build" : "src/lib",
+					"jsonFile" : "directory-src.lib-Debug-13ebd6f46d3a8d26f167.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "src/lib",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "src/main",
+					"jsonFile" : "directory-src.main-Debug-b65482225957dbc016cd.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "src/main",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				},
+				{
+					"build" : "test",
+					"jsonFile" : "directory-test-Debug-451c0598f41488bb20b9.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "test",
+					"targetIndexes" : 
+					[
+						3
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4
+					],
+					"name" : "Project_2",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 3,
+					"id" : "Extra::@5f1512723eddbe79ddaa",
+					"jsonFile" : "target-Extra-Debug-bf112a4d4171965c43fe.json",
+					"name" : "Extra",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "Main::@5f1512723eddbe79ddaa",
+					"jsonFile" : "target-Main-Debug-2779cc252d16e5f5f1eb.json",
+					"name" : "Main",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "Utilities::@dc1a1c76835bc3d8b019",
+					"jsonFile" : "target-Utilities-Debug-c46fbccfb8cd6c03801f.json",
+					"name" : "Utilities",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "functions_test::@36f028580bb02cc8272a",
+					"jsonFile" : "target-functions_test-Debug-662a1d7fa8e9c7349de0.json",
+					"name" : "functions_test",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/Privat/RandomizedAlgorithms2023/Project 2/Builds/Debug",
+		"source" : "/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/Privat/RandomizedAlgorithms2023/Project 2"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 4
+	}
+}
