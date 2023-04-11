@@ -94,3 +94,31 @@ TEST_CASE("Slow_VS_Fast", "[Hash functions]")
     std::cout << "## ====== SLOW_VS_FAST HASH TEST SUCCESSFUL ====== ##" << std::endl;
 
 }
+
+
+TEST_CASE("Independent 2 (impl. 1) vs. independent 2 (impl. 2)", "[Hash functions]")
+{
+
+    // Get the current time as a long integer
+    const uint64_t N = 1000;
+    const uint64_t ARRAY_SIZE = 12345;
+
+    for(uint64_t a = 0; a < N; a++)
+    {
+        for(uint64_t b = 0; a < N; a++)
+        {
+            uint64_t c = 0;
+            uint64_t d = 0;
+            hashing_constants constants = {a,b,c,d};
+            for(int64_t key = 0; key < static_cast<int64_t>(N); key++)
+            {
+                auto v1 = multiply_shift_2_independent(key,ARRAY_SIZE,constants);
+                auto v2 = multiply_shift_2_independent_2(key,ARRAY_SIZE,constants);
+                REQUIRE(v1.first == v2.first);
+                REQUIRE(v1.second == v2.second);
+            }
+        }
+    }
+    std::cout << "## ====== Independent 2 (impl. 1) vs. independent 2 (impl. 2) ====== ##" << std::endl;
+
+}

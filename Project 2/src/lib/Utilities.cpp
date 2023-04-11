@@ -124,17 +124,65 @@ uint32_t multiply_shift_hash(uint32_t key, uint32_t a, uint32_t l)
 
 std::pair<int64_t,int64_t> multiply_shift_2_independent(int64_t key, uint64_t array_size, hashing_constants constants)
 {
-    int64_t k;
+    uint64_t k;
 
-    k = (static_cast<int64_t>(constants.a)*static_cast<int64_t>(key)+static_cast<int64_t>(constants.b)) >> static_cast<int64_t>(33);
-
+    k = (static_cast<uint64_t>(constants.a)*static_cast<uint64_t>(key)+static_cast<uint64_t>(constants.b)) >> static_cast<uint64_t>(33);
     //TODO: Find out why three different k's are needed for correct result
     /*
      * (k & 1): returns the Least Significant Bit (LSB) of k.
      * LSB is the rightmost bit of the bitstring - this is always {0,1}.
      * As such, 2 * (k & 1) - 1 always returns a number in {-1,+1}
      */
-    int64_t g = 2*(k & 1)-1;
+    int64_t g = 2*(static_cast<int64_t>(k) & 1)-1;
+
+
+    /*
+     * (k >> 1): will shift the bits of k2 one position to the right.
+     * This is equivalent to floor(k / 2). (dividing w. 2, discarding remainder and rounding down).
+     * Or equivalent to dropping the LSB.
+     *
+     * (r-1): This operation produces a mask of bits that has all the bits set to 1 from the LSB
+     * up to the bit that corresponds to the highest power of 2 less than or equal to r.
+     *
+     * (k >> 1) & (r-1): produces a new value that has all the bits of (k >> 1) set to 0 from the LSB
+     * up to the bit that corresponds to the highest power of 2 less than or equal to r.
+     * Any higher-order bits of (k >> 1) that are above the bit corresponding to r are unaffected by the mask.
+     *
+     * Effectively (k >> 1) & (r-1) corresponds to first bit shifting k by 1, and then performing mod r, when r = 2^R (r is a power of 2).
+     */
+    uint64_t h = (k >> 1) & (array_size-1);
+    if(h >= array_size) {
+        std::cout<< "array size, h :" << array_size << "," << h << std::endl;
+        throw std::runtime_error("Error in multiply_shift_2_independent - h too large.");
+    }
+    if(!((g==-1)||(g==1)))
+    {
+        std::cout<< "array size, g :" << array_size << "," << g << std::endl;
+        throw std::runtime_error("Error in multiply_shift_2_independent");
+    }
+    //std::cout << "a:" << constants.a << " b:" << constants.b << std::endl;
+    //std::cout << "h=" << h << ",key=" << key << std::endl << std::endl;
+    return std::make_pair(g,h);
+
+}
+
+
+std::pair<int64_t,int64_t> multiply_shift_2_independent_2(int64_t key, uint64_t array_size, hashing_constants constants)
+{
+    uint64_t k;
+    uint64_t p = 2147483647;
+    uint64_t q = 31;
+
+    //k = (static_cast<int64_t>(constants.a)*static_cast<int64_t>(key)+static_cast<int64_t>(constants.b)) >> static_cast<int64_t>(33);
+    k = ((constants.a*key+constants.b)&p) + ((constants.a*key+constants.b)>>q);
+    if (k >= p) k-=p;
+    //TODO: Find out why three different k's are needed for correct result
+    /*
+     * (k & 1): returns the Least Significant Bit (LSB) of k.
+     * LSB is the rightmost bit of the bitstring - this is always {0,1}.
+     * As such, 2 * (k & 1) - 1 always returns a number in {-1,+1}
+     */
+    int64_t g = 2*(static_cast<int64_t>(k) & 1)-1;
 
 
     /*

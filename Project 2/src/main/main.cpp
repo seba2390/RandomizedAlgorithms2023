@@ -13,7 +13,7 @@ int main()
 {
 
     // Define constants
-    const uint32_t N_SEEDS = 100;
+    const uint32_t N_SEEDS = 20;
     const uint32_t SEED_MULTIPLIER = 11;
 
     // create a progress bar that displays a message
@@ -282,7 +282,7 @@ int main()
             // Repeat the experiment N_REPETITIONS times
             for (uint32_t experiment = 0; experiment <= N_REPETITIONS; experiment++) {
                 // Initialize new Sketch
-                sketch_type_2 my_sketch = sketch_type_2(r, 0+seed*SEED_MULTIPLIER + (r_idx), multiply_shift_2_independent);
+                sketch_type_2 my_sketch = sketch_type_2(r, 0+seed*SEED_MULTIPLIER + (r_idx), multiply_shift_2_independent_2);
                 uint64_t true_value = 0;
                 // Performing the 'N_UPDATES_2' updates, i.e. inserting (key, delta) pairs.
                 for (int64_t update = 1; update < N_UPDATES_2; update++) {
@@ -312,7 +312,7 @@ int main()
                     static_cast<output_data_type>(array_sizes_2[r]),
                     static_cast<output_data_type>(avg_relative_errs_2[r]),
                     static_cast<output_data_type>(max_relative_errs_2[r])});
-        };
+        }
 
         ++progress; // Increment progress bar
 

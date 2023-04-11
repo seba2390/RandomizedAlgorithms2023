@@ -67,6 +67,8 @@ uint32_t multiply_shift_hash(uint32_t key, uint32_t a, uint32_t l);
 
 std::pair<int64_t,int64_t> multiply_shift_2_independent(int64_t key, uint64_t array_size, hashing_constants constants);
 
+std::pair<int64_t,int64_t> multiply_shift_2_independent_2(int64_t key, uint64_t array_size, hashing_constants constants);
+
 std::pair<int64_t,int64_t> mersenne_4_independent_hash(int64_t key, uint64_t array_size,  hashing_constants constants);
 
 std::pair<int64_t,int64_t> slow_mersenne_4_independent_hash(int64_t key, uint64_t array_size, hashing_constants constants);
