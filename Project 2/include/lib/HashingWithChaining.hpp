@@ -163,7 +163,8 @@ public:
                 return std::make_tuple(array_index, list_index, true);
             }
         }
-        return std::make_tuple(NAN_TOKEN, NAN_TOKEN, true);
+        /// THIS PART MUST RETURN FALSE OTHERWISE VERY BAD THINGS WILL HAPPEN ///////
+        return std::make_tuple(NAN_TOKEN, NAN_TOKEN, false);
     }
 
     /**
