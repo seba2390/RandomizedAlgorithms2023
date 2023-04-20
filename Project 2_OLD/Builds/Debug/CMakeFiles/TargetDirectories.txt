@@ -1,3 +1,0 @@
-/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2/Builds/Debug/CMakeFiles/main.dir
-/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2/Builds/Debug/CMakeFiles/edit_cache.dir
-/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/RandomizedAlgorithms2023/Project 2/Builds/Debug/CMakeFiles/rebuild_cache.dir
