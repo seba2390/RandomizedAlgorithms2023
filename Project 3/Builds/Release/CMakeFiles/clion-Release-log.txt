@@ -1,0 +1,10 @@
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/ninja -DCMAKE_CXX_FLAGS=-O3 -G Ninja -S "/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/Privat/RandomizedAlgorithms2023/Project 3" -B "/Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/Privat/RandomizedAlgorithms2023/Project 3/Builds/Release"
+===== Boost found! ======
+Boost_VERSION_STRING is defined: 1.81.0
+Boost_INCLUDE_DIRS is defined: /opt/homebrew/include
+Boost_LIBRARY_DIRS is not defined!!
+Setting Boost_LIBRARY_DIRS to:
+/opt/homebrew/Cellar/boost/1.81.0_1/lib
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Users/sebastianyde/Library/CloudStorage/OneDrive-AarhusUniversitet/Div. Github projekter/Privat/RandomizedAlgorithms2023/Project 3/Builds/Release
