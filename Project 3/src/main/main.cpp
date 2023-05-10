@@ -6,7 +6,7 @@
 int main()
 {
 
-    auto TICKET_FRACTIONS = {2, 4, 10, 20};
+    auto TICKET_FRACTIONS = {4, 10, 100};
 
     for (auto fraction : TICKET_FRACTIONS)
     {
