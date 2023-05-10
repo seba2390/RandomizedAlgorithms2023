@@ -52,11 +52,20 @@ float_32_type std_deviation_float_32(const col_vector_32_type& x_arr) {
     return static_cast<float_32_type>(std::sqrt(1.0 / static_cast<float_32_type>((n - 1)) * sum_of_squares));
 }
 
-
+float_32_type avg_abs_rel_dist(const std::vector<float_32_type>& a, const std::vector<float_32_type>& b)
+{
+    float_32_type sum = 0;
+    for (size_t i = 0; i < a.size(); i++) {
+        float_32_type diff = a[i] - b[i];
+        if (a[i] > 0.0) sum += std::abs(diff) / a[i];
+        else sum += std::abs(diff);
+    }
+    return sum / static_cast<float_32_type>(a.size());
+}
 
 
 std::tuple<std::vector<float_32_type>, std::vector<float_32_type>, std::vector<uint32_t>> fixed_pricing_revenue_float_32(
-        uint32_t ticket_fraction, uint32_t nr_customers, uint32_t nr_trials) {
+        uint32_t ticket_fraction, uint32_t nr_customers, uint32_t nr_trials, uint32_t seed) {
 
     if (nr_customers <= 10) {
         throw std::invalid_argument("Should have n > 10");
@@ -80,8 +89,9 @@ std::tuple<std::vector<float_32_type>, std::vector<float_32_type>, std::vector<u
             for (uint32_t customer_nr = 1; customer_nr < n+1; customer_nr++) {
                 // If any tickets left - try selling
                 if (ticket_nr <= nr_tickets) {
-                    // uint32_t SEED = std::chrono::system_clock::now().time_since_epoch().count();
-                    float_32_type v_i = get_random_float_32(customer_nr + 3711 * trial);
+                    uint32_t DETERMINISTIC_SEED = seed*(customer_nr * 7 + 111 * trial);
+                    //uint32_t RANDOM_SEED = std::chrono::system_clock::now().time_since_epoch().count();
+                    float_32_type v_i = get_random_float_32(DETERMINISTIC_SEED);
                     if (v_i >= fixed_price) {
                         revenue   += fixed_price;
                         ticket_nr += 1;
@@ -105,7 +115,7 @@ std::tuple<std::vector<float_32_type>, std::vector<float_32_type>, std::vector<u
 
 
 std::tuple<std::vector<float_32_type>, std::vector<float_32_type>, std::vector<uint32_t>> variable_pricing_revenue_float_32(
-        uint32_t ticket_fraction, uint32_t nr_customers, uint32_t nr_trials) {
+        uint32_t ticket_fraction, uint32_t nr_customers, uint32_t nr_trials, uint32_t seed) {
 
     if (nr_customers <= 10) {
         throw std::invalid_argument("Should have n > 10");
@@ -153,8 +163,9 @@ std::tuple<std::vector<float_32_type>, std::vector<float_32_type>, std::vector<u
             for (uint32_t customer_nr = 1; customer_nr < n + 1; customer_nr++) {
                 // If any tickets left - try selling
                 if (ticket_nr <= nr_tickets) {
-                    //uint32_t SEED = std::chrono::system_clock::now().time_since_epoch().count();
-                    float_32_type v_i = get_random_float_32(customer_nr + 131 * trial);
+                    uint32_t DETERMINISTIC_SEED = seed*(customer_nr * 7 + 111 * trial);
+                    //uint32_t RANDOM_SEED = std::chrono::system_clock::now().time_since_epoch().count();
+                    float_32_type v_i = get_random_float_32(DETERMINISTIC_SEED);
                     if (v_i >= P(customer_nr-1, ticket_nr-1)) {
                         revenue   += P(customer_nr-1, ticket_nr-1);
                         ticket_nr += 1;

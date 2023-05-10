@@ -51,11 +51,13 @@ float_64_type get_random_float_64(const uint64_t& seed);
 float_32_type std_deviation_float_32(const col_vector_32_type& x_arr);
 float_64_type std_deviation_float_64(const col_vector_64_type& x_arr);
 
+float_32_type avg_abs_rel_dist(const std::vector<float_32_type>& a, const std::vector<float_32_type>& b);
+
 std::tuple<std::vector<float_32_type>, std::vector<float_32_type>, std::vector<uint32_t>> fixed_pricing_revenue_float_32(
-        uint32_t ticket_fraction, uint32_t nr_customers, uint32_t nr_trials);
+        uint32_t ticket_fraction, uint32_t nr_customers, uint32_t nr_trials, uint32_t seed);
 
 std::tuple<std::vector<float_32_type>, std::vector<float_32_type>, std::vector<uint32_t>> variable_pricing_revenue_float_32(
-        uint32_t ticket_fraction, uint32_t nr_customers, uint32_t nr_trials);
+        uint32_t ticket_fraction, uint32_t nr_customers, uint32_t nr_trials, uint32_t seed);
 
 
 
