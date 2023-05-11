@@ -37,9 +37,6 @@ using float_64_type = double_t;
 using matrix_32_type = Eigen::Matrix<float_32_type, Eigen::Dynamic, Eigen::Dynamic>;
 using matrix_64_type = Eigen::Matrix<float_64_type, Eigen::Dynamic, Eigen::Dynamic>;
 
-using row_vector_32_type = Eigen::Matrix<float_32_type, 1, Eigen::Dynamic>;
-using row_vector_64_type = Eigen::Matrix<float_64_type, 1, Eigen::Dynamic>;
-
 using col_vector_32_type = Eigen::Matrix<float_32_type, Eigen::Dynamic, 1>;
 using col_vector_64_type = Eigen::Matrix<float_64_type, Eigen::Dynamic, 1>;
 
@@ -58,8 +55,6 @@ std::tuple<std::vector<float_32_type>, std::vector<float_32_type>, std::vector<u
 
 std::tuple<std::vector<float_32_type>, std::vector<float_32_type>, std::vector<uint32_t>> variable_pricing_revenue_float_32(
         uint32_t ticket_fraction, uint32_t nr_customers, uint32_t nr_trials, uint32_t seed);
-
-
 
 void append_to_file(const std::string& filename, const std::string& path, const std::vector<float_32_type>& data);
 
