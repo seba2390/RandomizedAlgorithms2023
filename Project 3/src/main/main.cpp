@@ -98,22 +98,27 @@ int main()
 
 
 
-
     std::cout << " =================== " << std::endl;
-    const uint32_t TICKET_FRACTION = 1;
-    const uint32_t RERUNS = 100;
+    const uint32_t TICKET_FRACTION = 0;
+    const uint32_t RERUNS = 50;
     matrix_32_type standard_revenues;
     matrix_32_type optimal_revenues;
 
     for(int RUN = 0; RUN < RERUNS; RUN++)
     {
         std::cout << "Part c, nr.: " << RUN << std::endl;
-        const uint32_t NR_CUSTOMERS = 500;
+        const uint32_t NR_CUSTOMERS = 1000;
         const uint32_t NR_TRIALS = 100;
         const uint32_t OUTER_SEED = std::chrono::system_clock::now().time_since_epoch().count();
 
         auto standard_result = fixed_pricing_revenue_float_32(TICKET_FRACTION,NR_CUSTOMERS,NR_TRIALS,OUTER_SEED);
         auto optimal_result  = variable_pricing_revenue_float_32(TICKET_FRACTION,NR_CUSTOMERS,NR_TRIALS,OUTER_SEED);
+
+
+        // Resize the matrices before assigning values
+        auto valSize = static_cast<int>(std::get<0>(standard_result).size());
+        standard_revenues.resize(RERUNS, valSize);
+        optimal_revenues.resize(RERUNS, valSize);
 
         for(int val = 0; val < std::get<0>(standard_result).size(); val++) {
             standard_revenues(RUN, val) = std::get<0>(standard_result).at(val);
@@ -138,6 +143,23 @@ int main()
 
         optimal_avg_revenues.push_back(optimal_revenues.col(col).mean());
         optimal_revenues_std_dev.push_back(std_deviation_float_32(optimal_revenues.col(col)));
+    }
+
+    // Saving errors to drive
+    std::string filename_2 = "Exercise_1_1_ticket.txt";
+    std::string folder_path_2 = "../../../../Data/Exercise_1_c";
+    // Removing possibly already existing file with name 'filename' from drive.
+    remove_file(filename_2, folder_path_2);
+    // Writing out file
+    for (unsigned int i = 0; i < standard_avg_revenues.size(); i++) {
+        auto n_costumers = static_cast<float>(10 + i);
+        append_to_file(filename_2, folder_path_2, {
+                               n_costumers,
+                               standard_avg_revenues.at(i),
+                               standard_revenues_std_dev.at(i),
+                               optimal_avg_revenues.at(i),
+                               optimal_revenues_std_dev.at(i)}
+                                               );
     }
 
 }

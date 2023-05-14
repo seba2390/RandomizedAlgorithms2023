@@ -76,7 +76,13 @@ std::tuple<std::vector<float_32_type>, std::vector<float_32_type>, std::vector<u
     std::vector<uint32_t> n_customers;
 
     for (uint32_t n = 10; n < nr_customers+1; n++) {
-        uint32_t nr_tickets = n / ticket_fraction; // Integer round down
+        uint32_t nr_tickets;
+        if(ticket_fraction == 0){
+            nr_tickets = 1;
+        }
+        else{
+            nr_tickets = n / ticket_fraction; // Integer round down
+        }
         float_32_type fixed_price = static_cast<float_32_type>(1.0) - static_cast<float_32_type>(nr_tickets) / static_cast<float_32_type>(n);
         col_vector_32_type revenues(nr_trials);
 
@@ -116,7 +122,6 @@ std::tuple<std::vector<float_32_type>, std::vector<float_32_type>, std::vector<u
 
 std::tuple<std::vector<float_32_type>, std::vector<float_32_type>, std::vector<uint32_t>> variable_pricing_revenue_float_32(
         uint32_t ticket_fraction, uint32_t nr_customers, uint32_t nr_trials, uint32_t seed) {
-
     if (nr_customers <= 10) {
         throw std::invalid_argument("Should have n > 10");
     }
@@ -130,11 +135,20 @@ std::tuple<std::vector<float_32_type>, std::vector<float_32_type>, std::vector<u
         return (1 - p) * (p + exps(n - 1, k - 1)) + p * exps(n - 1, k);
     };
 
-    matrix_32_type P_init = matrix_32_type::Zero(nr_customers+1, nr_customers / ticket_fraction+1);
-    matrix_32_type E = matrix_32_type::Zero(nr_customers+1, nr_customers / ticket_fraction+1);
+    uint32_t n_tickets;
+    if (ticket_fraction == 0){
+        n_tickets = 1;
+    }
+    else{
+        n_tickets = nr_customers / ticket_fraction;
+    }
+
+    matrix_32_type P_init = matrix_32_type::Zero(nr_customers+1, n_tickets+1);
+    matrix_32_type E = matrix_32_type::Zero(nr_customers+1, n_tickets+1);
+
 
     for (uint32_t n = 0; n < nr_customers + 1 ; ++n) {
-        for (uint32_t k = 0; k < nr_customers / ticket_fraction + 1; ++k) {
+        for (uint32_t k = 0; k < n_tickets + 1; ++k) {
             if (k == 0 || n == 0) {
                 E(n, k) = 0.0;
             } else {
@@ -143,6 +157,7 @@ std::tuple<std::vector<float_32_type>, std::vector<float_32_type>, std::vector<u
             }
         }
     }
+
     // Slice matrix to remove first row and first column and flip matrix across both diagonals
     matrix_32_type P = P_init.block(1, 1, P_init.rows() - 1, P_init.cols() - 1).reverse();
 
@@ -151,7 +166,13 @@ std::tuple<std::vector<float_32_type>, std::vector<float_32_type>, std::vector<u
     std::vector<uint32_t> n_customers;
 
     for (uint32_t n = 10; n < nr_customers + 1; ++n) {
-        uint32_t nr_tickets = n / ticket_fraction;
+        uint32_t nr_tickets;
+        if (ticket_fraction == 0){
+            nr_tickets = 1;
+        }
+        else{
+            nr_tickets = n / ticket_fraction;
+        }
         col_vector_32_type revenues(nr_trials);
 
         // Repeating selling to "n" customers multiple times
